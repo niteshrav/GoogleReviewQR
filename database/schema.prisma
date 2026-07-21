@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id              String     @id @default(uuid())
+  slug            String     @unique
+  name            String
+  ownerEmail      String
+  ownerWhatsApp   String?
+  googleReviewUrl String
+  isActive        Boolean    @default(true)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  feedbacks       Feedback[]
+
+  @@index([isActive])
+}
+
+model Feedback {
+  id            String    @id @default(uuid())
+  businessId    String
+  rating        Int?
+  comment       String?   @db.VarChar(1000)
+  clickedGoogle Boolean   @default(false)
+  locationLabel String?   @default("main")
+  alertSentAt   DateTime?
+  createdAt     DateTime  @default(now())
+  business      Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, createdAt(sort: Desc)])
+  @@index([alertSentAt])
+}

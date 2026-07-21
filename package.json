@@ -1,0 +1,45 @@
+{
+  "name": "feedbackflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && next dev",
+    "build": "prisma generate --schema=database/schema.prisma && cd frontend && next build",
+    "start": "cd frontend && next start",
+    "lint": "cd frontend && next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "postinstall": "prisma generate --schema=database/schema.prisma",
+    "db:generate": "prisma generate --schema=database/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema=database/schema.prisma",
+    "db:migrate:deploy": "prisma migrate deploy --schema=database/schema.prisma",
+    "db:push": "prisma db push --schema=database/schema.prisma",
+    "db:studio": "prisma studio --schema=database/schema.prisma",
+    "db:seed": "tsx backend/scripts/seed-pilot.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.11.1",
+    "next": "^15.3.5",
+    "nodemailer": "^7.0.5",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^22.16.5",
+    "@types/nodemailer": "^6.4.17",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "^15.3.5",
+    "prisma": "^6.11.1",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
