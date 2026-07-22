@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { BusinessForm } from "@frontend/components/admin/business-form";
 import { AdminBusinessActions } from "@frontend/components/admin/admin-business-actions";
+import { Badge } from "@frontend/components/ui/badge";
+import { Button } from "@frontend/components/ui/button";
 
 type AdminBusinessCardProps = {
   business: {
@@ -19,10 +21,43 @@ type AdminBusinessCardProps = {
 
 export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
   const [editing, setEditing] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const reviewPath = `/r/${business.slug}`;
+
+  function absoluteReviewUrl() {
+    return `${window.location.origin}${reviewPath}`;
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(absoluteReviewUrl());
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard may be unavailable in some contexts.
+    }
+  }
+
+  async function shareLink() {
+    const url = absoluteReviewUrl();
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${business.name} feedback`,
+          text: `Share your experience with ${business.name}`,
+          url,
+        });
+        return;
+      } catch {
+        // Fall through to copy.
+      }
+    }
+    await copyLink();
+  }
 
   if (editing) {
     return (
-      <article className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <article className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Edit {business.name}</h2>
           <button
@@ -49,42 +84,79 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
   }
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <article className="group rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold">{business.name}</h2>
-          <p className="mt-1 text-sm text-muted">/{business.slug}</p>
-          <p className="mt-2 text-sm">{business.ownerEmail}</p>
-          <p className="mt-1 text-xs text-muted">
-            Status: {business.isActive ? "Active" : "Inactive"}
-          </p>
+        <div className="flex items-start gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-base font-bold text-brand">
+            {business.name.charAt(0)}
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight">{business.name}</h2>
+            <p className="mt-0.5 text-sm text-muted">/{business.slug}</p>
+            <p className="mt-2 text-sm text-foreground">{business.ownerEmail}</p>
+            <div className="mt-2">
+              <Badge variant={business.isActive ? "success" : "default"}>
+                {business.isActive ? "Active" : "Inactive"}
+              </Badge>
+            </div>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50"
-          >
+          <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
             Edit
-          </button>
+          </Button>
           {business.isActive ? (
             <AdminBusinessActions businessId={business.id} slug={business.slug} />
           ) : null}
         </div>
       </div>
-      <div className="mt-4 flex flex-wrap gap-3 text-sm">
-        <Link href={`/r/${business.slug}`} className="text-brand hover:underline">
-          View page
-        </Link>
-        <Link
-          href={`/admin/businesses/${business.id}/feedback`}
-          className="text-brand hover:underline"
-        >
-          Feedback log
-        </Link>
-        <a href={`/api/admin/qr/${business.slug}`} className="text-brand hover:underline">
-          Download QR
-        </a>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-[140px_1fr]">
+        <div className="rounded-2xl border border-border bg-slate-50 p-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/admin/qr/${business.slug}`}
+            alt={`QR code for ${business.name}`}
+            className="h-28 w-28 rounded-xl bg-white object-contain p-1"
+          />
+          <p className="mt-2 text-center text-[10px] font-medium uppercase tracking-wide text-muted">
+            QR preview
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <div className="rounded-xl border border-border bg-slate-50 px-3 py-2">
+            <p className="text-[11px] font-medium uppercase tracking-wide text-muted">
+              Public link
+            </p>
+            <p className="mt-1 truncate font-mono text-xs text-foreground">{reviewPath}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`/api/admin/qr/${business.slug}`}
+              className="inline-flex min-h-9 items-center justify-center rounded-xl bg-brand px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark"
+            >
+              Download
+            </a>
+            <Button size="sm" variant="outline" onClick={copyLink}>
+              {copied ? "Copied" : "Copy link"}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={shareLink}>
+              Share
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            <Link href={reviewPath} className="font-medium text-brand hover:underline">
+              View page
+            </Link>
+            <Link
+              href={`/admin/businesses/${business.id}/feedback`}
+              className="font-medium text-brand hover:underline"
+            >
+              Feedback log
+            </Link>
+          </div>
+        </div>
       </div>
     </article>
   );

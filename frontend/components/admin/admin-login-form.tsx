@@ -2,6 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Alert } from "@frontend/components/ui/alert";
+import { Button } from "@frontend/components/ui/button";
+import { Input } from "@frontend/components/ui/input";
 
 type AdminLoginFormProps = {
   nextPath?: string;
@@ -37,32 +40,25 @@ export function AdminLoginForm({ nextPath }: AdminLoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-      <div>
-        <label htmlFor="secret" className="block text-sm font-medium">
-          Admin secret
-        </label>
-        <input
-          id="secret"
-          name="secret"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={secret}
-          onChange={(event) => setSecret(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm outline-none ring-brand focus:ring-2"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Input
+        id="secret"
+        name="secret"
+        type="password"
+        label="Admin secret"
+        autoComplete="current-password"
+        required
+        value={secret}
+        onChange={(event) => setSecret(event.target.value)}
+        showPasswordToggle
+        placeholder="Enter your admin secret"
+      />
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <Alert variant="error">{error}</Alert> : null}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
-      >
+      <Button type="submit" loading={loading} fullWidth size="lg">
         {loading ? "Signing in..." : "Sign in"}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Button } from "@frontend/components/ui/button";
 
 type AdminBusinessActionsProps = {
   businessId: string;
@@ -26,12 +27,8 @@ export function AdminBusinessActions({ businessId }: AdminBusinessActionsProps) 
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleDeactivate}
-      className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
-    >
+    <Button type="button" size="sm" variant="danger" onClick={handleDeactivate}>
       Deactivate
-    </button>
+    </Button>
   );
 }

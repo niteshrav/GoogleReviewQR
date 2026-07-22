@@ -1,8 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { StarRating } from "@frontend/components/feedback/star-rating";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
+import { Alert } from "@frontend/components/ui/alert";
+import { Button } from "@frontend/components/ui/button";
+import { Textarea } from "@frontend/components/ui/textarea";
 
 type FeedbackFormProps = {
   businessSlug: string;
@@ -53,9 +57,19 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
 
   if (submitted) {
     return (
-      <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">Thank you for your feedback</h2>
-        <p className="mt-2 text-sm text-muted">
+      <motion.section
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35 }}
+        className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+      >
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-secondary">
+          ✓
+        </div>
+        <h2 className="mt-4 text-center text-xl font-semibold tracking-tight">
+          Thank you for your feedback
+        </h2>
+        <p className="mt-2 text-center text-sm text-muted">
           We appreciate you taking the time to help {businessName} improve.
         </p>
         <div className="mt-6">
@@ -65,30 +79,34 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
             label="Share your experience on Google"
           />
         </div>
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+    >
       <label className="block text-sm font-medium">Your rating</label>
       <div className="mt-3">
         <StarRating value={rating} onChange={setRating} />
       </div>
 
-      <label htmlFor="comment" className="mt-6 block text-sm font-medium">
-        Comments (optional)
-      </label>
-      <textarea
-        id="comment"
-        name="comment"
-        rows={4}
-        maxLength={1000}
-        value={comment}
-        onChange={(event) => setComment(event.target.value)}
-        className="mt-2 w-full rounded-lg border border-border px-3 py-3 text-base outline-none ring-brand focus:ring-2"
-        placeholder="Tell us what went well or what could improve"
-      />
+      <div className="mt-6">
+        <Textarea
+          id="comment"
+          name="comment"
+          label="Comments (optional)"
+          rows={4}
+          maxLength={1000}
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+          className="text-base"
+          placeholder="Tell us what went well or what could improve"
+          hint={`${comment.length}/1000`}
+        />
+      </div>
 
       <input
         type="text"
@@ -103,21 +121,34 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
 
       <p className="mt-4 text-xs text-muted">Your feedback is anonymous. No login required.</p>
 
-      {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+      <AnimatePresence>
+        {error ? (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-3"
+          >
+            <Alert variant="error">{error}</Alert>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
-      <button
+      <Button
         type="submit"
-        disabled={loading}
-        className="mt-6 min-h-[44px] w-full rounded-xl bg-brand px-4 py-3 text-base font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+        loading={loading}
+        fullWidth
+        size="lg"
+        className="mt-6 min-h-[44px] w-full"
       >
         {loading ? "Submitting..." : "Submit private feedback"}
-      </button>
+      </Button>
 
       <div className="mt-4">
         <GoogleReviewButton
           businessSlug={businessSlug}
           googleReviewUrl={googleReviewUrl}
-          className="block min-h-[44px] w-full rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground hover:bg-slate-50"
+          className="block min-h-[44px] w-full rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-slate-50"
           label="Share your experience on Google"
         />
       </div>

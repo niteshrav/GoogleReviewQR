@@ -2,6 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Alert } from "@frontend/components/ui/alert";
+import { Button } from "@frontend/components/ui/button";
+import { Input } from "@frontend/components/ui/input";
 
 type BusinessFormProps = {
   initialValues?: {
@@ -69,83 +72,62 @@ export function BusinessForm({ initialValues, onSuccess }: BusinessFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-border bg-card p-5">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium">
-          Business name
-        </label>
-        <input
-          id="name"
-          required
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm"
-        />
-      </div>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]"
+    >
+      <Input
+        id="name"
+        label="Business name"
+        required
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        placeholder="Cafe Edelweiss"
+      />
 
-      <div>
-        <label htmlFor="slug" className="block text-sm font-medium">
-          Slug
-        </label>
-        <input
-          id="slug"
-          required
-          disabled={isEdit}
-          value={slug}
-          onChange={(event) => setSlug(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm disabled:bg-slate-100"
-        />
-      </div>
+      <Input
+        id="slug"
+        label="Slug"
+        required
+        disabled={isEdit}
+        value={slug}
+        onChange={(event) => setSlug(event.target.value)}
+        hint={isEdit ? "Slug cannot be changed after creation." : "Used in /r/[slug] URLs"}
+        placeholder="cafe-edelweiss"
+      />
 
-      <div>
-        <label htmlFor="ownerEmail" className="block text-sm font-medium">
-          Owner email
-        </label>
-        <input
-          id="ownerEmail"
-          type="email"
-          required
-          value={ownerEmail}
-          onChange={(event) => setOwnerEmail(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm"
-        />
-      </div>
+      <Input
+        id="ownerEmail"
+        type="email"
+        label="Owner email"
+        required
+        value={ownerEmail}
+        onChange={(event) => setOwnerEmail(event.target.value)}
+        placeholder="owner@business.com"
+      />
 
-      <div>
-        <label htmlFor="ownerWhatsApp" className="block text-sm font-medium">
-          Owner WhatsApp (optional)
-        </label>
-        <input
-          id="ownerWhatsApp"
-          value={ownerWhatsApp}
-          onChange={(event) => setOwnerWhatsApp(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm"
-          placeholder="+919876543210"
-        />
-      </div>
+      <Input
+        id="ownerWhatsApp"
+        label="Owner WhatsApp (optional)"
+        value={ownerWhatsApp}
+        onChange={(event) => setOwnerWhatsApp(event.target.value)}
+        placeholder="+919876543210"
+      />
 
-      <div>
-        <label htmlFor="googleReviewUrl" className="block text-sm font-medium">
-          Google review URL
-        </label>
-        <input
-          id="googleReviewUrl"
-          required
-          value={googleReviewUrl}
-          onChange={(event) => setGoogleReviewUrl(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm"
-        />
-      </div>
+      <Input
+        id="googleReviewUrl"
+        label="Google review URL"
+        required
+        value={googleReviewUrl}
+        onChange={(event) => setGoogleReviewUrl(event.target.value)}
+        placeholder="https://g.page/r/..."
+      />
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <Alert variant="error">{error}</Alert> : null}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
-      >
+      <Button type="submit" loading={loading} fullWidth>
         {loading ? "Saving..." : isEdit ? "Update business" : "Create business"}
-      </button>
+      </Button>
     </form>
   );
 }

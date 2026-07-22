@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@frontend/lib/cn";
+
 type StarRatingProps = {
   value: number;
   onChange: (value: number) => void;
@@ -16,9 +18,12 @@ export function StarRating({ value, onChange }: StarRatingProps) {
           aria-checked={value === star}
           aria-label={`${star} star${star > 1 ? "s" : ""}`}
           onClick={() => onChange(star)}
-          className={`min-h-[44px] min-w-[44px] h-11 w-11 rounded-full text-lg ${
-            value >= star ? "bg-brand text-white" : "bg-slate-100 text-muted"
-          }`}
+          className={cn(
+            "min-h-[44px] min-w-[44px] h-11 w-11 rounded-full text-lg transition-all duration-200 active:scale-95",
+            value >= star
+              ? "bg-brand text-white shadow-sm shadow-blue-200"
+              : "bg-slate-100 text-muted hover:bg-slate-200",
+          )}
         >
           ★
         </button>

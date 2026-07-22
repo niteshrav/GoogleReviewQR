@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@frontend/lib/cn";
+
 type GoogleReviewButtonProps = {
   businessSlug: string;
   googleReviewUrl: string;
@@ -11,7 +13,7 @@ export function GoogleReviewButton({
   businessSlug,
   googleReviewUrl,
   label = "Leave a Google Review",
-  className = "block min-h-[44px] w-full rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white hover:bg-brand-dark",
+  className = "block min-h-[44px] w-full rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.99]",
 }: GoogleReviewButtonProps) {
   async function handleClick() {
     try {
@@ -28,7 +30,7 @@ export function GoogleReviewButton({
   }
 
   return (
-    <button type="button" onClick={handleClick} className={className}>
+    <button type="button" onClick={handleClick} className={cn(className)}>
       {label}
     </button>
   );

@@ -19,13 +19,18 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col px-5 py-10">
-      <header className="space-y-2">
-        <Link href={`/r/${slug}`} className="text-sm text-brand hover:underline">
+    <main className="bg-mesh mx-auto flex min-h-screen max-w-lg flex-col px-5 py-10">
+      <header className="space-y-3">
+        <Link
+          href={`/r/${slug}`}
+          className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
+        >
           ← Back
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight">Private feedback for {business.name}</h1>
-        <p className="text-sm text-muted">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Private feedback for {business.name}
+        </h1>
+        <p className="text-sm leading-relaxed text-muted">
           Share a rating and optional comment. You can still leave a Google review at any time.
         </p>
       </header>

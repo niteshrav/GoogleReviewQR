@@ -5,9 +5,20 @@
   --foreground: #0f172a;
   --brand: #2563eb;
   --brand-dark: #1d4ed8;
+  --brand-soft: #eff6ff;
+  --secondary: #10b981;
+  --secondary-dark: #059669;
   --muted: #64748b;
   --card: #ffffff;
   --border: #e2e8f0;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --ring: rgba(37, 99, 235, 0.35);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --radius: 14px;
 }
 
 @theme inline {
@@ -15,15 +26,27 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
+  --color-brand-soft: var(--brand-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-border: var(--border);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --shadow-card: var(--shadow-md);
+  --shadow-card-hover: var(--shadow-lg);
 }
 
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -33,6 +56,7 @@ body {
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  line-height: 1.5;
 }
 
 button,
@@ -41,9 +65,34 @@ a,
   touch-action: manipulation;
 }
 
+::selection {
+  background: color-mix(in srgb, var(--brand) 22%, white);
+  color: var(--foreground);
+}
+
 /* Prefer thumb-friendly spacing on small screens */
 @media (max-width: 480px) {
   body {
     font-size: 16px;
   }
+}
+
+/* Soft mesh backdrop for marketing surfaces */
+.bg-mesh {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.14), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(16, 185, 129, 0.08), transparent),
+    var(--background);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
 }
