@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { businessService } from "@backend/lib/services/index";
+import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
+import { CustomerPrivacyNotice } from "@frontend/components/customer/customer-privacy-notice";
 import { FeedbackForm } from "@frontend/components/feedback/feedback-form";
 
 export const dynamic = "force-dynamic";
@@ -19,29 +21,30 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
   }
 
   return (
-    <main className="bg-mesh mx-auto flex min-h-screen max-w-lg flex-col px-5 py-10">
+    <CustomerPageShell>
       <header className="space-y-3">
         <Link
           href={`/r/${slug}`}
-          className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
+          className="inline-flex min-h-[44px] items-center gap-1 text-base font-medium text-brand hover:underline sm:text-sm"
         >
           ← Back
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words">
           Private feedback for {business.name}
         </h1>
-        <p className="text-sm leading-relaxed text-muted">
+        <p className="text-base leading-relaxed text-muted sm:text-sm">
           Share a rating and optional comment. You can still leave a Google review at any time.
         </p>
+        <CustomerPrivacyNotice />
       </header>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <FeedbackForm
           businessSlug={slug}
           businessName={business.name}
           googleReviewUrl={business.googleReviewUrl}
         />
       </div>
-    </main>
+    </CustomerPageShell>
   );
 }

@@ -1,37 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BusinessForm } from "@frontend/components/admin/business-form";
 import { AdminBusinessActions } from "@frontend/components/admin/admin-business-actions";
 import { Badge } from "@frontend/components/ui/badge";
 import { Button } from "@frontend/components/ui/button";
+import { EmptyState } from "@frontend/components/ui/empty-state";
 
-type AdminBusinessCardProps = {
-  business: {
-    id: string;
-    name: string;
-    slug: string;
-    ownerEmail: string;
-    ownerWhatsApp: string | null;
-    googleReviewUrl: string;
-    isActive: boolean;
-  };
+export type AdminBusinessListItem = {
+  id: string;
+  name: string;
+  slug: string;
+  ownerEmail: string;
+  ownerWhatsApp: string | null;
+  googleReviewUrl: string;
+  isActive: boolean;
 };
 
-/** Kept for reuse; list page uses AdminBusinessesClient. */
-export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
+type AdminBusinessesClientProps = {
+  businesses: AdminBusinessListItem[];
+  publicBaseUrl: string;
+};
+
+function BusinessCard({
+  business,
+  publicBaseUrl,
+}: {
+  business: AdminBusinessListItem;
+  publicBaseUrl: string;
+}) {
   const [editing, setEditing] = useState(false);
   const [copied, setCopied] = useState(false);
   const reviewPath = `/r/${business.slug}`;
-
-  function absoluteReviewUrl() {
-    return `${window.location.origin}${reviewPath}`;
-  }
+  const absoluteUrl = `${publicBaseUrl.replace(/\/$/, "")}${reviewPath}`;
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(absoluteReviewUrl());
+      await navigator.clipboard.writeText(absoluteUrl);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -40,13 +46,12 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
   }
 
   async function shareLink() {
-    const url = absoluteReviewUrl();
     if (navigator.share) {
       try {
         await navigator.share({
           title: `${business.name} feedback`,
           text: `Share your experience with ${business.name}`,
-          url,
+          url: absoluteUrl,
         });
         return;
       } catch {
@@ -59,7 +64,7 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
   if (editing) {
     return (
       <article className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Edit {business.name}</h2>
           <button
             type="button"
@@ -133,10 +138,14 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted">
               Public link
             </p>
-            <p className="mt-1 block max-w-full overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs text-foreground">
-              {reviewPath}
+            <p
+              className="mt-1 block max-w-full overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs text-foreground"
+              title={absoluteUrl}
+            >
+              {absoluteUrl}
             </p>
           </div>
+
           <div className="flex flex-wrap gap-2">
             <a
               href={`/api/admin/qr/${business.slug}`}
@@ -151,6 +160,7 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
               Share
             </Button>
           </div>
+
           <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-3 text-sm">
             <Link href={reviewPath} className="font-medium text-brand hover:underline">
               View page
@@ -165,5 +175,77 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
         </div>
       </div>
     </article>
+  );
+}
+
+export function AdminBusinessesClient({
+  businesses,
+  publicBaseUrl,
+}: AdminBusinessesClientProps) {
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      return businesses;
+    }
+    return businesses.filter(
+      (business) =>
+        business.name.toLowerCase().includes(q) ||
+        business.slug.toLowerCase().includes(q) ||
+        business.ownerEmail.toLowerCase().includes(q),
+    );
+  }, [businesses, query]);
+
+  return (
+    <section className="grid min-w-0 gap-8 xl:grid-cols-[340px_minmax(0,1fr)]">
+      <div className="xl:sticky xl:top-24 xl:self-start">
+        <h2 className="mb-4 text-lg font-semibold">Create business</h2>
+        <BusinessForm />
+      </div>
+
+      <div className="min-w-0 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold">All businesses</h2>
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-muted">
+              {filtered.length}
+              {filtered.length !== businesses.length ? ` / ${businesses.length}` : ""}
+            </span>
+          </div>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Filter by name, slug, email…"
+            className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-[var(--ring)] sm:max-w-xs"
+            aria-label="Filter businesses"
+          />
+        </div>
+
+        {businesses.length === 0 ? (
+          <EmptyState
+            title="No businesses yet"
+            description="Create your first pilot business using the form. QR export and feedback logs appear here."
+            icon={<span>▣</span>}
+          />
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            title="No matches"
+            description="Try a different name, slug, or owner email."
+          />
+        ) : (
+          <div className="grid min-w-0 gap-4 lg:grid-cols-2">
+            {filtered.map((business) => (
+              <BusinessCard
+                key={business.id}
+                business={business}
+                publicBaseUrl={publicBaseUrl}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

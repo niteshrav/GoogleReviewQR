@@ -74,6 +74,14 @@ function createInMemoryBusinessRepository(seed: PilotBusinessSeed) {
     async deactivate(id: string) {
       return this.update(id, { isActive: false });
     },
+    async delete(id: string) {
+      const index = businesses.findIndex((item) => item.id === id);
+      if (index < 0) {
+        throw new BusinessNotFoundError(id);
+      }
+      const [removed] = businesses.splice(index, 1);
+      return removed;
+    },
   };
 }
 

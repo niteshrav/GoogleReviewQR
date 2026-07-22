@@ -71,6 +71,17 @@ export function createBusinessRepository(prisma: PrismaClient) {
         data: { isActive: false },
       });
     },
+
+    async delete(id: string) {
+      const existing = await prisma.business.findUnique({ where: { id } });
+      if (!existing) {
+        throw new BusinessNotFoundError(id);
+      }
+
+      return prisma.business.delete({
+        where: { id },
+      });
+    },
   };
 }
 

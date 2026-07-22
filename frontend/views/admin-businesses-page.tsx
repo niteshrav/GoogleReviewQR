@@ -1,14 +1,14 @@
 import Link from "next/link";
+import { getPublicBaseUrl } from "@backend/lib/env";
 import { businessService } from "@backend/lib/services/index";
-import { BusinessForm } from "@frontend/components/admin/business-form";
-import { AdminBusinessCard } from "@frontend/components/admin/admin-business-card";
+import { AdminBusinessesClient } from "@frontend/components/admin/admin-businesses-client";
 import { Card } from "@frontend/components/ui/card";
-import { EmptyState } from "@frontend/components/ui/empty-state";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBusinessesPage() {
   const businesses = await businessService.listBusinesses();
+  const publicBaseUrl = getPublicBaseUrl();
 
   return (
     <div className="space-y-8">
@@ -25,38 +25,44 @@ export default async function AdminBusinessesPage() {
         </Link>
       </div>
 
-      <section className="grid gap-8 xl:grid-cols-[360px_1fr]">
-        <div>
-          <h2 className="mb-4 text-lg font-semibold">Create business</h2>
-          <BusinessForm />
-        </div>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">All businesses</h2>
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-muted">
-              {businesses.length}
-            </span>
-          </div>
-          {businesses.length === 0 ? (
-            <EmptyState
-              title="No businesses yet"
-              description="Create your first pilot business using the form. QR export and feedback logs appear here."
-              icon={<span>▣</span>}
-            />
-          ) : (
-            <div className="grid gap-4 lg:grid-cols-2">
-              {businesses.map((business) => (
-                <AdminBusinessCard key={business.id} business={business} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      {publicBaseUrl.includes("localhost") ? (
+        <Card className="border-amber-200 bg-amber-50">
+          <p className="text-sm text-amber-900">
+            <strong>Phone QR tip:</strong> <code className="rounded bg-white px-1">BASE_URL</code> is
+            still <code className="rounded bg-white px-1">localhost</code>. Phone scans will fail. Set{" "}
+            <code className="rounded bg-white px-1">BASE_URL</code> to your PC Wi‑Fi IP (e.g.{" "}
+            <code className="rounded bg-white px-1">http://192.168.x.x:3000</code>), restart{" "}
+            <code className="rounded bg-white px-1">npm run dev</code>, then re-download QR.
+          </p>
+        </Card>
+      ) : (
+        <Card className="border-emerald-200 bg-emerald-50">
+          <p className="text-sm text-emerald-900">
+            QR codes &amp; share links use{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-xs">{publicBaseUrl}</code>. Phone
+            must be on the <strong>same Wi‑Fi</strong> as this PC.
+          </p>
+        </Card>
+      )}
+
+      <AdminBusinessesClient
+        publicBaseUrl={publicBaseUrl}
+        businesses={businesses.map((business) => ({
+          id: business.id,
+          name: business.name,
+          slug: business.slug,
+          ownerEmail: business.ownerEmail,
+          ownerWhatsApp: business.ownerWhatsApp,
+          googleReviewUrl: business.googleReviewUrl,
+          isActive: business.isActive,
+        }))}
+      />
 
       <Card className="border-dashed bg-slate-50/70">
         <p className="text-sm text-muted">
-          Tip: After creating a business, download the QR PNG and place it at the counter. The public
-          page lives at <code className="rounded bg-white px-1.5 py-0.5 text-xs">/r/[slug]</code>.
+          Tip: After creating a business, download the QR PNG again (old QRs still point to the old
+          URL). Public page:{" "}
+          <code className="rounded bg-white px-1.5 py-0.5 text-xs">/r/[slug]</code>.
         </p>
       </Card>
     </div>

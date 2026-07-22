@@ -10,6 +10,7 @@ function createMockRepository() {
     findAll: vi.fn(),
     update: vi.fn(),
     deactivate: vi.fn(),
+    delete: vi.fn(),
   };
 }
 
@@ -61,6 +62,15 @@ describe("businessService", () => {
     const result = await service.deactivateBusiness("biz-1");
 
     expect(result.isActive).toBe(false);
+  });
+
+  it("deletes a business", async () => {
+    repository.delete.mockResolvedValue({ id: "biz-1", slug: "cafe-demo" });
+
+    const result = await service.deleteBusiness("biz-1");
+
+    expect(result.id).toBe("biz-1");
+    expect(repository.delete).toHaveBeenCalledWith("biz-1");
   });
 
   it("finds active business by slug for customer pages", async () => {

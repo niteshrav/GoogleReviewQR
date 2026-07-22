@@ -18,11 +18,15 @@ export async function downloadAdminQr(request: Request, slug: string) {
   const env = getEnv();
   const url = buildBusinessReviewUrl(env.BASE_URL, business.slug);
   const png = await generateQrPngBuffer(url);
+  const preview = new URL(request.url).searchParams.get("preview") === "1";
 
   return new Response(new Uint8Array(png), {
     headers: {
       "Content-Type": "image/png",
-      "Content-Disposition": `attachment; filename="${business.slug}-qr.png"`,
+      "Content-Disposition": preview
+        ? `inline; filename="${business.slug}-qr.png"`
+        : `attachment; filename="${business.slug}-qr.png"`,
+      "Cache-Control": "private, max-age=60",
     },
   });
 }

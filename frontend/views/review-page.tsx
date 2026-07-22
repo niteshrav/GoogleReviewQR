@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { businessService } from "@backend/lib/services/index";
+import { CustomerFooter } from "@frontend/components/customer/customer-footer";
+import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
+import { CustomerPrivacyNotice } from "@frontend/components/customer/customer-privacy-notice";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
 
 export const dynamic = "force-dynamic";
@@ -19,43 +22,39 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   }
 
   return (
-    <main className="bg-mesh mx-auto flex min-h-screen max-w-lg flex-col px-5 py-10">
+    <CustomerPageShell>
       <header className="space-y-3">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3 py-1 text-xs font-semibold text-brand shadow-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-          FeedbackFlow
+          {business.name}
         </div>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words sm:text-3xl">
           How was your experience at {business.name}?
         </h1>
-        <p className="text-sm leading-relaxed text-muted">
-          Your feedback is anonymous. No login required. Google reviews are always available.
-        </p>
+        <CustomerPrivacyNotice />
       </header>
 
-      <section className="mt-8 space-y-3 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+      <section className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand">Primary</p>
         <GoogleReviewButton businessSlug={slug} googleReviewUrl={business.googleReviewUrl} />
 
-        <Link
-          href={`/r/${slug}/feedback`}
-          className="block min-h-[44px] w-full rounded-xl border border-border bg-white px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-slate-50"
-        >
-          Send private feedback
-        </Link>
+        <div className="pt-1">
+          <p className="mb-2 text-xs font-medium text-muted">Or send private feedback</p>
+          <Link
+            href={`/r/${slug}/feedback`}
+            className="customer-cta block rounded-xl border border-border bg-white px-4 py-3 text-center font-medium text-foreground transition-colors hover:bg-slate-50 active:bg-slate-100"
+          >
+            Send us private feedback
+          </Link>
+        </div>
       </section>
 
-      <div className="mt-6 rounded-2xl border border-dashed border-border bg-white/70 p-4 text-center">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted">Business</p>
-        <p className="mt-1 text-sm font-semibold text-foreground">{business.name}</p>
-      </div>
+      <p className="mt-4 text-center text-xs text-muted">
+        Google reviews are always available to every customer — we never hide or gate them by rating.
+      </p>
 
-      <footer className="mt-auto pt-10 text-center text-xs text-muted">
-        Powered by{" "}
-        <a href="https://commiters.in" className="font-medium text-brand hover:underline">
-          Commiters
-        </a>
-      </footer>
-    </main>
+      <CustomerFooter />
+    </CustomerPageShell>
   );
 }
 

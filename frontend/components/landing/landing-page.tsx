@@ -94,10 +94,12 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export function LandingPage() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   return (
-    <div className="bg-mesh min-h-screen">
-      <header className="sticky top-0 z-40 border-b border-border/70 glass">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+    <div className="bg-mesh min-h-[100dvh]">
+      <header className="sticky top-0 z-40 border-b border-border/70 glass pt-[env(safe-area-inset-top)]">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white shadow-sm">
               F
@@ -118,6 +120,15 @@ export function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border md:hidden"
+              aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen((open) => !open)}
+            >
+              {mobileNavOpen ? "✕" : "☰"}
+            </button>
             <Link
               href="/admin"
               className="hidden rounded-xl px-3 py-2 text-sm font-medium text-muted hover:bg-slate-100 hover:text-foreground sm:inline-flex"
@@ -129,6 +140,28 @@ export function LandingPage() {
             </Link>
           </div>
         </div>
+        {mobileNavOpen ? (
+          <nav className="border-t border-border bg-white/95 px-4 py-3 md:hidden">
+            <ul className="space-y-1">
+              {[
+                { href: "#features", label: "Features" },
+                { href: "#how", label: "How it works" },
+                { href: "#faq", label: "FAQ" },
+                { href: "/admin/login", label: "Admin login" },
+              ].map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    className="flex min-h-[44px] items-center rounded-xl px-3 text-base font-medium text-foreground hover:bg-slate-50"
+                    onClick={() => setMobileNavOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
       </header>
 
       <main>
@@ -145,12 +178,14 @@ export function LandingPage() {
               QR-powered customer feedback for local businesses — private notes for you, an
               ungated Google review path for everyone.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/admin/login">
-                <Button size="lg">Open admin dashboard</Button>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link href="/admin/login" className="w-full sm:w-auto">
+                <Button size="lg" fullWidth className="sm:w-auto">
+                  Open admin dashboard
+                </Button>
               </Link>
-              <a href="#how">
-                <Button size="lg" variant="outline">
+              <a href="#how" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" fullWidth className="sm:w-auto">
                   See how it works
                 </Button>
               </a>

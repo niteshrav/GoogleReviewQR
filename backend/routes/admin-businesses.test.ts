@@ -11,6 +11,7 @@ vi.mock("@backend/lib/services/index", () => ({
     createBusiness: vi.fn(),
     updateBusiness: vi.fn(),
     deactivateBusiness: vi.fn(),
+    deleteBusiness: vi.fn(),
   },
 }));
 
@@ -19,6 +20,7 @@ import { businessService } from "@backend/lib/services/index";
 import {
   createAdminBusiness,
   deactivateAdminBusiness,
+  deleteAdminBusiness,
   listAdminBusinesses,
   updateAdminBusiness,
 } from "@backend/routes/admin-businesses";
@@ -121,5 +123,23 @@ describe("admin-businesses routes", () => {
     );
 
     expect(response.status).toBe(200);
+  });
+
+  it("deletes a business", async () => {
+    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(businessService.deleteBusiness).mockResolvedValue({
+      id: "biz-1",
+      slug: "cafe-demo",
+    } as never);
+
+    const response = await deleteAdminBusiness(
+      new Request("http://localhost/api/admin/businesses/biz-1", {
+        method: "DELETE",
+      }),
+      "biz-1",
+    );
+
+    expect(response.status).toBe(200);
+    expect(businessService.deleteBusiness).toHaveBeenCalledWith("biz-1");
   });
 });

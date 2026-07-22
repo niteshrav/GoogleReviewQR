@@ -13,7 +13,7 @@ export function GoogleReviewButton({
   businessSlug,
   googleReviewUrl,
   label = "Leave a Google Review",
-  className = "block min-h-[44px] w-full rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.99]",
+  className = "customer-cta block rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.99]",
 }: GoogleReviewButtonProps) {
   async function handleClick() {
     try {

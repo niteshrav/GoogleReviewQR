@@ -9,7 +9,11 @@ type StarRatingProps = {
 
 export function StarRating({ value, onChange }: StarRatingProps) {
   return (
-    <div className="flex gap-2" role="radiogroup" aria-label="Rating">
+    <div
+      className="flex w-full max-w-sm items-center justify-between gap-1.5 sm:max-w-none sm:justify-start sm:gap-2"
+      role="radiogroup"
+      aria-label="Rating"
+    >
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
@@ -19,7 +23,7 @@ export function StarRating({ value, onChange }: StarRatingProps) {
           aria-label={`${star} star${star > 1 ? "s" : ""}`}
           onClick={() => onChange(star)}
           className={cn(
-            "min-h-[44px] min-w-[44px] h-11 w-11 rounded-full text-lg transition-all duration-200 active:scale-95",
+            "flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center rounded-full text-lg transition-all duration-200 active:scale-95 sm:h-11 sm:w-11 sm:flex-none",
             value >= star
               ? "bg-brand text-white shadow-sm shadow-blue-200"
               : "bg-slate-100 text-muted hover:bg-slate-200",

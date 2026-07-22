@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
+import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-button";
 import { cn } from "@frontend/lib/cn";
 
 const navItems = [
@@ -96,12 +97,11 @@ export function AdminShell({ children }: AdminShellProps) {
           </button>
 
           <div className="relative hidden flex-1 md:block">
-            <input
-              type="search"
-              placeholder="Search businesses, feedback…"
-              className="w-full max-w-md rounded-xl border border-border bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-brand focus:bg-white focus:ring-2 focus:ring-[var(--ring)]"
-              aria-label="Search"
-            />
+            <p className="text-sm text-muted">
+              {pathname.startsWith("/admin/businesses")
+                ? "Manage pilot businesses & QR codes"
+                : "FeedbackFlow admin"}
+            </p>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
@@ -109,19 +109,20 @@ export function AdminShell({ children }: AdminShellProps) {
               type="button"
               className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted hover:bg-slate-50"
               aria-label="Notifications"
+              title="Alerts appear by email for low ratings"
             >
               🔔
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand" />
             </button>
-            <div className="flex items-center gap-2 rounded-xl border border-border px-2.5 py-1.5">
+            <div className="hidden items-center gap-2 rounded-xl border border-border px-2.5 py-1.5 sm:flex">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
                 A
               </span>
-              <div className="hidden sm:block">
+              <div className="hidden md:block">
                 <p className="text-xs font-semibold">Admin</p>
                 <p className="text-[10px] text-muted">Pilot access</p>
               </div>
             </div>
+            <AdminLogoutButton />
           </div>
         </header>
 

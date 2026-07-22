@@ -24,18 +24,21 @@ describe("mobile-first customer UI (pre-deploy)", () => {
   });
 
   it("keeps customer pages single-column and phone-width constrained", () => {
+    const shell = read("frontend/components/customer/customer-page-shell.tsx");
+    expect(shell).toMatch(/max-w-lg/);
+    expect(shell).toMatch(/px-4|px-5/);
+
     for (const file of ["frontend/views/review-page.tsx", "frontend/views/feedback-page.tsx"]) {
       const contents = read(file);
-      expect(contents).toMatch(/max-w-lg/);
-      expect(contents).toMatch(/px-5|px-4/);
+      expect(contents).toContain("CustomerPageShell");
       expect(contents).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
     }
   });
 
   it("uses full-width primary CTAs sized for thumb taps", () => {
     const googleButton = read("frontend/components/google-review-button.tsx");
-    expect(googleButton).toMatch(/w-full/);
-    expect(googleButton).toMatch(/py-3|min-h-\[44px\]|h-11|h-12/);
+    expect(googleButton).toMatch(/customer-cta|w-full/);
+    expect(googleButton).toMatch(/py-3|min-h-\[44px\]|h-11|h-12|customer-cta/);
 
     const form = read("frontend/components/feedback/feedback-form.tsx");
     expect(form).toMatch(/w-full/);

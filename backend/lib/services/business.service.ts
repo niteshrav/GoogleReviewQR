@@ -37,6 +37,10 @@ export function createBusinessService(repository: BusinessRepository) {
     async deactivateBusiness(id: string) {
       return repository.deactivate(id);
     },
+
+    async deleteBusiness(id: string) {
+      return repository.delete(id);
+    },
   };
 }
 

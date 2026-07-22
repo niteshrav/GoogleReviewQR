@@ -96,3 +96,19 @@ export async function deactivateAdminBusiness(request: Request, id: string) {
     throw error;
   }
 }
+
+export async function deleteAdminBusiness(request: Request, id: string) {
+  if (!isAdminAuthorizedFromHeader(request)) {
+    return unauthorized();
+  }
+
+  try {
+    const business = await businessService.deleteBusiness(id);
+    return jsonOk({ business });
+  } catch (error) {
+    if (error instanceof BusinessNotFoundError) {
+      return jsonError(error.message, 404);
+    }
+    throw error;
+  }
+}

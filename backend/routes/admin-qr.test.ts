@@ -36,7 +36,18 @@ describe("downloadAdminQr", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("image/png");
+    expect(response.headers.get("Content-Disposition")).toContain("attachment");
     expect(response.headers.get("Content-Disposition")).toContain("cafe-demo-qr.png");
+  });
+
+  it("returns inline PNG when preview=1", async () => {
+    const response = await downloadAdminQr(
+      new Request("http://localhost?preview=1"),
+      "cafe-demo",
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Disposition")).toContain("inline");
   });
 
   it("returns 404 for unknown slug", async () => {

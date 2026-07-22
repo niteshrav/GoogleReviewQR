@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cd frontend && next dev",
+    "dev": "cd frontend && next dev -H 0.0.0.0 -p 3000",
     "build": "prisma generate --schema=database/schema.prisma && cd frontend && next build",
     "start": "cd frontend && next start",
     "lint": "cd frontend && next lint",
+    "deploy:check": "npm test && npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "postinstall": "prisma generate --schema=database/schema.prisma",

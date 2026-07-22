@@ -11,6 +11,7 @@ function createMockPrisma() {
       findMany: vi.fn(),
       findUnique: vi.fn(),
       update: vi.fn(),
+      delete: vi.fn(),
     },
   };
 }
@@ -137,6 +138,18 @@ describe("businessRepository", () => {
     expect(prisma.business.update).toHaveBeenCalledWith({
       where: { id: "biz-1" },
       data: { isActive: false },
+    });
+  });
+
+  it("deletes business by id", async () => {
+    prisma.business.findUnique.mockResolvedValue({ id: "biz-1", slug: "cafe-demo" });
+    prisma.business.delete.mockResolvedValue({ id: "biz-1", slug: "cafe-demo" });
+
+    const result = await repository.delete("biz-1");
+
+    expect(result.id).toBe("biz-1");
+    expect(prisma.business.delete).toHaveBeenCalledWith({
+      where: { id: "biz-1" },
     });
   });
 

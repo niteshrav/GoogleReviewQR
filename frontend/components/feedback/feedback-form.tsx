@@ -72,6 +72,9 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         <p className="mt-2 text-center text-sm text-muted">
           We appreciate you taking the time to help {businessName} improve.
         </p>
+        <p className="mt-3 text-center text-xs text-muted">
+          You can still share your experience on Google — same option for every customer.
+        </p>
         <div className="mt-6">
           <GoogleReviewButton
             businessSlug={businessSlug}
@@ -86,7 +89,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+      className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
     >
       <label className="block text-sm font-medium">Your rating</label>
       <div className="mt-3">
@@ -148,7 +151,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         <GoogleReviewButton
           businessSlug={businessSlug}
           googleReviewUrl={googleReviewUrl}
-          className="block min-h-[44px] w-full rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-slate-50"
+          className="customer-cta block rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-slate-50 active:bg-slate-100"
           label="Share your experience on Google"
         />
       </div>
