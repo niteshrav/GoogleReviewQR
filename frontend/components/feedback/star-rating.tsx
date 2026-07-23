@@ -25,7 +25,7 @@ export function StarRating({ value, onChange }: StarRatingProps) {
           className={cn(
             "flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center rounded-full text-lg transition-all duration-200 active:scale-95 sm:h-11 sm:w-11 sm:flex-none",
             value >= star
-              ? "bg-brand text-white shadow-sm shadow-blue-200"
+              ? "bg-brand text-white shadow-sm"
               : "bg-slate-100 text-muted hover:bg-slate-200",
           )}
         >

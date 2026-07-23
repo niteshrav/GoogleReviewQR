@@ -11,7 +11,7 @@ export function CustomerPageShell({ children, className }: CustomerPageShellProp
   return (
     <main
       className={cn(
-        "bg-mesh mx-auto flex min-h-[100dvh] w-full max-w-lg flex-col px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:px-5 sm:py-10",
+        "bg-quiet mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.75rem,env(safe-area-inset-top))] sm:px-6 sm:py-12",
         className,
       )}
     >

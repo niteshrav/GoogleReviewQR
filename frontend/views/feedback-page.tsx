@@ -30,10 +30,11 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
           ← Back
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words">
-          Private feedback for {business.name}
+          Private feedback
         </h1>
         <p className="text-base leading-relaxed text-muted sm:text-sm">
-          Share a rating and optional comment. You can still leave a Google review at any time.
+          For {business.name}. Share a rating and optional comment. You can still leave a Google
+          review anytime.
         </p>
         <CustomerPrivacyNotice />
       </header>

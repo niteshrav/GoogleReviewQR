@@ -10,46 +10,51 @@ const features = [
   {
     title: "QR-powered collection",
     description: "Print one QR code. Customers land on a clean mobile page in seconds.",
-    icon: "▣",
   },
   {
     title: "Private feedback first",
     description: "Capture honest ratings and comments privately so you can improve faster.",
-    icon: "◎",
   },
   {
     title: "Google reviews, ungated",
     description: "Every customer sees the same Google review option. No rating tricks.",
-    icon: "★",
   },
   {
     title: "Owner alerts",
     description: "Low ratings can trigger email alerts so you can follow up quickly.",
-    icon: "⚡",
   },
 ];
 
 const steps = [
-  { step: "01", title: "Create a business", body: "Add your Google review link and owner contacts in admin." },
-  { step: "02", title: "Print the QR", body: "Download a high-quality PNG and place it at the counter." },
-  { step: "03", title: "Collect & improve", body: "Review private feedback and grow your public reputation." },
+  {
+    step: "01",
+    title: "Create a business",
+    body: "Add your Google review link and owner contacts in admin.",
+  },
+  {
+    step: "02",
+    title: "Print the QR",
+    body: "Download a high-quality PNG and place it at the counter.",
+  },
+  {
+    step: "03",
+    title: "Collect & improve",
+    body: "Review private feedback and grow your public reputation.",
+  },
 ];
 
-const testimonials = [
+const benefits = [
   {
-    quote: "We finally get honest private notes without making Google reviews feel awkward.",
-    name: "Priya N.",
-    role: "Cafe owner",
+    title: "Protect reputation",
+    body: "Private feedback catches issues early while Google stays open to everyone.",
   },
   {
-    quote: "Setup took minutes. The QR page looks premium on every phone we tested.",
-    name: "Rahul M.",
-    role: "Restaurant manager",
+    title: "Look professional",
+    body: "Customers land on a trustworthy, branded mobile experience — not a form dump.",
   },
   {
-    quote: "Alerts on low ratings help us fix issues before they become public reviews.",
-    name: "Ananya S.",
-    role: "Boutique hotel",
+    title: "Operate simply",
+    body: "Admin tools for businesses, QR export, and feedback logs — no extra apps.",
   },
 ];
 
@@ -72,24 +77,79 @@ const faqs = [
   },
 ];
 
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false);
-
+function FaqItem({
+  question,
+  answer,
+  open,
+  onToggle,
+}: {
+  question: string;
+  answer: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
-    <div className="border-b border-border last:border-0">
+    <div
+      className={`rounded-2xl border transition-colors ${
+        open ? "border-brand/25 bg-white shadow-[var(--shadow-sm)]" : "border-border bg-white"
+      }`}
+    >
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6 sm:py-5"
         aria-expanded={open}
       >
         <span className="text-sm font-semibold text-foreground sm:text-base">{question}</span>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-medium text-muted">
+        <span
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+            open ? "bg-brand text-white" : "bg-brand-soft text-brand"
+          }`}
+          aria-hidden
+        >
           {open ? "−" : "+"}
         </span>
       </button>
-      {open ? <p className="pb-5 pr-12 text-sm leading-relaxed text-muted">{answer}</p> : null}
+      {open ? (
+        <div className="border-t border-border px-5 pb-5 pt-4 sm:px-6">
+          <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">{answer}</p>
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+function FaqSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <section id="faq" className="border-t border-border bg-background py-20">
+      <div className="mx-auto max-w-3xl px-5 sm:px-8">
+        <FadeIn>
+          <div className="text-center">
+            <p className="text-sm font-semibold text-brand">FAQ</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight">Frequently asked questions</h2>
+            <p className="mx-auto mt-3 max-w-xl text-muted">
+              Quick answers about compliance, customer flow, and QR setup.
+            </p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.06}>
+          <div className="mt-10 space-y-3">
+            {faqs.map((item, index) => (
+              <FaqItem
+                key={item.q}
+                question={item.q}
+                answer={item.a}
+                open={openIndex === index}
+                onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
+              />
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+    </section>
   );
 }
 
@@ -98,7 +158,7 @@ export function LandingPage() {
 
   return (
     <div className="bg-mesh min-h-[100dvh]">
-      <header className="sticky top-0 z-40 border-b border-border/70 glass pt-[env(safe-area-inset-top)]">
+      <header className="sticky top-0 z-40 glass pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white shadow-sm">
@@ -109,13 +169,13 @@ export function LandingPage() {
             </span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
-            <a href="#features" className="hover:text-foreground">
+            <a href="#features" className="transition-colors hover:text-foreground">
               Features
             </a>
-            <a href="#how" className="hover:text-foreground">
+            <a href="#how" className="transition-colors hover:text-foreground">
               How it works
             </a>
-            <a href="#faq" className="hover:text-foreground">
+            <a href="#faq" className="transition-colors hover:text-foreground">
               FAQ
             </a>
           </nav>
@@ -131,7 +191,7 @@ export function LandingPage() {
             </button>
             <Link
               href="/admin"
-              className="hidden rounded-xl px-3 py-2 text-sm font-medium text-muted hover:bg-slate-100 hover:text-foreground sm:inline-flex"
+              className="hidden rounded-xl px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-brand-soft hover:text-foreground sm:inline-flex"
             >
               Admin
             </Link>
@@ -152,7 +212,7 @@ export function LandingPage() {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="flex min-h-[44px] items-center rounded-xl px-3 text-base font-medium text-foreground hover:bg-slate-50"
+                    className="flex min-h-[44px] items-center rounded-xl px-3 text-base font-medium text-foreground hover:bg-brand-soft"
                     onClick={() => setMobileNavOpen(false)}
                   >
                     {item.label}
@@ -165,14 +225,14 @@ export function LandingPage() {
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:gap-16">
+        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
           <FadeIn immediate>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand">
               Commiters FeedbackFlow
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
               Collect better feedback.
-              <span className="block text-brand">Grow Google reviews.</span>
+              <span className="mt-1 block text-brand">Grow Google reviews.</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               QR-powered customer feedback for local businesses — private notes for you, an
@@ -195,14 +255,21 @@ export function LandingPage() {
             </p>
           </FadeIn>
 
-          <FadeIn immediate delay={0.12} className="relative">
-            <div className="absolute -inset-4 rounded-[28px] bg-gradient-to-br from-brand/10 via-transparent to-secondary/10 blur-2xl" />
-            <Card className="relative overflow-hidden p-0" padding="none">
-              <div className="border-b border-border bg-slate-50/80 px-5 py-4">
+          <FadeIn immediate delay={0.1} className="relative">
+            <div
+              className="absolute -inset-6 rounded-[32px] opacity-70 blur-2xl"
+              aria-hidden
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 20%, rgba(15,76,70,0.16), transparent 55%), radial-gradient(circle at 80% 80%, rgba(61,107,102,0.12), transparent 50%)",
+              }}
+            />
+            <Card className="relative overflow-hidden p-0 shadow-[var(--shadow-lg)]" padding="none">
+              <div className="border-b border-border bg-brand-soft/60 px-5 py-4">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#d4a5a5]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#d4c4a5]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#a5c4b5]" />
                   <span className="ml-3 text-xs font-medium text-muted">/r/cafe-edelweiss</span>
                 </div>
               </div>
@@ -214,14 +281,14 @@ export function LandingPage() {
                   <h2 className="mt-2 text-xl font-semibold tracking-tight">
                     How was your experience?
                   </h2>
-                  <p className="mt-2 text-sm text-muted">
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
                     One scan opens a polished mobile page with private feedback and Google review.
                   </p>
                   <div className="mt-5 space-y-2">
                     <div className="rounded-xl bg-brand px-4 py-3 text-center text-sm font-semibold text-white">
                       Leave a Google Review
                     </div>
-                    <div className="rounded-xl border border-border px-4 py-3 text-center text-sm font-medium">
+                    <div className="rounded-xl border border-border bg-white px-4 py-3 text-center text-sm font-medium">
                       Send private feedback
                     </div>
                   </div>
@@ -239,7 +306,7 @@ export function LandingPage() {
                         className={`rounded-[2px] ${
                           [0, 1, 2, 4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 22, 23, 24].includes(i)
                             ? "bg-foreground"
-                            : "bg-slate-200"
+                            : "bg-border"
                         }`}
                       />
                     ))}
@@ -253,21 +320,22 @@ export function LandingPage() {
           </FadeIn>
         </section>
 
-        <section id="features" className="border-t border-border bg-white/60 py-20">
+        <section id="features" className="border-t border-border bg-white py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <FadeIn>
               <p className="text-sm font-semibold text-brand">Features</p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight">Built for real counters</h2>
               <p className="mt-3 max-w-2xl text-muted">
-                Everything you need for Phase 1 pilots — without clutter or review-gating dark patterns.
+                Everything you need for Phase 1 pilots — without clutter or review-gating dark
+                patterns.
               </p>
             </FadeIn>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {features.map((feature, index) => (
-                <FadeIn key={feature.title} delay={index * 0.06}>
+                <FadeIn key={feature.title} delay={index * 0.05}>
                   <Card hover className="h-full">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
-                      {feature.icon}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-sm font-bold text-brand">
+                      {String(index + 1).padStart(2, "0")}
                     </div>
                     <h3 className="mt-4 text-base font-semibold">{feature.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted">{feature.description}</p>
@@ -285,21 +353,8 @@ export function LandingPage() {
               <h2 className="mt-2 text-3xl font-semibold tracking-tight">Why businesses choose it</h2>
             </FadeIn>
             <div className="mt-10 grid gap-4 lg:grid-cols-3">
-              {[
-                {
-                  title: "Protect reputation",
-                  body: "Private feedback catches issues early while Google stays open to everyone.",
-                },
-                {
-                  title: "Look professional",
-                  body: "Customers land on a trustworthy, branded mobile experience — not a form dump.",
-                },
-                {
-                  title: "Operate simply",
-                  body: "Admin tools for businesses, QR export, and feedback logs — no extra apps.",
-                },
-              ].map((item, index) => (
-                <FadeIn key={item.title} delay={index * 0.08}>
+              {benefits.map((item, index) => (
+                <FadeIn key={item.title} delay={index * 0.06}>
                   <Card className="h-full border-l-4 border-l-brand">
                     <h3 className="text-lg font-semibold">{item.title}</h3>
                     <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
@@ -310,7 +365,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="how" className="border-y border-border bg-white/60 py-20">
+        <section id="how" className="border-y border-border bg-white py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <FadeIn>
               <p className="text-sm font-semibold text-brand">How it works</p>
@@ -318,7 +373,7 @@ export function LandingPage() {
             </FadeIn>
             <div className="mt-10 grid gap-4 md:grid-cols-3">
               {steps.map((item, index) => (
-                <FadeIn key={item.step} delay={index * 0.08}>
+                <FadeIn key={item.step} delay={index * 0.06}>
                   <Card className="h-full">
                     <p className="text-xs font-bold tracking-widest text-brand">{item.step}</p>
                     <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
@@ -330,139 +385,51 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <FadeIn>
-              <p className="text-sm font-semibold text-brand">Testimonials</p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight">Trusted by local teams</h2>
-            </FadeIn>
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {testimonials.map((item, index) => (
-                <FadeIn key={item.name} delay={index * 0.08}>
-                  <Card className="h-full">
-                    <p className="text-sm leading-relaxed text-foreground">&ldquo;{item.quote}&rdquo;</p>
-                    <div className="mt-6 flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand">
-                        {item.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <p className="text-xs text-muted">{item.role}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </FadeIn>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="faq" className="border-t border-border bg-white/60 py-20">
-          <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1fr_1.2fr]">
-            <FadeIn>
-              <p className="text-sm font-semibold text-brand">FAQ</p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight">Questions, answered</h2>
-              <p className="mt-3 text-muted">
-                Still unsure? Open admin and try the seeded pilot businesses locally.
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.08}>
-              <Card padding="md">
-                {faqs.map((item) => (
-                  <FaqItem key={item.q} question={item.q} answer={item.a} />
-                ))}
-              </Card>
-            </FadeIn>
-          </div>
-        </section>
+        <FaqSection />
 
         <section className="px-5 py-20 sm:px-8">
           <FadeIn>
-            <Card className="mx-auto max-w-6xl overflow-hidden bg-gradient-to-br from-brand to-brand-dark p-8 text-white sm:p-12">
-              <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-                <div>
-                  <h2 className="text-3xl font-semibold tracking-tight">Ready to launch your pilot?</h2>
-                  <p className="mt-3 max-w-xl text-blue-100">
-                    Sign in to the admin panel, create a business, download your QR, and start collecting feedback today.
-                  </p>
-                </div>
-                <Link href="/admin/login">
-                  <Button
-                    size="lg"
-                    className="bg-white text-brand hover:bg-blue-50 hover:text-brand-dark"
-                  >
-                    Launch admin
-                  </Button>
-                </Link>
+            <div
+              className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 rounded-2xl px-8 py-10 sm:px-12 sm:py-12 lg:flex-row lg:items-center"
+              style={{ background: "var(--brand)", color: "#fff" }}
+            >
+              <div>
+                <h2 className="text-3xl font-semibold tracking-tight text-white">
+                  Ready to launch your pilot?
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-relaxed text-white/85">
+                  Sign in to the admin panel, create a business, download your QR, and start
+                  collecting feedback today.
+                </p>
               </div>
-            </Card>
+              <Link
+                href="/admin/login"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl px-5 py-3 text-base font-semibold transition-colors focus-ring"
+                style={{ background: "#ffffff", color: "var(--brand)" }}
+              >
+                Launch admin
+              </Link>
+            </div>
           </FadeIn>
         </section>
       </main>
 
       <footer className="border-t border-border bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 md:flex-row md:justify-between">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-5 py-10 sm:px-8 sm:py-12">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">
+            F
+          </span>
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">
-                F
-              </span>
-              <span className="font-semibold">FeedbackFlow</span>
-            </div>
-            <p className="mt-3 max-w-sm text-sm text-muted">
-              QR-powered customer feedback by Commiters. Phase 1 MVP for local businesses.
+            <p className="text-base font-semibold tracking-tight text-foreground">
+              FeedbackFlow
             </p>
-          </div>
-          <div className="grid grid-cols-2 gap-8 text-sm sm:grid-cols-3">
-            <div>
-              <p className="font-semibold text-foreground">Product</p>
-              <ul className="mt-3 space-y-2 text-muted">
-                <li>
-                  <a href="#features" className="hover:text-foreground">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#how" className="hover:text-foreground">
-                    How it works
-                  </a>
-                </li>
-                <li>
-                  <Link href="/admin" className="hover:text-foreground">
-                    Admin
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">Resources</p>
-              <ul className="mt-3 space-y-2 text-muted">
-                <li>
-                  <Link href="/api/health" className="hover:text-foreground">
-                    Health check
-                  </Link>
-                </li>
-                <li>
-                  <a href="https://commiters.in" className="hover:text-foreground">
-                    Commiters
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">Compliance</p>
-              <p className="mt-3 text-muted">No review gating. Same Google CTA for every customer.</p>
-            </div>
+            <p className="mt-0.5 text-sm text-muted">Turn every visit into better service.</p>
           </div>
         </div>
         <div className="border-t border-border">
-          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
-            <p>© {new Date().getFullYear()} Commiters FeedbackFlow</p>
-            <p>
-              Powered by{" "}
-              <a href="https://commiters.in" className="font-medium text-brand hover:underline">
-                Commiters
-              </a>
+          <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
+            <p className="text-xs text-muted">
+              © {new Date().getFullYear()} Commiters FeedbackFlow. All rights reserved.
             </p>
           </div>
         </div>

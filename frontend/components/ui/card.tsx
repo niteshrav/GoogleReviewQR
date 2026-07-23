@@ -25,8 +25,8 @@ export function Card({
   return (
     <Tag
       className={cn(
-        "rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] transition-all duration-200",
-        hover && "hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]",
+        "rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] transition-colors duration-200",
+        hover && "hover:border-brand/30 hover:shadow-[var(--shadow-card-hover)]",
         paddingClasses[padding],
         className,
       )}

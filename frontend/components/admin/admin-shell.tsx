@@ -7,8 +7,8 @@ import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-butto
 import { cn } from "@frontend/lib/cn";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard", icon: "◈" },
-  { href: "/admin/businesses", label: "Businesses", icon: "▣" },
+  { href: "/admin", label: "Dashboard" },
+  { href: "/admin/businesses", label: "Businesses" },
 ];
 
 type AdminShellProps = {
@@ -28,7 +28,7 @@ export function AdminShell({ children }: AdminShellProps) {
       {sidebarOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-[2px] lg:hidden"
+          className="fixed inset-0 z-40 bg-foreground/25 lg:hidden"
           aria-label="Close menu"
           onClick={() => setSidebarOpen(false)}
         />
@@ -36,21 +36,17 @@ export function AdminShell({ children }: AdminShellProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-border bg-white transition-transform duration-200 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-white transition-transform duration-200 lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">
-            F
-          </span>
-          <div>
-            <p className="text-sm font-semibold tracking-tight">FeedbackFlow</p>
-            <p className="text-[11px] text-muted">Admin console</p>
-          </div>
+        <div className="flex h-16 items-center border-b border-border px-5">
+          <Link href="/admin" className="text-base font-semibold tracking-tight">
+            FeedbackFlow
+          </Link>
         </div>
 
-        <nav className="flex-1 space-y-1 p-3">
+        <nav className="flex-1 space-y-0.5 p-3">
           {navItems.map((item) => {
             const active =
               item.href === "/admin"
@@ -62,31 +58,30 @@ export function AdminShell({ children }: AdminShellProps) {
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                   active
                     ? "bg-brand-soft text-brand"
-                    : "text-muted hover:bg-slate-50 hover:text-foreground",
+                    : "text-muted hover:bg-background hover:text-foreground",
                 )}
               >
-                <span aria-hidden>{item.icon}</span>
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="border-t border-border p-4">
+        <div className="border-t border-border p-3">
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-muted hover:bg-slate-50 hover:text-foreground"
+            className="flex items-center rounded-xl px-3 py-2 text-sm text-muted hover:bg-background hover:text-foreground"
           >
-            ← Public site
+            Public site
           </Link>
         </div>
       </aside>
 
-      <div className="lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border/80 bg-white/80 px-4 backdrop-blur-md sm:px-6">
+      <div className="lg:pl-64">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-white/90 px-4 backdrop-blur-sm sm:px-6">
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border lg:hidden"
@@ -96,32 +91,14 @@ export function AdminShell({ children }: AdminShellProps) {
             ☰
           </button>
 
-          <div className="relative hidden flex-1 md:block">
-            <p className="text-sm text-muted">
-              {pathname.startsWith("/admin/businesses")
-                ? "Manage pilot businesses & QR codes"
-                : "FeedbackFlow admin"}
-            </p>
-          </div>
+          <p className="hidden text-sm text-muted md:block">
+            {pathname.startsWith("/admin/businesses")
+              ? "Businesses & QR codes"
+              : "Admin"}
+          </p>
 
           <div className="ml-auto flex items-center gap-2">
-            <button
-              type="button"
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted hover:bg-slate-50"
-              aria-label="Notifications"
-              title="Alerts appear by email for low ratings"
-            >
-              🔔
-            </button>
-            <div className="hidden items-center gap-2 rounded-xl border border-border px-2.5 py-1.5 sm:flex">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
-                A
-              </span>
-              <div className="hidden md:block">
-                <p className="text-xs font-semibold">Admin</p>
-                <p className="text-[10px] text-muted">Pilot access</p>
-              </div>
-            </div>
+            <span className="hidden text-sm text-muted sm:inline">Admin</span>
             <AdminLogoutButton />
           </div>
         </header>

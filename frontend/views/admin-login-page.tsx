@@ -26,19 +26,14 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
   const seededCredentials = showSeededHints ? getSeededLoginCredentials() : [];
 
   return (
-    <main className="bg-mesh flex min-h-screen items-center justify-center px-5 py-16">
+    <main className="bg-quiet flex min-h-screen items-center justify-center px-5 py-16">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-lg font-bold text-white shadow-md shadow-blue-200">
-            F
-          </div>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-brand">
-            Admin login
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Welcome back</h1>
+        <div className="mb-8">
+          <p className="text-2xl font-semibold tracking-tight text-foreground">FeedbackFlow</p>
+          <h1 className="mt-6 text-xl font-semibold tracking-tight">Admin login</h1>
           <p className="mt-2 text-sm text-muted">
-            Enter the admin secret configured in your environment
-            {showSeededHints ? ", or use a seeded example credential below" : ""}.
+            Enter the admin secret from your environment
+            {showSeededHints ? ", or use a seeded credential below" : ""}.
           </p>
         </div>
 

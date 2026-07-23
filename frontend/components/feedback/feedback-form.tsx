@@ -151,7 +151,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         <GoogleReviewButton
           businessSlug={businessSlug}
           googleReviewUrl={googleReviewUrl}
-          className="customer-cta block rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-slate-50 active:bg-slate-100"
+          className="customer-cta block rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-background active:bg-brand-soft"
           label="Share your experience on Google"
         />
       </div>
