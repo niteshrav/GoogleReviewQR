@@ -22,7 +22,7 @@ describe("getHealthStatus", () => {
 
     expect(response.status).toBe(200);
     expect(body.status).toBe("ok");
-    expect(body.service).toBe("feedbackflow");
+    expect(body.service).toBe("trusttap");
   });
 
   it("returns degraded when database fails", async () => {

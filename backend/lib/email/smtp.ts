@@ -50,7 +50,7 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     lines.push("", `WhatsApp: ${payload.whatsAppLink}`);
   }
 
-  lines.push("", "---", "Powered by Commiters FeedbackFlow");
+  lines.push("", "---", "Powered by Commiters TrustTap");
 
   await transport.sendMail({
     from: env.SMTP_FROM,
@@ -68,7 +68,7 @@ export function buildWhatsAppLink(
 ): string {
   const digits = ownerWhatsApp.replace(/\D/g, "");
   const text = [
-    `FeedbackFlow alert — ${businessName}`,
+    `TrustTap alert — ${businessName}`,
     `Rating: ${rating}/5`,
     comment?.trim() ? `Comment: ${comment.trim()}` : "Comment: No comment",
   ].join("\n");

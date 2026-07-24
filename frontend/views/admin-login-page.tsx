@@ -29,7 +29,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
     <main className="bg-quiet flex min-h-screen items-center justify-center px-5 py-16">
       <div className="w-full max-w-md">
         <div className="mb-8">
-          <p className="text-2xl font-semibold tracking-tight text-foreground">FeedbackFlow</p>
+          <p className="text-2xl font-semibold tracking-tight text-foreground">TrustTap</p>
           <h1 className="mt-6 text-xl font-semibold tracking-tight">Admin login</h1>
           <p className="mt-2 text-sm text-muted">
             Enter the admin secret from your environment

@@ -60,7 +60,7 @@ const benefits = [
 
 const faqs = [
   {
-    q: "Does FeedbackFlow gate Google reviews by rating?",
+    q: "Does TrustTap gate Google reviews by rating?",
     a: "No. Every customer always sees the same Google review option. Private feedback is separate.",
   },
   {
@@ -162,10 +162,10 @@ export function LandingPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white shadow-sm">
-              F
+              T
             </span>
             <span className="text-sm font-semibold tracking-tight text-foreground">
-              FeedbackFlow
+              TrustTap
             </span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
@@ -228,7 +228,7 @@ export function LandingPage() {
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
           <FadeIn immediate>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand">
-              Commiters FeedbackFlow
+              Commiters TrustTap
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
               Collect better feedback.
@@ -417,11 +417,11 @@ export function LandingPage() {
       <footer className="border-t border-border bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-5 py-10 sm:px-8 sm:py-12">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">
-            F
+            T
           </span>
           <div>
             <p className="text-base font-semibold tracking-tight text-foreground">
-              FeedbackFlow
+              TrustTap
             </p>
             <p className="mt-0.5 text-sm text-muted">Turn every visit into better service.</p>
           </div>
@@ -429,7 +429,7 @@ export function LandingPage() {
         <div className="border-t border-border">
           <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
             <p className="text-xs text-muted">
-              © {new Date().getFullYear()} Commiters FeedbackFlow. All rights reserved.
+              © {new Date().getFullYear()} Commiters TrustTap. All rights reserved.
             </p>
           </div>
         </div>

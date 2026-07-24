@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Commiters FeedbackFlow",
+  title: "TrustTap",
   description:
     "QR-powered customer feedback that helps local businesses improve service and make Google reviews easy.",
   metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),

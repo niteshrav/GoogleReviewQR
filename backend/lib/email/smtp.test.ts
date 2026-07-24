@@ -14,7 +14,7 @@ vi.mock("@backend/lib/env", () => ({
     SMTP_PORT: 587,
     SMTP_USER: "noreply@commiters.in",
     SMTP_PASS: "secret",
-    SMTP_FROM: "FeedbackFlow <noreply@commiters.in>",
+    SMTP_FROM: "TrustTap <noreply@commiters.in>",
   })),
 }));
 

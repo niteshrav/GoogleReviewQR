@@ -1,4 +1,4 @@
-# Commiters FeedbackFlow
+# TrustTap
 
 QR-powered customer feedback for local businesses. **Phase 1 MVP — ready for testing deploy.**
 

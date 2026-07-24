@@ -42,7 +42,7 @@ export function AdminShell({ children }: AdminShellProps) {
       >
         <div className="flex h-16 items-center border-b border-border px-5">
           <Link href="/admin" className="text-base font-semibold tracking-tight">
-            FeedbackFlow
+            TrustTap
           </Link>
         </div>
 
