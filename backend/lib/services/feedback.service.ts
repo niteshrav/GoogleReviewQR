@@ -1,16 +1,16 @@
 import type { BusinessRepository } from "@database/repositories/business.repository";
 import type { FeedbackRepository } from "@database/repositories/feedback.repository";
 import { shouldTriggerAlert } from "@backend/lib/alerts/should-trigger-alert";
-import { buildWhatsAppLink, sendLowRatingAlert } from "@backend/lib/email/smtp";
+import { sendOwnerAlert } from "@backend/lib/alerts/send-owner-alert";
 
 type FeedbackServiceDeps = {
   businessRepository: BusinessRepository;
   feedbackRepository: FeedbackRepository;
-  sendAlert?: typeof sendLowRatingAlert;
+  sendOwnerAlertFn?: typeof sendOwnerAlert;
 };
 
 export function createFeedbackService(deps: FeedbackServiceDeps) {
-  const sendAlert = deps.sendAlert ?? sendLowRatingAlert;
+  const deliverOwnerAlert = deps.sendOwnerAlertFn ?? sendOwnerAlert;
 
   return {
     async submitPrivateFeedback(input: {
@@ -30,27 +30,22 @@ export function createFeedbackService(deps: FeedbackServiceDeps) {
       });
 
       if (shouldTriggerAlert(input.rating)) {
-        const whatsAppLink = business.ownerWhatsApp
-          ? buildWhatsAppLink(
-              business.ownerWhatsApp,
-              business.name,
-              input.rating,
-              input.comment,
-            )
-          : null;
-
         try {
-          await sendAlert({
-            to: business.ownerEmail,
+          const result = await deliverOwnerAlert({
+            ownerEmail: business.ownerEmail,
+            ownerWhatsApp: business.ownerWhatsApp,
+            ownerSmsPhone: business.ownerSmsPhone ?? null,
             businessName: business.name,
             rating: input.rating,
             comment: input.comment,
             timestamp: feedback.createdAt,
-            whatsAppLink,
           });
-          await deps.feedbackRepository.markAlertSent(feedback.id);
+
+          if (result.phoneDelivered || result.emailDelivered) {
+            await deps.feedbackRepository.markAlertSent(feedback.id);
+          }
         } catch (error) {
-          console.error("Failed to send low-rating alert", error);
+          console.error("Failed to send owner alert", error);
         }
       }
 

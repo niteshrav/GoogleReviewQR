@@ -15,6 +15,11 @@ const envSchema = z.object({
   RATE_LIMIT_FEEDBACK_MAX: z.coerce.number().int().positive().default(10),
   RATE_LIMIT_FEEDBACK_WINDOW_SECONDS: z.coerce.number().int().positive().default(3600),
   COMMENT_MAX_CHARS: z.coerce.number().int().positive().max(5000).default(1000),
+  ALERT_PHONE_MODE: z.enum(["log", "twilio"]).default("log"),
+  TWILIO_ACCOUNT_SID: z.string().optional(),
+  TWILIO_AUTH_TOKEN: z.string().optional(),
+  TWILIO_SMS_FROM: z.string().optional(),
+  TWILIO_WHATSAPP_FROM: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

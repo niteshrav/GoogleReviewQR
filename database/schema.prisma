@@ -13,6 +13,7 @@ model Business {
   name            String
   ownerEmail      String
   ownerWhatsApp   String?
+  ownerSmsPhone   String?
   googleReviewUrl String
   isActive        Boolean    @default(true)
   createdAt       DateTime   @default(now())

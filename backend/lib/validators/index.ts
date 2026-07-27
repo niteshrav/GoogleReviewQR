@@ -3,6 +3,13 @@ import { z } from "zod";
 const GOOGLE_REVIEW_URL_PATTERN =
   /^https:\/\/(search\.google\.com\/local\/writereview|g\.page\/r\/[^/]+\/review|maps\.google\.com\/)/;
 
+const phoneFieldSchema = z
+  .string()
+  .trim()
+  .regex(/^\+?[1-9]\d{7,14}$/, "Phone number must be E.164-ish digits")
+  .optional()
+  .or(z.literal(""));
+
 export const slugSchema = z
   .string()
   .trim()
@@ -19,19 +26,20 @@ export const googleReviewUrlSchema = z
     "Must be a valid Google review URL",
   );
 
-export const businessInputSchema = z.object({
-  name: z.string().trim().min(2).max(120),
-  slug: slugSchema,
-  ownerEmail: z.string().trim().email(),
-  ownerWhatsApp: z
-    .string()
-    .trim()
-    .regex(/^\+?[1-9]\d{7,14}$/, "WhatsApp number must be E.164-ish digits")
-    .optional()
-    .or(z.literal("")),
-  googleReviewUrl: googleReviewUrlSchema,
-  isActive: z.boolean().optional(),
-});
+export const businessInputSchema = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    slug: slugSchema,
+    ownerEmail: z.string().trim().email(),
+    ownerWhatsApp: phoneFieldSchema,
+    ownerSmsPhone: phoneFieldSchema,
+    googleReviewUrl: googleReviewUrlSchema,
+    isActive: z.boolean().optional(),
+  })
+  .refine((data) => Boolean(data.ownerWhatsApp?.trim() || data.ownerSmsPhone?.trim()), {
+    message: "Provide owner WhatsApp or SMS phone for automated alerts",
+    path: ["ownerWhatsApp"],
+  });
 
 export const feedbackInputSchema = z.object({
   businessSlug: slugSchema,

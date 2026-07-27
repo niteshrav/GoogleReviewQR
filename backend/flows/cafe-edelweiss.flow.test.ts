@@ -4,17 +4,12 @@ import { runCafeEdelweissFlow } from "@backend/flows/cafe-edelweiss.flow";
 
 /**
  * TDD — Cafe Edelweiss complete seeded flow
- *
- * Scenario (pilot seed):
- *   Customer scans QR → /r/cafe-edelweiss
- *   → taps Google review (logged)
- *   → submits private 2★ feedback with comment
- *   → owner gets email alert (+ WhatsApp deep link)
- *   → admin sees both events in feedback log
- *   → Google CTA never gated by rating
  */
 describe("Cafe Edelweiss complete seeded flow", () => {
-  const sendAlert = vi.fn().mockResolvedValue(undefined);
+  const sendOwnerAlertFn = vi.fn().mockResolvedValue({
+    phoneDelivered: true,
+    emailDelivered: true,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,10 +22,9 @@ describe("Cafe Edelweiss complete seeded flow", () => {
         rating: 2,
         comment: "Coffee was good but service was slow",
       },
-      sendAlert,
+      sendOwnerAlertFn,
     });
 
-    // 1. Landing resolves active seeded business
     expect(result.business).toMatchObject({
       slug: "cafe-edelweiss",
       name: "Cafe Edelweiss",
@@ -40,28 +34,25 @@ describe("Cafe Edelweiss complete seeded flow", () => {
     });
     expect(result.googleReviewUrl).toContain("writereview?placeid=");
 
-    // 2. Google click logged without rating/alert payload of its own
     expect(result.googleClick.feedbackId).toBeTruthy();
     expect(result.googleClick.clickedGoogle).toBe(true);
     expect(result.googleClick.rating).toBeNull();
 
-    // 3. Private low rating triggers exactly one owner alert (Google click does not)
     expect(result.privateFeedback.feedbackId).toBeTruthy();
     expect(result.privateFeedback.rating).toBe(2);
     expect(result.privateFeedback.comment).toBe("Coffee was good but service was slow");
     expect(result.privateFeedback.alertSentAt).toBeInstanceOf(Date);
-    expect(sendAlert).toHaveBeenCalledTimes(1);
-    expect(sendAlert).toHaveBeenCalledWith(
+    expect(sendOwnerAlertFn).toHaveBeenCalledTimes(1);
+    expect(sendOwnerAlertFn).toHaveBeenCalledWith(
       expect.objectContaining({
-        to: "owner@example.com",
+        ownerEmail: "owner@example.com",
+        ownerWhatsApp: "+919876543210",
         businessName: "Cafe Edelweiss",
         rating: 2,
         comment: "Coffee was good but service was slow",
-        whatsAppLink: expect.stringContaining("https://wa.me/919876543210"),
       }),
     );
 
-    // 4. Admin feedback log shows Google click + private feedback (newest first)
     expect(result.adminLog).toHaveLength(2);
     expect(result.adminLog[0]).toMatchObject({
       rating: 2,
@@ -73,7 +64,6 @@ describe("Cafe Edelweiss complete seeded flow", () => {
       clickedGoogle: true,
     });
 
-    // 5. Compliance: Google CTA still offered after low rating (no gating)
     expect(result.googleCtaAlwaysVisible).toBe(true);
   });
 
@@ -84,13 +74,13 @@ describe("Cafe Edelweiss complete seeded flow", () => {
         rating: 5,
         comment: "Loved it",
       },
-      sendAlert,
+      sendOwnerAlertFn,
       skipGoogleClick: true,
     });
 
     expect(result.privateFeedback.rating).toBe(5);
     expect(result.privateFeedback.alertSentAt).toBeNull();
-    expect(sendAlert).not.toHaveBeenCalled();
+    expect(sendOwnerAlertFn).not.toHaveBeenCalled();
     expect(result.googleCtaAlwaysVisible).toBe(true);
   });
 });

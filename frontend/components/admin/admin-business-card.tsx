@@ -14,6 +14,7 @@ type AdminBusinessCardProps = {
     slug: string;
     ownerEmail: string;
     ownerWhatsApp: string | null;
+    ownerSmsPhone: string | null;
     googleReviewUrl: string;
     isActive: boolean;
   };
@@ -76,6 +77,7 @@ export function AdminBusinessCard({ business }: AdminBusinessCardProps) {
             slug: business.slug,
             ownerEmail: business.ownerEmail,
             ownerWhatsApp: business.ownerWhatsApp ?? "",
+            ownerSmsPhone: business.ownerSmsPhone ?? "",
             googleReviewUrl: business.googleReviewUrl,
           }}
           onSuccess={() => setEditing(false)}

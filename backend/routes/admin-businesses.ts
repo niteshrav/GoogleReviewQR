@@ -16,6 +16,12 @@ const updateBusinessSchema = z
       .regex(/^\+?[1-9]\d{7,14}$/, "WhatsApp number must be E.164-ish digits")
       .optional()
       .or(z.literal("")),
+    ownerSmsPhone: z
+      .string()
+      .trim()
+      .regex(/^\+?[1-9]\d{7,14}$/, "SMS phone must be E.164-ish digits")
+      .optional()
+      .or(z.literal("")),
     googleReviewUrl: googleReviewUrlSchema.optional(),
     isActive: z.boolean().optional(),
   })

@@ -1,7 +1,7 @@
 import { createBusinessService } from "@backend/lib/services/business.service";
 import { createFeedbackService } from "@backend/lib/services/feedback.service";
 import type { PilotBusinessSeed } from "@backend/lib/fixtures/pilot-businesses";
-import type { sendLowRatingAlert } from "@backend/lib/email/smtp";
+import type { sendOwnerAlert } from "@backend/lib/alerts/send-owner-alert";
 import { DuplicateSlugError, BusinessNotFoundError } from "@database/errors";
 import type { CreateBusinessInput, UpdateBusinessInput } from "@database/types";
 import type { CreateFeedbackInput, ListFeedbackOptions } from "@database/types";
@@ -44,6 +44,7 @@ function createInMemoryBusinessRepository(seed: PilotBusinessSeed) {
         id: `biz-${businesses.length + 1}`,
         ...data,
         ownerWhatsApp: data.ownerWhatsApp || null,
+        ownerSmsPhone: data.ownerSmsPhone || null,
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -137,7 +138,7 @@ export type CafeEdelweissFlowInput = {
     rating: number;
     comment?: string | null;
   };
-  sendAlert: typeof sendLowRatingAlert;
+  sendOwnerAlertFn: typeof sendOwnerAlert;
   skipGoogleClick?: boolean;
 };
 
@@ -152,7 +153,7 @@ export async function runCafeEdelweissFlow(input: CafeEdelweissFlowInput) {
   const feedbackService = createFeedbackService({
     businessRepository: businessRepository as never,
     feedbackRepository: feedbackRepository as never,
-    sendAlert: input.sendAlert,
+    sendOwnerAlertFn: input.sendOwnerAlertFn,
   });
 
   const business = await businessService.getActiveBusinessBySlug(input.seed.slug);

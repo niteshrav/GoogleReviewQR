@@ -44,7 +44,9 @@ describe("businessRepository", () => {
     const result = await repository.create(input);
 
     expect(result.slug).toBe("cafe-edelweiss");
-    expect(prisma.business.create).toHaveBeenCalledWith({ data: input });
+    expect(prisma.business.create).toHaveBeenCalledWith({
+      data: { ...input, ownerSmsPhone: null },
+    });
   });
 
   it("throws DuplicateSlugError when slug already exists", async () => {

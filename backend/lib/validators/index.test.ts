@@ -4,6 +4,7 @@ import {
   googleClickInputSchema,
   googleReviewUrlSchema,
   slugSchema,
+  businessInputSchema,
 } from "@backend/lib/validators";
 
 describe("slugSchema", () => {
@@ -55,5 +56,30 @@ describe("googleClickInputSchema", () => {
         businessSlug: "jmb-cafe",
       }).businessSlug,
     ).toBe("jmb-cafe");
+  });
+});
+
+describe("businessInputSchema", () => {
+  it("requires at least one owner phone for alerts", () => {
+    const result = businessInputSchema.safeParse({
+      name: "Cafe",
+      slug: "cafe-edelweiss",
+      ownerEmail: "owner@example.com",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts WhatsApp-only contact", () => {
+    const parsed = businessInputSchema.parse({
+      name: "Cafe",
+      slug: "cafe-edelweiss",
+      ownerEmail: "owner@example.com",
+      ownerWhatsApp: "+919876543210",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+    });
+
+    expect(parsed.ownerWhatsApp).toBe("+919876543210");
   });
 });

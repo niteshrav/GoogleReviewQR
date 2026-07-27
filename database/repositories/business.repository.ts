@@ -11,6 +11,7 @@ export function createBusinessRepository(prisma: PrismaClient) {
           data: {
             ...data,
             ownerWhatsApp: data.ownerWhatsApp || null,
+            ownerSmsPhone: data.ownerSmsPhone || null,
           },
         });
       } catch (error) {
@@ -56,6 +57,8 @@ export function createBusinessRepository(prisma: PrismaClient) {
           ...data,
           ownerWhatsApp:
             data.ownerWhatsApp === undefined ? undefined : data.ownerWhatsApp || null,
+          ownerSmsPhone:
+            data.ownerSmsPhone === undefined ? undefined : data.ownerSmsPhone || null,
         },
       });
     },

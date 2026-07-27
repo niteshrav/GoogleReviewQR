@@ -13,6 +13,7 @@ type BusinessFormProps = {
     slug?: string;
     ownerEmail?: string;
     ownerWhatsApp?: string;
+    ownerSmsPhone?: string;
     googleReviewUrl?: string;
   };
   onSuccess?: () => void;
@@ -26,6 +27,7 @@ export function BusinessForm({ initialValues, onSuccess }: BusinessFormProps) {
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [ownerEmail, setOwnerEmail] = useState(initialValues?.ownerEmail ?? "");
   const [ownerWhatsApp, setOwnerWhatsApp] = useState(initialValues?.ownerWhatsApp ?? "");
+  const [ownerSmsPhone, setOwnerSmsPhone] = useState(initialValues?.ownerSmsPhone ?? "");
   const [googleReviewUrl, setGoogleReviewUrl] = useState(initialValues?.googleReviewUrl ?? "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,7 @@ export function BusinessForm({ initialValues, onSuccess }: BusinessFormProps) {
       slug,
       ownerEmail,
       ownerWhatsApp,
+      ownerSmsPhone,
       googleReviewUrl,
     };
 
@@ -66,6 +69,7 @@ export function BusinessForm({ initialValues, onSuccess }: BusinessFormProps) {
       setSlug("");
       setOwnerEmail("");
       setOwnerWhatsApp("");
+      setOwnerSmsPhone("");
       setGoogleReviewUrl("");
     }
     setLoading(false);
@@ -108,10 +112,20 @@ export function BusinessForm({ initialValues, onSuccess }: BusinessFormProps) {
 
       <Input
         id="ownerWhatsApp"
-        label="Owner WhatsApp (optional)"
+        label="Owner WhatsApp"
         value={ownerWhatsApp}
         onChange={(event) => setOwnerWhatsApp(event.target.value)}
         placeholder="+919876543210"
+        hint="For automated WhatsApp alerts (E.164). Provide WhatsApp or SMS phone."
+      />
+
+      <Input
+        id="ownerSmsPhone"
+        label="Owner SMS phone"
+        value={ownerSmsPhone}
+        onChange={(event) => setOwnerSmsPhone(event.target.value)}
+        placeholder="+919876543210"
+        hint="SMS fallback if WhatsApp fails. At least one phone number is required."
       />
 
       <Input

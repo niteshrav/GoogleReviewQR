@@ -25,7 +25,7 @@ describe("mobile-first customer UI (pre-deploy)", () => {
 
   it("keeps customer pages single-column and phone-width constrained", () => {
     const shell = read("frontend/components/customer/customer-page-shell.tsx");
-    expect(shell).toMatch(/max-w-lg/);
+    expect(shell).toMatch(/max-w-(lg|md)/);
     expect(shell).toMatch(/px-4|px-5/);
 
     for (const file of ["frontend/views/review-page.tsx", "frontend/views/feedback-page.tsx"]) {

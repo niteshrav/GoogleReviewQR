@@ -10,6 +10,7 @@ export function createBusinessService(repository: BusinessRepository) {
         slug: input.slug,
         ownerEmail: input.ownerEmail,
         ownerWhatsApp: input.ownerWhatsApp || null,
+        ownerSmsPhone: input.ownerSmsPhone || null,
         googleReviewUrl: input.googleReviewUrl,
       });
     },

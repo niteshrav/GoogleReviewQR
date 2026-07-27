@@ -7,7 +7,6 @@ export type AlertEmailPayload = {
   rating: number;
   comment?: string | null;
   timestamp: Date;
-  whatsAppLink?: string | null;
 };
 
 let transporter: nodemailer.Transporter | null = null;
@@ -38,19 +37,18 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
 
   const subject = `Low feedback — ${payload.businessName} — ${payload.rating}/5`;
   const lines = [
-    "New private feedback received",
+    "New private feedback received (email backup)",
     "",
     `Business: ${payload.businessName}`,
     `Rating: ${payload.rating}/5`,
     `Comment: ${payload.comment?.trim() ? payload.comment.trim() : "No comment"}`,
     `Time: ${payload.timestamp.toISOString()}`,
+    "",
+    "Primary alert channel: automated WhatsApp or SMS to the owner phone.",
+    "",
+    "---",
+    "Powered by Commiters TrustTap",
   ];
-
-  if (payload.whatsAppLink) {
-    lines.push("", `WhatsApp: ${payload.whatsAppLink}`);
-  }
-
-  lines.push("", "---", "Powered by Commiters TrustTap");
 
   await transport.sendMail({
     from: env.SMTP_FROM,
@@ -58,20 +56,4 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     subject,
     text: lines.join("\n"),
   });
-}
-
-export function buildWhatsAppLink(
-  ownerWhatsApp: string,
-  businessName: string,
-  rating: number,
-  comment?: string | null,
-): string {
-  const digits = ownerWhatsApp.replace(/\D/g, "");
-  const text = [
-    `TrustTap alert — ${businessName}`,
-    `Rating: ${rating}/5`,
-    comment?.trim() ? `Comment: ${comment.trim()}` : "Comment: No comment",
-  ].join("\n");
-
-  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
 }

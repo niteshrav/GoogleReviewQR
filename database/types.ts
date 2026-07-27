@@ -3,6 +3,7 @@ export type CreateBusinessInput = {
   slug: string;
   ownerEmail: string;
   ownerWhatsApp?: string | null;
+  ownerSmsPhone?: string | null;
   googleReviewUrl: string;
 };
 
@@ -10,6 +11,7 @@ export type UpdateBusinessInput = {
   name?: string;
   ownerEmail?: string;
   ownerWhatsApp?: string | null;
+  ownerSmsPhone?: string | null;
   googleReviewUrl?: string;
   isActive?: boolean;
 };

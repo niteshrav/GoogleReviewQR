@@ -53,6 +53,7 @@ export default async function AdminBusinessesPage() {
           slug: business.slug,
           ownerEmail: business.ownerEmail,
           ownerWhatsApp: business.ownerWhatsApp,
+          ownerSmsPhone: business.ownerSmsPhone,
           googleReviewUrl: business.googleReviewUrl,
           isActive: business.isActive,
         }))}

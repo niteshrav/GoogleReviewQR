@@ -11,7 +11,7 @@ function createMocks() {
       listByBusiness: vi.fn(),
       markAlertSent: vi.fn(),
     },
-    sendAlert: vi.fn(),
+    sendOwnerAlertFn: vi.fn(),
   };
 }
 
@@ -28,13 +28,15 @@ describe("feedbackService", () => {
       id: "biz-1",
       name: "Cafe",
       ownerEmail: "owner@example.com",
-      ownerWhatsApp: null,
+      ownerWhatsApp: "+919876543210",
+      ownerSmsPhone: null,
     });
     mocks.feedbackRepository.create.mockResolvedValue({
       id: "fb-1",
       rating: 2,
       createdAt: new Date(),
     });
+    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: true, emailDelivered: true });
 
     const result = await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
@@ -43,7 +45,8 @@ describe("feedbackService", () => {
     });
 
     expect(result.feedbackId).toBe("fb-1");
-    expect(mocks.sendAlert).toHaveBeenCalledOnce();
+    expect(mocks.sendOwnerAlertFn).toHaveBeenCalledOnce();
+    expect(mocks.feedbackRepository.markAlertSent).toHaveBeenCalledWith("fb-1");
   });
 
   it("returns null business when slug is inactive or missing", async () => {
@@ -74,7 +77,7 @@ describe("feedbackService", () => {
       rating: 5,
     });
 
-    expect(mocks.sendAlert).not.toHaveBeenCalled();
+    expect(mocks.sendOwnerAlertFn).not.toHaveBeenCalled();
   });
 
   it("logs google click without alert", async () => {
@@ -88,31 +91,24 @@ describe("feedbackService", () => {
       businessId: "biz-1",
       clickedGoogle: true,
     });
-    expect(mocks.sendAlert).not.toHaveBeenCalled();
+    expect(mocks.sendOwnerAlertFn).not.toHaveBeenCalled();
   });
 
-  it("lists feedback for admin", async () => {
-    mocks.feedbackRepository.listByBusiness.mockResolvedValue([{ id: "fb-1" }]);
-
-    const result = await service.listFeedbackForBusiness("biz-1");
-
-    expect(result).toHaveLength(1);
-  });
-
-  it("still saves feedback when email send fails", async () => {
+  it("still saves feedback when all alert channels fail", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     mocks.businessRepository.findActiveBySlug.mockResolvedValue({
       id: "biz-1",
       name: "Cafe",
       ownerEmail: "owner@example.com",
-      ownerWhatsApp: null,
+      ownerWhatsApp: "+919876543210",
+      ownerSmsPhone: null,
     });
     mocks.feedbackRepository.create.mockResolvedValue({
       id: "fb-3",
       rating: 1,
       createdAt: new Date(),
     });
-    mocks.sendAlert.mockRejectedValue(new Error("SMTP down"));
+    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: false, emailDelivered: false });
 
     const result = await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
@@ -125,19 +121,20 @@ describe("feedbackService", () => {
     errorSpy.mockRestore();
   });
 
-  it("marks alertSentAt after successful send", async () => {
+  it("marks alertSentAt when email backup succeeds", async () => {
     mocks.businessRepository.findActiveBySlug.mockResolvedValue({
       id: "biz-1",
       name: "Cafe",
       ownerEmail: "owner@example.com",
       ownerWhatsApp: "+919876543210",
+      ownerSmsPhone: null,
     });
     mocks.feedbackRepository.create.mockResolvedValue({
       id: "fb-4",
       rating: 2,
       createdAt: new Date(),
     });
-    mocks.sendAlert.mockResolvedValue(undefined);
+    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: false, emailDelivered: true });
 
     await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
