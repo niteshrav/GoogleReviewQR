@@ -1,9 +1,9 @@
 # Phase 1 MVP — Implementation Document (TDD)
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Phase:** 1 — Pilot MVP  
-**Version:** 1.0  
-**Last updated:** July 20, 2026  
+**Version:** 1.1  
+**Last updated:** July 26, 2026  
 **Methodology:** Test-Driven Development (Red → Green → Refactor)  
 **Related documents:** [PHASE_1_ARCHITECTURE.md](./PHASE_1_ARCHITECTURE.md) · [PHASE_1_USE_CASES.md](./PHASE_1_USE_CASES.md) · [PHASE_1_USER_STORIES.md](./PHASE_1_USER_STORIES.md) · [PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)
 
@@ -67,7 +67,7 @@ npm run dev           # manual smoke test
 | **1.1** | Admin business CRUD | 1 day | ✅ Done | UC-06, UC-07, UC-08 |
 | **1.2** | Feedback form UI + API hardening | 1 day | ✅ Done | UC-03 |
 | **1.3** | Google click logging (frontend wire-up) | 0.5 day | ✅ Done | UC-02 |
-| **1.4** | Email alerts + idempotency tests | 0.5 day | ✅ Done | UC-04 |
+| **1.4** | Phone alerts (WA/SMS) + email backup + idempotency | 1 day | 🔲 Required | UC-04 |
 | **1.5** | Admin feedback log + QR export | 1 day | ✅ Done | UC-09, UC-10 |
 | **1.6** | Compliance tests + deploy | 1 day | 🟡 Code done — production cutover pending credentials | UC-11, all COMP-* |
 | **Beta** | 30-day pilot | 30 days | 🔲 Ready to start after deploy | All |
@@ -287,69 +287,55 @@ describe("logGoogleClick", () => {
 
 ---
 
-## 8. Phase 1.4 — Email Alerts + Idempotency
+## 8. Phase 1.4 — Phone Alerts (WhatsApp/SMS) + Email Backup
 
-**Goal:** Owners receive reliable email alerts for low ratings.  
+**Goal:** Owners receive **automated phone alerts** for low ratings; email is backup only.  
 **Use cases:** UC-04  
-**User stories:** US-C1 – US-C4
+**User stories:** US-C1 – US-C5
+
+### Explicit non-goals
+- Manual staff WhatsApp relay / dashboard babysitting
+- Email-only as Phase 1 done criteria
+- `wa.me` link inside email as the sole phone strategy
 
 ### 8.1 Tests to write first (Red)
 
-Create `backend/lib/email/smtp.integration.test.ts`:
-
-```typescript
-describe("sendLowRatingAlert", () => {
-  it("sends email with correct subject and body");
-  it("includes wa.me link when ownerWhatsApp set");
-  it("omits wa.me link when ownerWhatsApp absent");
-});
-```
-
-Extend `backend/routes/feedback.test.ts`:
-
-```typescript
-describe("alert idempotency", () => {
-  it("sets alertSentAt after successful send");
-  it("does not send duplicate alert if alertSentAt already set");
-  it("does not fail feedback submission if email send fails");
-});
-```
-
-Create `backend/lib/alerts/should-trigger-alert.test.ts`:
-
-```typescript
-describe("shouldTriggerAlert", () => {
-  it("returns true for rating 1, 2, 3");
-  it("returns false for rating 4, 5");
-});
-```
+- Phone provider client sends expected payload for ≤3★
+- SMS fallback when WhatsApp fails (if both configured)
+- Email backup always attempted
+- Idempotent `alertSentAt`
+- Feedback still saved if all channels fail
+- Google-only click does not alert
+- `shouldTriggerAlert` true for 1–3, false for 4–5
 
 ### 8.2 Implementation (Green)
 
 | File | Action |
 |------|--------|
-| `backend/lib/alerts/should-trigger-alert.ts` | **Create** — `rating <= 3` logic |
-| `backend/routes/feedback.ts` | **Update** — use shouldTriggerAlert + idempotent alertSentAt |
-| `backend/lib/email/smtp.ts` | **Verify** — existing implementation meets tests |
+| `backend/lib/phone/*` | **Create** — WhatsApp Business API and/or SMS client |
+| `backend/lib/alerts/send-owner-alert.ts` | **Create** — orchestrate phone primary + email secondary |
+| `backend/lib/alerts/should-trigger-alert.ts` | Keep / verify `rating <= 3` |
+| `backend/lib/email/smtp.ts` | Keep as **backup** channel |
+| Env | Add `WHATSAPP_*` and/or `SMS_*` credentials |
 
 ### 8.3 Refactor
 
-- Extract alert orchestration to `backend/lib/alerts/send-owner-alert.ts`.
+- Single orchestrator used by feedback service; providers mocked in unit tests
 
 ### 8.4 Acceptance criteria
 
-- [ ] Rating ≤ 3 triggers email within ~60 seconds (pilot SLA).
-- [ ] Email contains business name, rating, comment, timestamp.
-- [ ] wa.me link included when WhatsApp number configured.
-- [ ] No duplicate alerts for same feedback ID.
-- [ ] Feedback still saved if SMTP fails.
-- [ ] All tests pass.
+- [ ] Rating ≤ 3 triggers WhatsApp **or** SMS within ~60 seconds
+- [ ] Email backup sent
+- [ ] No duplicate alerts for same feedback ID
+- [ ] Feedback saved if alert providers fail
+- [ ] No human relay required
+- [ ] All tests pass
 
 ### 8.5 Manual smoke test
 
-1. Configure real SMTP in `.env`.
-2. Submit 2-star feedback for test business with your email as owner.
-3. Confirm email received with correct content.
+1. Configure real WA or SMS + SMTP.
+2. Submit 2★ feedback for a pilot business.
+3. Confirm phone notification on owner device; confirm email backup.
 
 ---
 
@@ -471,8 +457,10 @@ describe("getHealthStatus", () => {
 - [ ] `GET /api/health` returns `{ status: "ok" }` *(production)*
 - [ ] Admin login works on production
 - [ ] Test QR scan on real mobile device
-- [ ] Test email alert on production SMTP
-- [ ] Seed 3 pilot businesses with real Place IDs: `npm run db:seed`
+- [ ] Test phone alert (WhatsApp or SMS) on owner device
+- [ ] Test email backup on production SMTP
+- [ ] Seed 3 pilot businesses with real Place IDs + phone numbers: `npm run db:seed`
+- [ ] Print laminated QR boards **with merchant business name**
 
 ### 10.4 Acceptance criteria
 
@@ -491,7 +479,7 @@ See [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) for the full cutover runbook.
 | Week | Activity |
 |------|----------|
 | Week 1 | Install laminated QRs at 3 cafés; verify scans work |
-| Week 2 | Check email alerts with owners; fix any SMTP/URL issues |
+| Week 2 | Verify WhatsApp/SMS alerts with owners; fix provider/URL issues |
 | Week 3 | Collect owner feedback; document 1 "caught issue" story |
 | Week 4 | Review metrics: scans, feedback count, Google clicks |
 
@@ -536,9 +524,12 @@ Phase 1 is **done** when ALL of the following are true:
 - [ ] 3 pilot businesses seeded with correct Google URLs
 - [ ] QR codes printed and installed at 3 Udaipur cafés *(Beta Week 1)*
 - [x] Compliance tests pass (no gating logic)
-- [ ] Owner email alert verified end-to-end on production
-- [x] No PII collected from customers (form: rating + comment only)
+- [ ] Owner **phone** alert (WhatsApp or SMS) verified end-to-end on production
+- [ ] Email backup verified
+- [ ] Physical QR boards printed with merchant names
+- [ ] No PII collected from customers (form: rating + comment only)
 - [ ] Product owner sign-off on BRD Section 16
+- [ ] Manual alert-relay process is **not** part of operations
 
 ---
 

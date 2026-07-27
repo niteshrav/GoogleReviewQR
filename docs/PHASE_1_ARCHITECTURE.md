@@ -1,21 +1,21 @@
 # Phase 1 MVP — Architecture Document
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Phase:** 1 — Pilot MVP  
-**Version:** 1.0  
-**Last updated:** July 20, 2026  
+**Version:** 1.1  
+**Last updated:** July 26, 2026  
 **Related documents:** [PHASE_1_USE_CASES.md](./PHASE_1_USE_CASES.md) · [PHASE_1_IMPLEMENTATION.md](./PHASE_1_IMPLEMENTATION.md) · [PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)
 
 ---
 
 ## 1. Architecture Overview
 
-FeedbackFlow Phase 1 is a **monolithic Next.js application** organized into three logical layers deployed as a single Vercel project:
+TrustTap Phase 1 is a **monolithic Next.js application** organized into three logical layers deployed as a single Vercel project:
 
 | Layer | Folder | Responsibility |
 |-------|--------|----------------|
 | **Frontend** | `frontend/` | UI, routing, middleware, customer + admin views |
-| **Backend** | `backend/` | API handlers, business logic, validation, email, auth |
+| **Backend** | `backend/` | API handlers, business logic, validation, **alerts** (WhatsApp/SMS + email), auth |
 | **Database** | `database/` | Prisma schema, migrations, client |
 
 Next.js requires the App Router at `frontend/app/`. The frontend imports backend and database modules via TypeScript path aliases. Vercel deploys from `frontend/` with `externalDir` enabled to resolve sibling folders.
@@ -31,7 +31,7 @@ flowchart TB
         Browser[Mobile Browser]
     end
 
-    subgraph Vercel["Vercel (feedbackflow.commiters.in)"]
+    subgraph Vercel["Vercel (feedbackflow.commiters.in / TrustTap)"]
         subgraph Frontend["frontend/"]
             AppRouter[App Router]
             Middleware[Admin Middleware]
@@ -43,7 +43,9 @@ flowchart TB
             Validators[Zod Validators]
             RateLimit[Rate Limiter]
             Auth[Admin Auth]
-            Email[SMTP Service]
+            Alerts[Alert orchestrator]
+            Email[SMTP backup]
+            Phone[WhatsApp API / SMS]
         end
 
         subgraph Database["database/"]
@@ -55,6 +57,7 @@ flowchart TB
     subgraph External
         Google[Google Maps Review]
         SMTP[Commiters SMTP]
+        WA[WhatsApp / SMS provider]
     end
 
     QR --> Browser
@@ -65,11 +68,14 @@ flowchart TB
     Routes --> Validators
     Routes --> RateLimit
     Routes --> Auth
-    Routes --> Email
+    Routes --> Alerts
+    Alerts --> Phone
+    Alerts --> Email
     Routes --> Prisma
     Prisma --> Schema
     Views --> Google
     Email --> SMTP
+    Phone --> WA
 ```
 
 ---
@@ -101,7 +107,9 @@ GoogleReviewQR/
 │   │   └── admin-login.ts
 │   ├── lib/
 │   │   ├── auth/                 # Admin secret + cookie validation
-│   │   ├── email/                # SMTP + wa.me link builder
+│   │   ├── email/                # SMTP backup alerts
+│   │   ├── alerts/               # shouldTriggerAlert + phone/email orchestrator
+│   │   ├── phone/                # WhatsApp Business API + SMS providers (Phase 1 Must)
 │   │   ├── validators/           # Zod schemas
 │   │   ├── env.ts
 │   │   ├── http.ts
@@ -144,7 +152,9 @@ GoogleReviewQR/
 | `lib/validators/` | Input validation (Zod) |
 | `lib/rate-limit.ts` | In-memory IP rate limiting (Phase 1) |
 | `lib/auth/` | Admin secret verification, session cookie |
-| `lib/email/smtp.ts` | Low-rating alert emails + wa.me links |
+| `lib/email/smtp.ts` | Backup low-rating emails |
+| `lib/alerts/*` | Trigger rules + orchestrator (phone primary, email secondary) |
+| `lib/phone/*` | WhatsApp Business API and/or SMS gateway clients |
 | `lib/env.ts` | Typed environment variable validation |
 
 **Design rule:** All testable logic lives here. TDD tests co-located as `*.test.ts`.
@@ -194,7 +204,7 @@ erDiagram
 - **Business.slug** — URL-safe, globally unique (one QR per business in Phase 1).
 - **Feedback.rating** — Internal only; never used to gate Google CTA.
 - **Feedback.clickedGoogle** — Tracks Google CTA engagement separately from private feedback.
-- **Feedback.alertSentAt** — Idempotency guard for email alerts.
+- **Feedback.alertSentAt** — Idempotency guard for owner alerts (phone + email orchestration).
 
 ---
 
@@ -366,7 +376,8 @@ flowchart LR
 | `DATABASE_URL` | database | Yes | PostgreSQL connection |
 | `ADMIN_SECRET` | backend | Yes | Admin authentication |
 | `BASE_URL` | backend | Yes | Public URL for QR generation |
-| `SMTP_HOST/PORT/USER/PASS/FROM` | backend | Yes | Email alerts |
+| `SMTP_HOST/PORT/USER/PASS/FROM` | backend | Yes | Backup email alerts |
+| `WHATSAPP_*` or `SMS_*` provider keys | backend | Yes (at least one phone channel) | Primary phone alerts |
 | `RATE_LIMIT_*` | backend | No | Override defaults |
 | `COMMENT_MAX_CHARS` | backend | No | Default 1000 |
 
@@ -415,9 +426,11 @@ Run: `npm test` (uses `backend/vitest.config.ts`).
 | Validation | Zod | Runtime + compile-time schemas |
 | Styling | Tailwind CSS 4 | Mobile-first, fast iteration |
 | Testing | Vitest | Fast, ESM-native, co-located tests |
-| Email | Nodemailer + existing SMTP | Zero new cost |
+| Email | Nodemailer + existing SMTP | Backup / archive alerts |
 | Rate limiting | In-memory Map | Sufficient for pilot scale |
-| WhatsApp | wa.me link in email | No API cost in Phase 1 |
+| Phone alerts | WhatsApp Business API and/or SMS gateway | **Primary** owner notification (email alone rejected) |
+
+**Ops rule:** Architecture must not depend on humans watching the admin log to forward alerts.
 
 ---
 

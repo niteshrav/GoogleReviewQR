@@ -1,9 +1,9 @@
 # Phase 1 MVP — Business Requirements Document
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Phase:** 1 — Pilot MVP  
-**Document version:** 1.0  
-**Last updated:** July 20, 2026  
+**Document version:** 1.1  
+**Last updated:** July 26, 2026  
 **Author:** Commiters  
 **Parent document:** [PHASED_ROADMAP.md](./PHASED_ROADMAP.md)
 
@@ -11,13 +11,15 @@
 
 ## 1. Executive Summary
 
-Phase 1 delivers a **production-ready, Google-compliant QR feedback experience** for a small number of Udaipur cafés and restaurants. Commiters manually onboards each merchant. Customers scan a QR code, can leave a Google review in one tap, and optionally submit private feedback. Business owners receive instant alerts when feedback indicates a poor experience.
+Phase 1 delivers a **production-ready, Google-compliant QR feedback experience** for a small number of Udaipur cafés, restaurants, and similar local shops. Commiters manually onboards each merchant. Customers scan a QR code, can leave a Google review in one tap, and optionally submit private feedback. Business owners receive **automated phone alerts** (WhatsApp or SMS) when feedback indicates a poor experience, with email as backup.
 
-This phase validates **product-market fit and compliance** before investing in self-serve auth, dashboards, payments, or WhatsApp API integration.
+This phase validates **product-market fit and compliance** before investing in self-serve auth, dashboards, or payments.
 
-**Build target:** ~5 development days  
+**Build target:** ~5–8 development days (includes phone-alert channel)  
 **Beta target:** 3 active businesses for 30 days  
 **Revenue:** None (free pilot)
+
+**Not a print competitor:** Phase 1 must beat static ₹1,000–1,500 “lifetime QR boards” on **recovery + alerts + support**, not on sticker price.
 
 ---
 
@@ -53,7 +55,7 @@ This phase validates **product-market fit and compliance** before investing in s
 - **Goals:** More Google reviews, know when service fails before it goes public
 - **Pain:** Doesn’t check email often; won’t use a dashboard daily
 - **Tech comfort:** Uses WhatsApp constantly; not technical
-- **Phase 1 expectation:** Commiters installs everything; Raj gets WhatsApp or email when someone is unhappy
+- **Phase 1 expectation:** Commiters installs everything; Raj gets an **automatic WhatsApp or SMS** when someone is unhappy (email is backup only)
 
 ### 4.2 Customer (Primary — B2C)
 
@@ -80,12 +82,15 @@ This phase validates **product-market fit and compliance** before investing in s
 - Optional private feedback (internal 1–5 stars + optional text comment)
 - Feedback storage in PostgreSQL
 - Owner alert on low rating (≤3 stars) or substantive negative comment
-- Alert channels: **email** and/or **`wa.me` click-to-chat** pre-filled message
+- Alert channels:
+  - **Primary (Must):** automated WhatsApp Business API **or** automated SMS (owner’s phone buzzes; no human relay)
+  - **Secondary (Must):** email via Commiters SMTP (archive / backup)
 - Hidden Commiters admin: create, edit, deactivate businesses
 - Rate limiting and bot protection on public write endpoints
 - “Powered by Commiters” footer on customer pages
 - Production deployment (Vercel + managed PostgreSQL)
 - Basic privacy notice on customer page (anonymous feedback, no PII collected)
+- Physical pilot QR with **merchant business name printed** on the board
 
 ### 5.2 Out of scope
 
@@ -94,17 +99,18 @@ This phase validates **product-market fit and compliance** before investing in s
 | Merchant self-registration | Phase 3 |
 | Merchant login / password reset | Phase 3 |
 | Customer name or phone collection | Phase 3 (with consent) |
-| Merchant dashboard UI | Phase 2 (minimal) / Phase 3 |
+| Merchant dashboard UI / analytics charts | Phase 2–4 |
 | Payment / subscriptions | Phase 2 (manual) / Phase 3 (in-app) |
-| WhatsApp Business API (Twilio/Gupshup) | Phase 4 |
+| Instagram / UPI / multi-link QR inside the product | Phase 2+ (optional); not required to beat print boards |
+| **Manual staff WhatsApp / dashboard babysitting** | Never (ops anti-pattern) |
 | Multiple QR codes per business | Phase 3 |
 | AI sentiment analysis | Phase 4 |
-| Analytics charts | Phase 4 |
-| Weekly automated reports | Phase 2 |
+| Weekly automated digests | Phase 2 |
 | Acrylic QR stands | Post-validation |
 | Mobile native app | Never (web-only product) |
 | Incentives tied to Google reviews | Never (policy violation) |
 | Star-based routing to Google | Never (policy violation) |
+| Promise of “no negative Google reviews” | Never (impossible under compliant equal access) |
 
 ---
 
@@ -140,7 +146,8 @@ Customer scans QR
                                  │
                     If rating ≤ 3 OR negative comment
                                  ▼
-                       Owner alert (email / wa.me)
+                       Owner alert (PRIMARY: WhatsApp API or SMS;
+                       SECONDARY: email backup)
 ```
 
 ### 6.2 Compliance rules (functional requirements)
@@ -154,6 +161,18 @@ Customer scans QR
 | COMP-5 | Internal star rating is **never** used to decide whether Google CTA is shown |
 | COMP-6 | Customer page includes brief note: feedback is anonymous; no account required |
 | COMP-7 | Merchant onboarding includes verbal/written guidance: staff must not pressure customers to review while seated |
+| COMP-8 | Sales and docs must state honestly: customers who tap Google may still post a public negative review; TrustTap does not block that |
+
+### 6.3 Honest product limit (required messaging)
+
+Because Google access is equal for all customers, **some people will tap Google and leave a bad public review**. That is allowed and expected under compliance.
+
+TrustTap differentiates by:
+1. Catching many issues via **private feedback** before/without a public post
+2. **Phone-alerting** the owner on ≤3★ private feedback
+3. Logging Google clicks + private feedback for Commiters/ops follow-up
+
+Google Business Profile may already email/notify owners when a **public** review is posted. That is a Google feature — not a reason to skip TrustTap’s private phone alerts.
 
 ---
 
@@ -163,7 +182,7 @@ Customer scans QR
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| FR-ADM-1 | Admin can create a business with: name, URL slug, owner email, optional owner WhatsApp number, Google review URL | Must |
+| FR-ADM-1 | Admin can create a business with: name, URL slug, owner email, **owner WhatsApp (required for WA channel) or owner mobile for SMS**, Google review URL | Must |
 | FR-ADM-2 | Admin can edit business details and deactivate a business (inactive businesses return friendly “not available” page) | Must |
 | FR-ADM-3 | Admin can view list of all businesses and status (active/inactive) | Must |
 | FR-ADM-4 | Admin can view feedback entries per business (read-only log) | Must |
@@ -212,12 +231,23 @@ Customer scans QR
 | FR-ALT-1 | Trigger alert when private feedback rating is ≤3 | Must |
 | FR-ALT-2 | Trigger alert when rating is 4–5 but comment contains strong negative keywords (optional simple keyword list; fallback: rating-only trigger for ≤3) | Could |
 | FR-ALT-3 | Alert includes: business name, rating, comment (if any), timestamp | Must |
-| FR-ALT-4 | Email alert sent to `ownerEmail` if configured | Must |
-| FR-ALT-5 | If `ownerWhatsApp` set: generate `wa.me/{number}?text={encoded message}` link and email it to admin OR use mailto fallback — **Phase 1 does not require server-side WhatsApp API send**; alert delivery via email is sufficient, with optional manual wa.me link in email body for owner to tap | Must |
+| FR-ALT-4 | **Primary channel:** system sends an automated **WhatsApp template message** (Business API via Meta/Gupshup/Twilio or equivalent) **or** automated **SMS** to the owner’s phone within ~60 seconds | Must |
+| FR-ALT-5 | **Secondary channel:** email alert sent to `ownerEmail` via Commiters SMTP (backup / archive). Email alone is **not** sufficient for Phase 1 done | Must |
 | FR-ALT-6 | Do not send alert for Google-only clicks (no private feedback) | Must |
-| FR-ALT-7 | Do not send duplicate alerts for same feedback ID | Must |
+| FR-ALT-7 | Do not send duplicate alerts for same feedback ID (idempotent `alertSentAt`) | Must |
+| FR-ALT-8 | If WhatsApp send fails, fall back to SMS (if configured) and always attempt email backup; feedback submission must still succeed | Must |
+| FR-ALT-9 | **Forbidden:** human monitoring of admin dashboard to manually WhatsApp/SMS the owner | Must |
 
-**Phase 1 alert delivery clarification:** Minimum viable = **email to owner**. Email body may include a `wa.me` link the owner taps to forward/share. Automated WhatsApp API send is Phase 4.
+**Phase 1 alert delivery clarification**
+
+| Channel | Role | Status |
+|---------|------|--------|
+| WhatsApp Business API **or** SMS | **Primary** — owner must feel a phone notification | Must (at least one) |
+| Email (SMTP) | Secondary backup | Must |
+| `wa.me` link inside email only | Insufficient as sole phone strategy | Rejected as primary |
+| Manual staff relay | Ops anti-pattern | Forbidden |
+
+**Provider choice (decide in implementation):** WhatsApp preferred for India UX; SMS acceptable as Phase 1 primary if WA template approval blocks launch. Both may be configured with WA primary + SMS fallback.
 
 ### 7.6 QR code
 
@@ -225,7 +255,8 @@ Customer scans QR
 |----|-------------|----------|
 | FR-QR-1 | One QR per business pointing to `/r/{slug}` | Must |
 | FR-QR-2 | QR downloadable as PNG (min 300×300px, error correction M or higher) | Should |
-| FR-QR-3 | Printable layout not required in app — Commiters prints laminated A4 manually for pilot | — |
+| FR-QR-3 | Physical print for pilot **must include merchant business name** on the board/card (not a generic vendor-only sticker) | Must |
+| FR-QR-4 | Physical layout: one primary TrustTap QR; do not require Instagram/UPI codes inside the software product | Must |
 
 ---
 
@@ -257,8 +288,9 @@ Customer scans QR
 | id | UUID | Yes | Primary key |
 | slug | String | Yes | Unique, URL-safe, e.g. `cafe-edelweiss` |
 | name | String | Yes | Display name |
-| ownerEmail | String | Yes | Alert recipient |
-| ownerWhatsApp | String | No | E.164 format, for wa.me links in alerts |
+| ownerEmail | String | Yes | Email backup / archive alert recipient |
+| ownerWhatsApp | String | Conditional | Required if WhatsApp is primary channel (E.164) |
+| ownerSmsPhone | String | Conditional | Required if SMS is primary/fallback (E.164); may reuse WhatsApp number |
 | googleReviewUrl | String | Yes | Full HTTPS Google review URL |
 | isActive | Boolean | Yes | Default true |
 | createdAt | DateTime | Yes | Auto |
@@ -300,7 +332,8 @@ Customer scans QR
 | ORM | Prisma | Migrations from day one |
 | Database | PostgreSQL (Supabase or Neon) | Managed |
 | Hosting | Vercel | Edge-friendly |
-| Email | Existing Commiters SMTP | Transactional alerts via env-configured SMTP |
+| Email | Existing Commiters SMTP | Secondary / backup alerts |
+| Phone alerts | WhatsApp Business API and/or SMS gateway | **Primary** owner notification |
 | QR generation | `qrcode` npm package or API | PNG export in admin |
 | Bot protection | Honeypot + IP rate limit | Cloudflare Turnstile optional |
 
@@ -329,10 +362,12 @@ Customer scans QR
 
 ### Epic B — Owner value
 
-**US-B1:** As a café owner, I want to be notified when someone leaves low private feedback, so I can fix issues quickly.
+**US-B1:** As a café owner, I want to be notified on my phone when someone leaves low private feedback, so I can fix issues quickly.
 
-- **AC:** Rating ≤3 triggers email within 60 seconds
-- **AC:** Email contains rating, comment, time, business name
+- **AC:** Rating ≤3 triggers automated WhatsApp **or** SMS within ~60 seconds
+- **AC:** Email backup is also sent
+- **AC:** Alert contains rating, comment, time, business name
+- **AC:** No human is required to watch a dashboard and relay the message
 
 **US-B2:** As a café owner, I want every customer to have the same chance to review on Google.
 
@@ -362,18 +397,39 @@ Customer scans QR
 ### 12.1 Target customers
 
 - **Geography:** Udaipur, Rajasthan
-- **Segment:** Independent cafés and small restaurants (≤30 tables)
-- **Exclude for pilot:** Salons, gyms, coaching (Phase 2+ niches)
+- **Segment:** Independent cafés, small restaurants, and similar local shops that care about Google reputation (barbers OK if Google-focused)
+- **Exclude for pilot:** Multi-link Instagram/UPI board replacements as the primary pitch
 
-### 12.2 Offer
+### 12.2 Offer / pitch
 
-> “Free for 30 days. We install a QR on your table. When a customer is unhappy, you get an instant WhatsApp/email alert. Every customer can still review you on Google — we just make it easier.”
+> “Free for 30 days. We install a QR with your shop name. Every customer can leave a Google review. If someone is unhappy, you get an automatic WhatsApp or SMS — not just an email you’ll miss. Google already notifies you *after* a public review; we alert you on private feedback so you can fix issues first.”
+
+**Objection — “I already have a ₹1,500 board”:**  
+> “That board sends people away. Ours also tells you who left unhappy privately, and we keep the link working after sale.”
+
+**Objection — “Google already messages me when someone reviews”:**  
+> “That’s Google notifying you after a public post. We notify you when someone shares private low feedback — often before anything is public.”
+
+**Objection — “What if they still post a bad Google review?”:**  
+> “We don’t block Google — that would be dishonest and risky. Some people will still post publicly. Our job is to catch more issues early and help you respond faster.”
 
 ### 12.3 Materials needed (non-software)
 
-- Laminated A4 QR print (Commiters prints locally, &lt;₹50/stand)
+- Laminated QR card/board with **merchant business name** printed large
+- One primary TrustTap QR (optional small secondary print icons for Instagram/UPI only if merchant insists — **not** in the app)
 - 30-second verbal pitch card for founder
 - One-page merchant compliance tip sheet (no staff pressure at table)
+- Week-1 value WhatsApp summary template (scans / clicks / private feedback) — may be semi-manual for 3 pilots **without** becoming an alert-relay desk
+
+### 12.4 Competitive positioning (Phase 1)
+
+| Static print board | TrustTap |
+|--------------------|----------|
+| Cheap lifetime print | Free pilot → SaaS |
+| Static Google (and maybe Instagram/UPI) | Google + private recovery |
+| No support after sale | Onboarding + URL fixes |
+| Relies on Google public-review notices | Automated phone alert on private ≤3★ |
+| No data | Feedback + Google-click log |
 
 ### 12.4 Pilot targets
 
@@ -403,7 +459,10 @@ Customer scans QR
 | **Day 1** | Project setup, DB schema, admin create-business flow |
 | **Day 2** | Customer landing page, Google redirect + click logging |
 | **Day 3** | Private feedback form, thank-you screen, honeypot + rate limits |
-| **Day 4** | Email alerts, admin feedback log, QR PNG export |
+| **Day 4** | Automated WhatsApp/SMS alerts + email backup, admin feedback log, QR PNG export |
+| **Day 5** | Phone-alert E2E on real devices; compliance pass |
+| **Day 6–7** | Buffer / WA template approval / SMS provider if needed |
+| **Day 8+** | Deploy + seed 3 pilots + print named QR boards |
 | **Day 5** | Production deploy, seed 3 pilot businesses, print QRs, walk-in outreach begins |
 | **Day 6–35** | 30-day pilot monitoring, weekly check-in with each merchant |
 
@@ -415,7 +474,11 @@ Customer scans QR
 |------|------------|--------|------------|
 | Merchants don’t display QR | Medium | High | Physical install visit; table tent placement |
 | Low scan volume | Medium | Medium | Staff aware QR exists; receipt sticker backup |
-| Owner ignores email alerts | Medium | Medium | Follow up in person; add WhatsApp number for wa.me in email |
+| Owner ignores email alerts | High | High | Phone channel is primary; email is backup only |
+| Manual WhatsApp relay ops | High | High | **Forbidden** — automate WA/SMS; no dashboard babysitting |
+| Static ₹1,500 board competition | Medium | Medium | Sell recovery + phone alerts + support; free pilot then SaaS |
+| Public bad Google review after CTA | Medium | Medium | Honest sales script; response playbook |
+| WhatsApp template approval delay | Medium | High | Ship SMS as primary or fallback |
 | Spam feedback | Low | Medium | Rate limits + honeypot |
 | Google URL misconfigured | Medium | High | Validate URL on admin save; test click before print |
 | Scope creep (dashboard, auth) | High | High | This BRD is the scope contract |
@@ -427,7 +490,9 @@ Customer scans QR
 | # | Question | Decision | Date |
 |---|----------|----------|------|
 | OQ-1 | Production domain | **`feedbackflow.commiters.in`** — subdomain on existing `commiters.in` infrastructure; no new domain purchase or separate hosting | 2026-07-20 |
-| OQ-2 | Email provider | **Existing Commiters SMTP** (no Resend or new email service) | 2026-07-20 |
+| OQ-2 | Email provider | **Existing Commiters SMTP** (backup alerts only) | 2026-07-20 |
+| OQ-ALERT-1 | Primary phone channel | **WhatsApp Business API preferred; SMS acceptable as Phase 1 primary/fallback** | 2026-07-26 |
+| OQ-ALERT-2 | Manual alert relay | **Rejected** — no dedicated staff watching dashboard | 2026-07-26 |
 | OQ-3 | Admin approach | **Minimal `/admin` page** (env-protected; not Prisma Studio in production) | 2026-07-20 |
 | OQ-4 | Google CTA opens new tab or same tab? | New tab (recommended default — confirm at build) | Pending |
 | OQ-5 | Alert on 4-star with negative comment in v1? | ≤3 stars only (recommended default — confirm at build) | Pending |
@@ -441,7 +506,7 @@ Customer scans QR
 3. In your DNS provider (where `commiters.in` is managed) → add a **CNAME** record: `feedbackflow` → `cname.vercel-dns.com` (or the target Vercel provides).
 4. No additional domain registration fee; SSL is automatic via Vercel.
 
-SMTP uses existing Commiters mail credentials via environment variables — no new email subscription.
+SMTP remains for **backup** email. Phase 1 also requires WhatsApp API and/or SMS gateway credentials in environment variables.
 
 ---
 

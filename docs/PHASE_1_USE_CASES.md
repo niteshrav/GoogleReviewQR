@@ -1,16 +1,16 @@
 # Phase 1 MVP — Use Case Document
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Phase:** 1 — Pilot MVP  
-**Version:** 1.0  
-**Last updated:** July 20, 2026  
+**Version:** 1.1  
+**Last updated:** July 26, 2026  
 **Related documents:** [PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md) · [PHASE_1_USER_STORIES.md](./PHASE_1_USER_STORIES.md) · [PHASE_1_ARCHITECTURE.md](./PHASE_1_ARCHITECTURE.md) · [PHASE_1_IMPLEMENTATION.md](./PHASE_1_IMPLEMENTATION.md)
 
 ---
 
 ## 1. Purpose
 
-This document describes **who** uses FeedbackFlow Phase 1, **what** they do, and **why** — expressed as formal use cases with preconditions, postconditions, main flows, and alternate flows.
+This document describes **who** uses TrustTap Phase 1, **what** they do, and **why** — expressed as formal use cases with preconditions, postconditions, main flows, and alternate flows.
 
 It bridges business requirements (BRD) and technical implementation.
 
@@ -20,22 +20,24 @@ It bridges business requirements (BRD) and technical implementation.
 
 ```mermaid
 C4Context
-    title FeedbackFlow Phase 1 — System Context
+    title TrustTap Phase 1 — System Context
 
-    Person(customer, "Customer", "Scans QR at café/restaurant")
-    Person(owner, "Business Owner", "Receives email alerts")
+    Person(customer, "Customer", "Scans QR at café/shop")
+    Person(owner, "Business Owner", "Receives WhatsApp/SMS (+ email backup)")
     Person(admin, "Commiters Admin", "Onboards pilot merchants")
 
-    System(feedbackflow, "FeedbackFlow", "QR feedback + Google review facilitation")
+    System(trusttap, "TrustTap", "QR feedback + Google review facilitation")
     System_Ext(google, "Google Maps", "Public review destination")
-    System_Ext(smtp, "Commiters SMTP", "Email delivery")
+    System_Ext(wa, "WhatsApp Business API or SMS gateway", "Primary phone alerts")
+    System_Ext(smtp, "Commiters SMTP", "Email backup alerts")
 
-    Rel(customer, feedbackflow, "Scans QR, submits feedback")
+    Rel(customer, trusttap, "Scans QR, submits feedback")
     Rel(customer, google, "Leaves public review")
-    Rel(owner, feedbackflow, "Receives alerts via email")
-    Rel(admin, feedbackflow, "Manages businesses")
-    Rel(feedbackflow, google, "Redirects to review URL")
-    Rel(feedbackflow, smtp, "Sends low-rating alerts")
+    Rel(owner, trusttap, "Receives automated phone alerts")
+    Rel(admin, trusttap, "Manages businesses")
+    Rel(trusttap, google, "Redirects to review URL")
+    Rel(trusttap, wa, "Sends low-rating phone alerts")
+    Rel(trusttap, smtp, "Sends backup email alerts")
 ```
 
 ---
@@ -44,10 +46,12 @@ C4Context
 
 | Actor | Type | Description |
 |-------|------|-------------|
-| **Customer** | Primary external | Person visiting a pilot café/restaurant who scans a QR code |
-| **Business Owner** | Primary external | Merchant who receives email alerts for low private feedback |
-| **Commiters Admin** | Internal | Commiters team member who onboards and manages pilot businesses |
+| **Customer** | Primary external | Person visiting a pilot business who scans a QR code |
+| **Business Owner** | Primary external | Merchant who receives **automated WhatsApp/SMS** (email backup) for low private feedback |
+| **Commiters Admin** | Internal | Onboards and manages pilot businesses — **does not** manually relay alerts |
 | **Google Maps** | External system | Destination for public Google reviews |
+| **WhatsApp API / SMS gateway** | External system | Primary phone alert delivery |
+| **Commiters SMTP** | External system | Backup email alerts |
 | **Commiters SMTP** | External system | Existing email infrastructure for owner alerts |
 
 ---
@@ -156,25 +160,28 @@ C4Context
 | Field | Detail |
 |-------|--------|
 | **Primary actor** | Business Owner |
-| **Goal** | Know immediately when a customer had a poor experience |
-| **Preconditions** | UC-03 completed with rating ≤ 3; valid `ownerEmail` configured |
-| **Postconditions** | Owner receives one email alert per feedback record |
+| **Goal** | Know immediately on their phone when a customer had a poor private experience |
+| **Preconditions** | UC-03 completed with rating ≤ 3; owner WhatsApp and/or SMS number configured; email configured for backup |
+| **Postconditions** | Owner receives one automated phone alert (WA or SMS) per feedback record; email backup attempted; `alertSentAt` set when primary success criteria met |
 
 **Main flow:**
 1. System detects rating ≤ 3 on new feedback.
-2. System builds email with business name, rating, comment, timestamp.
-3. If `ownerWhatsApp` set, system includes `wa.me` deep link in email body.
-4. System sends email via Commiters SMTP.
-5. System sets `alertSentAt` on feedback record.
+2. System builds alert payload: business name, rating, comment, timestamp.
+3. System sends **primary** channel: WhatsApp Business API template **or** SMS.
+4. System sends **secondary** email via Commiters SMTP.
+5. System sets `alertSentAt` on feedback record when the primary phone channel succeeds (or per configured success rule).
 
 **Alternate flows:**
-- **4a. SMTP failure:** Error logged; `alertSentAt` not set (manual retry in Phase 1).
-- **4b. No WhatsApp number:** Email sends without wa.me link.
-- **4c. Duplicate trigger:** Idempotency via `alertSentAt` prevents second email.
+- **3a. WhatsApp failure:** Attempt SMS fallback if configured; always attempt email; log errors. Feedback remains saved.
+- **3b. SMS-only deployment:** Skip WhatsApp; SMS is primary.
+- **3c. Duplicate trigger:** Idempotency via `alertSentAt` prevents second owner-facing phone alert.
+- **3d. Forbidden path:** Commiters staff manually copying the feedback into WhatsApp is **not** a valid alternate flow.
 
 **Business rules:**
+- BR-ALT-4/5: Phone channel is primary; email is backup.
 - BR-ALT-6: No alert for Google-only clicks.
-- BR-ALT-7: One alert per feedback record.
+- BR-ALT-7: One primary alert per feedback record.
+- BR-ALT-9: No human alert relay.
 
 ---
 
@@ -211,7 +218,7 @@ C4Context
 
 **Main flow:**
 1. Admin opens create-business form in `/admin`.
-2. Admin enters: name, slug, owner email, optional WhatsApp, Google review URL.
+2. Admin enters: name, slug, owner email, owner WhatsApp and/or SMS phone, Google review URL.
 3. System validates slug uniqueness and Google URL format.
 4. System saves business with `isActive = true`.
 5. System displays public URL: `/r/{slug}`.
@@ -346,10 +353,12 @@ The following are **not** use cases in Phase 1:
 - Merchant self-registration
 - Customer account creation
 - Payment or subscription
-- WhatsApp Business API send
+- Manual staff WhatsApp relay / dashboard babysitting
+- Instagram / UPI multi-link product flows
 - Multi-location QR per business
 - Analytics dashboard for merchants
 - Review gating by sentiment
+- Promise that public negative Google reviews cannot happen
 
 ---
 

@@ -1,10 +1,10 @@
 # Phase 1 MVP — Production Deploy Runbook
 
-**Product:** Commiters FeedbackFlow  
-**Target URL:** `https://feedbackflow.commiters.in`  
-**Last updated:** July 20, 2026
+**Product:** Commiters TrustTap  
+**Target URL:** `https://feedbackflow.commiters.in` (or TrustTap production host)  
+**Last updated:** July 26, 2026
 
-This runbook finishes **Phase 1.6**. Code and tests are ready; the steps below require your production credentials (database, Vercel, DNS, SMTP).
+This runbook finishes **Phase 1.6**. Phone-alert provider credentials are required in addition to database, Vercel, DNS, and SMTP.
 
 ---
 
@@ -14,7 +14,8 @@ This runbook finishes **Phase 1.6**. Code and tests are ready; the steps below r
 |------|-----------------|
 | PostgreSQL `DATABASE_URL` | Neon / Supabase / managed Postgres |
 | `ADMIN_SECRET` | Generate a long random string |
-| Commiters SMTP (`SMTP_*`) | Existing Commiters mail settings |
+| Commiters SMTP (`SMTP_*`) | Backup email alerts |
+| WhatsApp API **and/or** SMS gateway keys | **Primary** phone alerts (at least one) |
 | Vercel project linked to this repo | Vercel dashboard |
 | DNS access for `commiters.in` | Domain DNS provider |
 
@@ -48,11 +49,20 @@ SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASS=
-SMTP_FROM=FeedbackFlow <noreply@commiters.in>
+SMTP_FROM=TrustTap <noreply@commiters.in>
+# Primary phone alerts — configure at least one:
+WHATSAPP_PROVIDER=
+WHATSAPP_API_KEY=
+WHATSAPP_FROM=
+SMS_PROVIDER=
+SMS_API_KEY=
+SMS_FROM=
 NODE_ENV=production
 ```
 
 `vercel.json` already sets `rootDirectory` to `frontend` and builds from the repo root.
+
+**Go-live gate:** do not treat Phase 1 as complete until a real owner phone receives an automated ≤3★ alert.
 
 ---
 
@@ -108,7 +118,9 @@ Confirm three businesses:
 - [ ] Admin login at `/admin/login` with `ADMIN_SECRET`
 - [ ] Create / edit / deactivate a test business
 - [ ] Customer landing `/r/{slug}` shows Google CTA + private feedback link
-- [ ] Submit 2-star feedback → owner email received
+- [ ] Submit 2-star feedback → owner **WhatsApp or SMS** received; email backup received
+- [ ] Print QR includes **merchant business name**
+- [ ] Confirm no manual alert-relay process is required for go-live
 - [ ] Google CTA opens review URL and logs click
 - [ ] Download QR PNG from admin and scan on a real phone
 - [ ] Compliance: Google CTA visible regardless of rating path

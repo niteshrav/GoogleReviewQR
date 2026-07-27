@@ -1,9 +1,9 @@
 # Phase 1 MVP — User Stories (No Code)
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Phase:** 1 — Pilot MVP  
-**Version:** 1.0  
-**Last updated:** 2026-07-20  
+**Version:** 1.1  
+**Last updated:** 2026-07-26  
 
 ---
 
@@ -97,17 +97,19 @@
 
 ---
 
-## Epic C — Owner alerts (Phase 1 email)
+## Epic C — Owner alerts (phone-first, automated)
 
-### US-C1: Owner is alerted on low ratings
+### US-C1: Owner is alerted on low ratings via phone
 **As a** merchant owner  
-**I want** an alert when a customer leaves low private feedback  
-**So that** I can fix issues quickly.  
+**I want** an automatic WhatsApp or SMS when a customer leaves low private feedback  
+**So that** I notice it even if I never open email.  
 
 **Acceptance criteria**
-1. When a feedback submission has rating <= 3, an email alert is sent.
-2. Email is sent within the operational SLA (target ~60 seconds in pilot).
-3. Email includes business name, rating, comment (or “No comment”), and timestamp.
+1. When a feedback submission has rating <= 3, the system sends an automated WhatsApp **or** SMS to the configured owner phone.
+2. Delivery target: ~60 seconds in pilot.
+3. Message includes business name, rating, comment (or “No comment”), and timestamp.
+4. An email backup is also sent to `ownerEmail`.
+5. No Commiters staff member is required to watch the admin UI and relay the message.
 
 ### US-C2: No alert on Google-only clicks
 **As a** merchant owner  
@@ -115,25 +117,35 @@
 **So that** I don’t receive noise.  
 
 **Acceptance criteria**
-1. Clicking Google CTA without submitting private feedback does not send an alert email.
+1. Clicking Google CTA without submitting private feedback does not send WhatsApp, SMS, or email alerts.
 
-### US-C3: OwnerWhatsApp is optional and used only as a deep link
+### US-C3: Channel failover is automatic
 **As a** merchant owner  
-**I want** an easy way to respond on WhatsApp  
-**So that** I can act fast (without WhatsApp API cost in Phase 1).  
+**I want** reliable delivery  
+**So that** a single provider outage doesn’t silence alerts.  
 
 **Acceptance criteria**
-1. If `ownerWhatsApp` is configured, the alert email includes a clickable `wa.me` link with pre-filled text.
-2. If `ownerWhatsApp` is not configured, the email still sends without errors.
+1. If WhatsApp is primary and send fails, SMS fallback is attempted when configured.
+2. Email backup is always attempted for ≤3★ private feedback.
+3. Feedback is still saved if all alert channels fail (error logged; `alertSentAt` only set when at least one phone or email channel succeeds — product decision: prefer marking sent when primary phone channel succeeds).
 
 ### US-C4: Alerts are idempotent per feedback submission
 **As a** merchant owner  
-**I want** to avoid duplicate alert emails  
-**So that** I don’t get spammy notifications.  
+**I want** to avoid duplicate alert spam  
+**So that** I don’t get repeated pings for one submission.  
 
 **Acceptance criteria**
-1. The system does not send more than one alert per feedback record.
-2. Retries (caused by transient failures) do not create duplicate alerts.
+1. The system does not send more than one primary phone alert per feedback record.
+2. Retries do not create duplicate owner-facing alerts for the same feedback ID.
+
+### US-C5: Honest expectation about public Google reviews
+**As a** merchant owner  
+**I want** clear expectations  
+**So that** I don’t think TrustTap blocks bad Google reviews.  
+
+**Acceptance criteria**
+1. Onboarding / pitch materials state that customers who tap Google may still post publicly (positive or negative).
+2. Product does not add gating to prevent that.
 
 ---
 
@@ -145,9 +157,10 @@
 **So that** I can generate a QR for the merchant.  
 
 **Acceptance criteria**
-1. Admin provides: business name, slug, owner email, optional owner WhatsApp, and `googleReviewUrl`.
+1. Admin provides: business name, slug, owner email, owner WhatsApp and/or SMS phone, and `googleReviewUrl`.
 2. `slug` must be unique.
 3. `googleReviewUrl` must be validated on save (at minimum: HTTPS + Google review URL pattern).
+4. At least one phone alert destination (WhatsApp or SMS number) is required for pilot businesses.
 
 ### US-D2: Admin can edit business details
 **As a** Commiters admin  
@@ -231,6 +244,9 @@
 ---
 
 ## Notes / Clarifications
-- Phase 1 uses **email** as the minimum viable alert channel. Any WhatsApp deep link is informational (Phase 4 includes API).
+- Phase 1 **primary** alert channel is automated **WhatsApp Business API or SMS**. Email is **backup only**.
+- Manual staff relay of alerts is **out of scope / forbidden**.
+- Physical QR for pilots must include the **merchant business name**.
+- Instagram/UPI multi-QR boards are **not** Phase 1 product scope.
 - Phase 1 avoids customer PII to reduce compliance surface and friction.
 

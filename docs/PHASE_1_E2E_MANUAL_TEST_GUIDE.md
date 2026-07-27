@@ -1,13 +1,15 @@
 # Phase 1 MVP — Pre-Deploy End-to-End Manual Test Guide
 
-**Product:** Commiters FeedbackFlow  
+**Product:** Commiters TrustTap  
 **Audience:** Commiters before production cutover  
 **Priority:** Mobile-first (QR scans + feedback happen on phones)  
-**Last updated:** July 20, 2026  
+**Last updated:** July 26, 2026  
 **Related:** [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) · [PHASE_1_BETA_CHECKLIST.md](./PHASE_1_BETA_CHECKLIST.md)
 
 Automated guardrails: `backend/lib/mobile-first.test.ts` + `npm test`.  
-This guide covers **manual** checks that cannot be fully automated (real phone, SMTP, QR print).
+This guide covers **manual** checks that cannot be fully automated (real phone, WA/SMS, QR print).
+
+**Alert rule under test:** ≤3★ private feedback must buzz the owner’s phone automatically (WhatsApp or SMS). Email is backup. Manual dashboard relay is a fail.
 
 ---
 
@@ -109,10 +111,11 @@ Open: `/r/cafe-edelweiss/feedback`
 |---|--------|------|
 | L1 | Submit **2★** with comment: “Service was slow” | ☐ |
 | L2 | Thank-you + Google CTA still shown (no gating) | ☐ |
-| L3 | Owner email received (staging/prod SMTP) within ~60s | ☐ |
-| L4 | Email includes business name, rating, comment, timestamp | ☐ |
-| L5 | If WhatsApp configured: `wa.me` link present and opens | ☐ |
-| L6 | Admin log shows rating 2 + comment; alert sent = Yes when SMTP succeeded | ☐ |
+| L3 | Owner receives **WhatsApp or SMS** within ~60s | ☐ |
+| L4 | Email backup also received | ☐ |
+| L5 | Alert includes business name, rating, comment, timestamp | ☐ |
+| L6 | Admin log shows rating 2 + comment; alert sent = Yes | ☐ |
+| L7 | No staff member manually WhatsApp’d the owner from the dashboard | ☐ |
 
 ### 2.5 Compliance on mobile
 
@@ -121,6 +124,7 @@ Open: `/r/cafe-edelweiss/feedback`
 | X1 | After 1★ or 2★, Google CTA is still visible and tappable | ☐ |
 | X2 | No copy like “leave private feedback instead of a Google review” | ☐ |
 | X3 | Landing always offers Google + private feedback equally | ☐ |
+| X4 | Team can explain: public bad Google reviews are still possible if customer taps Google | ☐ |
 
 ---
 
@@ -185,8 +189,10 @@ Admin is Commiters-internal; customer path is the mobile priority.
 | Mobile customer flow (iPhone) | Eng / Product | ☐ |
 | Mobile customer flow (Android) | Eng / Product | ☐ |
 | QR scan from printed/test PNG | Eng | ☐ |
-| Low-rating email on real SMTP | Eng | ☐ |
-| Compliance (no gating) | Product | ☐ |
+| Low-rating **phone** alert (WA or SMS) | Eng | ☐ |
+| Email backup on real SMTP | Eng | ☐ |
+| Named physical QR print (shop name) | Eng / Ops | ☐ |
+| Compliance (no gating) + honest bad-review messaging | Product | ☐ |
 | Ready for [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) | Product | ☐ |
 
 **Sign-off**
