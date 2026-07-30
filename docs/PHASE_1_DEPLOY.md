@@ -55,7 +55,6 @@ Then complete the **mobile-first manual E2E checklist** before cutover:
 Copy values from [`.env.production.example`](../.env.production.example) into Vercel → Project → Settings → Environment Variables (Production):
 
 ```text
-NODE_ENV=production
 BASE_URL=https://trusttap.commiters.com
 DATABASE_URL=
 ADMIN_SECRET=
@@ -70,6 +69,8 @@ TWILIO_AUTH_TOKEN=
 TWILIO_SMS_FROM=
 TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
 ```
+
+Do **not** add `NODE_ENV` in Vercel. Vercel sets it automatically; setting `NODE_ENV=production` during install can skip Tailwind/PostCSS and break the build.
 
 If Twilio is not ready on day one, set `ALERT_PHONE_MODE=log` temporarily (alerts print to server logs). Switch to `twilio` before calling Phase 1 complete.
 
