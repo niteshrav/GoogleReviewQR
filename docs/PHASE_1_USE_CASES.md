@@ -86,7 +86,7 @@ C4Context
 | **Postconditions** | Customer sees compliant landing page with equal Google access |
 
 **Main flow:**
-1. Customer scans QR encoding `https://feedbackflow.commiters.in/r/{slug}`.
+1. Customer scans QR encoding `https://trusttap.commiters.com/r/{slug}`.
 2. System loads business by slug.
 3. System displays business name, primary Google CTA, secondary private feedback link, privacy note, and Commiters footer.
 
@@ -291,7 +291,7 @@ C4Context
 
 **Main flow:**
 1. Admin clicks **Download QR** for a business.
-2. System generates PNG for `https://feedbackflow.commiters.in/r/{slug}`.
+2. System generates PNG for `https://trusttap.commiters.com/r/{slug}`.
 3. Admin prints and laminates for table display.
 
 ---

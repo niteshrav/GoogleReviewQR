@@ -59,30 +59,42 @@ QR scans happen on phones. Use a real device:
 
 ## Deploy to Vercel (testing / production)
 
+**Production URL:** `https://trusttap.commiters.com`
+
 ### 1. Pre-deploy gate
 
 ```bash
 npm run deploy:check
 ```
 
-Must pass: **86 tests** + production build.
+Must pass: tests + production build.
 
-### 2. Vercel env vars
+### 2. Vercel project settings
 
-Copy from [`.env.production.example`](./.env.production.example) into Vercel → Settings → Environment Variables:
+| Setting | Value |
+|---------|--------|
+| Root Directory | `frontend` |
+| Region | `bom1` (from `frontend/vercel.json`) |
+
+Install/build already run from the repo root via `frontend/vercel.json` (`npm ci` + `npm run build`).
+
+### 3. Vercel env vars
+
+Copy from [`.env.production.example`](./.env.production.example):
 
 - `DATABASE_URL` — Neon or Supabase Postgres
 - `ADMIN_SECRET` — long random string
-- `BASE_URL` — `https://feedbackflow.commiters.in`
-- `SMTP_*` — Commiters mail (for alerts)
+- `BASE_URL` — `https://trusttap.commiters.com`
+- `SMTP_*` — Commiters mail (backup alerts)
+- `ALERT_PHONE_MODE` + `TWILIO_*` — primary phone alerts (`log` until Twilio is ready)
 
-### 3. DNS
+### 4. DNS (GoDaddy)
 
 ```
-feedbackflow.commiters.in  →  cname.vercel-dns.com
+Host: trusttap   Type: CNAME   Value: cname.vercel-dns.com
 ```
 
-### 4. Deploy + database
+### 5. Deploy + database
 
 ```bash
 npx vercel --prod
@@ -96,12 +108,12 @@ Update real owner emails & Google Place IDs in `backend/lib/fixtures/pilot-busin
 npm run db:seed
 ```
 
-### 5. Smoke test (production)
+### 6. Smoke test (production)
 
 - [ ] `/api/health` → `{ "status": "ok" }`
 - [ ] `/admin/login` with `ADMIN_SECRET`
 - [ ] `/r/cafe-edelweiss` on mobile — Google CTA + private feedback
-- [ ] Submit 2★ feedback → owner email received
+- [ ] Submit 2★ feedback → owner phone alert + email backup
 - [ ] Download QR from admin → scan on phone
 
 Full runbook: [docs/PHASE_1_DEPLOY.md](./docs/PHASE_1_DEPLOY.md)
@@ -109,10 +121,13 @@ Full runbook: [docs/PHASE_1_DEPLOY.md](./docs/PHASE_1_DEPLOY.md)
 ## Project structure
 
 ```text
-frontend/          # UI + App Router + middleware
-backend/           # API handlers, services, validators
+frontend/          # Next.js app (Vercel Root Directory) + vercel.json
+backend/           # API handlers, services, validators, alerts
 database/          # Prisma schema + migrations
 docs/              # Phase 1 BRD, deploy, E2E test guide
+package.json       # Single workspace install at repo root
+.env.example       # Local env template
+.env.production.example  # Vercel env template
 ```
 
 ## Docs

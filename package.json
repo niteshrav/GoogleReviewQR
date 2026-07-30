@@ -2,6 +2,9 @@
   "name": "trusttap",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "cd frontend && next dev -H 0.0.0.0 -p 3000",
     "build": "prisma generate --schema=database/schema.prisma && cd frontend && next build",
@@ -23,6 +26,7 @@
     "framer-motion": "^12.42.2",
     "next": "^15.3.5",
     "nodemailer": "^9.0.3",
+    "prisma": "^6.11.1",
     "qrcode": "^1.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -38,7 +42,6 @@
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.3.5",
-    "prisma": "^6.11.1",
     "tailwindcss": "^4.1.11",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",

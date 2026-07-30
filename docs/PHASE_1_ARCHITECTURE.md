@@ -31,7 +31,7 @@ flowchart TB
         Browser[Mobile Browser]
     end
 
-    subgraph Vercel["Vercel (feedbackflow.commiters.in / TrustTap)"]
+    subgraph Vercel["Vercel (trusttap.commiters.com / TrustTap)"]
         subgraph Frontend["frontend/"]
             AppRouter[App Router]
             Middleware[Admin Middleware]
@@ -97,6 +97,7 @@ GoogleReviewQR/
 │   ├── styles/globals.css
 │   ├── middleware.ts             # Admin route protection
 │   ├── next.config.ts
+│   ├── vercel.json               # Install/build when Vercel Root Directory = frontend
 │   └── tsconfig.json
 │
 ├── backend/
@@ -109,7 +110,7 @@ GoogleReviewQR/
 │   │   ├── auth/                 # Admin secret + cookie validation
 │   │   ├── email/                # SMTP backup alerts
 │   │   ├── alerts/               # shouldTriggerAlert + phone/email orchestrator
-│   │   ├── phone/                # WhatsApp Business API + SMS providers (Phase 1 Must)
+│   │   ├── phone/                # Twilio WhatsApp / SMS (Phase 1 Must)
 │   │   ├── validators/           # Zod schemas
 │   │   ├── env.ts
 │   │   ├── http.ts
@@ -125,7 +126,9 @@ GoogleReviewQR/
 │
 ├── docs/                         # Product + technical documentation
 ├── package.json                  # Root scripts orchestrate all layers
-└── vercel.json                   # rootDirectory: frontend
+├── .env.example
+├── .env.production.example
+└── vercel.json                   # Fallback; prefer frontend/vercel.json + Root Directory=frontend
 ```
 
 ---
@@ -335,7 +338,7 @@ if (rating >= 4) { showGoogleReview(); } else { showPrivateFormOnly(); }
 ```mermaid
 flowchart LR
     subgraph DNS
-        CNAME["feedbackflow.commiters.in"]
+        CNAME["trusttap.commiters.com"]
     end
 
     subgraph Vercel
@@ -360,12 +363,13 @@ flowchart LR
 
 | Setting | Value |
 |---------|-------|
-| Domain | `feedbackflow.commiters.in` |
-| Vercel root | `frontend/` |
-| Build command | `cd .. && npm run build` |
+| Domain | `trusttap.commiters.com` |
+| Vercel Root Directory | `frontend/` |
+| Install / build | `frontend/vercel.json` → `cd .. && npm ci` / `npm run build` |
 | Region | `bom1` (Mumbai) |
 | Database | Managed PostgreSQL with daily backups |
 | Email | Existing Commiters SMTP via env vars |
+| Phone alerts | Twilio WhatsApp and/or SMS |
 
 ---
 
@@ -375,9 +379,11 @@ flowchart LR
 |----------|-------|----------|---------|
 | `DATABASE_URL` | database | Yes | PostgreSQL connection |
 | `ADMIN_SECRET` | backend | Yes | Admin authentication |
-| `BASE_URL` | backend | Yes | Public URL for QR generation |
+| `BASE_URL` | backend | Yes | Public URL for QR generation (`https://trusttap.commiters.com`) |
 | `SMTP_HOST/PORT/USER/PASS/FROM` | backend | Yes | Backup email alerts |
-| `WHATSAPP_*` or `SMS_*` provider keys | backend | Yes (at least one phone channel) | Primary phone alerts |
+| `ALERT_PHONE_MODE` | backend | Yes | `log` (dev) or `twilio` (production) |
+| `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` | backend | When mode=`twilio` | Twilio auth |
+| `TWILIO_SMS_FROM` / `TWILIO_WHATSAPP_FROM` | backend | When mode=`twilio` | Sender IDs (at least one channel) |
 | `RATE_LIMIT_*` | backend | No | Override defaults |
 | `COMMENT_MAX_CHARS` | backend | No | Default 1000 |
 

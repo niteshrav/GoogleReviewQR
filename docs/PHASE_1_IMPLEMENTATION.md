@@ -316,7 +316,7 @@ describe("logGoogleClick", () => {
 | `backend/lib/alerts/send-owner-alert.ts` | **Create** — orchestrate phone primary + email secondary |
 | `backend/lib/alerts/should-trigger-alert.ts` | Keep / verify `rating <= 3` |
 | `backend/lib/email/smtp.ts` | Keep as **backup** channel |
-| Env | Add `WHATSAPP_*` and/or `SMS_*` credentials |
+| Env | Add `ALERT_PHONE_MODE` + `TWILIO_*` credentials |
 
 ### 8.3 Refactor
 
@@ -445,7 +445,7 @@ describe("getHealthStatus", () => {
 | `backend/lib/compliance/scan-copy.ts` | **Create** — optional static copy scanner for CI |
 | All views | **Audit** — confirm Google CTA on landing + thank-you |
 | `.env` on Vercel | **Configure** — all production env vars |
-| DNS | **Configure** — CNAME for feedbackflow.commiters.in |
+| DNS | **Configure** — CNAME for trusttap.commiters.com |
 
 ### 10.3 Deploy checklist
 
@@ -465,7 +465,7 @@ describe("getHealthStatus", () => {
 ### 10.4 Acceptance criteria
 
 - [x] Zero compliance test failures (local suite).
-- [ ] Production URL live at `https://feedbackflow.commiters.in`.
+- [ ] Production URL live at `https://trusttap.commiters.com`.
 - [ ] 3 pilot businesses configured and ready for print.
 
 See [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) for the full cutover runbook.
@@ -520,7 +520,7 @@ Phase 1 is **done** when ALL of the following are true:
 - [x] All implementation phases 1.1–1.5 complete; 1.6 code/tests complete
 - [x] `npm test` passes with ≥ 30 tests
 - [x] `npm run build` succeeds
-- [ ] Deployed to `feedbackflow.commiters.in` *(credentials required — see PHASE_1_DEPLOY.md)*
+- [ ] Deployed to `trusttap.commiters.com` *(credentials required — see PHASE_1_DEPLOY.md)*
 - [ ] 3 pilot businesses seeded with correct Google URLs
 - [ ] QR codes printed and installed at 3 Udaipur cafés *(Beta Week 1)*
 - [x] Compliance tests pass (no gating logic)

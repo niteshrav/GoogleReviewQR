@@ -220,5 +220,5 @@ Admin is Commiters-internal; customer path is the mobile priority.
 ## 9. After this guide passes
 
 1. Follow [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) for production cutover.  
-2. Re-run **sections 2, 4, 2.4** once against `https://feedbackflow.commiters.in`.  
+2. Re-run **sections 2, 4, 2.4** once against `https://trusttap.commiters.com`.  
 3. Start [PHASE_1_BETA_CHECKLIST.md](./PHASE_1_BETA_CHECKLIST.md) (print + café install).

@@ -7,7 +7,7 @@ export function CustomerFooter({ className = "" }: CustomerFooterProps) {
     <footer className={`mt-auto pt-8 text-center text-xs text-muted ${className}`}>
       Powered by{" "}
       <a
-        href="https://commiters.in"
+        href="https://commiters.com"
         className="font-medium text-brand hover:underline"
         target="_blank"
         rel="noopener noreferrer"

@@ -1,10 +1,24 @@
 # Phase 1 MVP — Production Deploy Runbook
 
 **Product:** Commiters TrustTap  
-**Target URL:** `https://feedbackflow.commiters.in` (or TrustTap production host)  
-**Last updated:** July 26, 2026
+**Target URL:** `https://trusttap.commiters.com`  
+**Last updated:** July 29, 2026
 
 This runbook finishes **Phase 1.6**. Phone-alert provider credentials are required in addition to database, Vercel, DNS, and SMTP.
+
+---
+
+## Project layout (Vercel)
+
+| Path | Role |
+|------|------|
+| `frontend/` | Next.js app — **set as Vercel Root Directory** |
+| `frontend/vercel.json` | Install/build commands + Mumbai region |
+| `backend/` | API handlers, alerts, services (imported via `@backend/*`) |
+| `database/` | Prisma schema + migrations |
+| `package.json` (repo root) | Single install + `npm run build` |
+
+Vercel project setting **Root Directory** must be `frontend`. That loads `frontend/vercel.json`, which runs install/build from the repo root so Prisma and shared packages resolve correctly.
 
 ---
 
@@ -15,9 +29,9 @@ This runbook finishes **Phase 1.6**. Phone-alert provider credentials are requir
 | PostgreSQL `DATABASE_URL` | Neon / Supabase / managed Postgres |
 | `ADMIN_SECRET` | Generate a long random string |
 | Commiters SMTP (`SMTP_*`) | Backup email alerts |
-| WhatsApp API **and/or** SMS gateway keys | **Primary** phone alerts (at least one) |
-| Vercel project linked to this repo | Vercel dashboard |
-| DNS access for `commiters.in` | Domain DNS provider |
+| Twilio account (WhatsApp and/or SMS) | Primary phone alerts |
+| Vercel project linked to this repo | Vercel dashboard — Root Directory = `frontend` |
+| DNS access for `commiters.com` | GoDaddy (or your DNS provider) |
 
 ---
 
@@ -25,8 +39,7 @@ This runbook finishes **Phase 1.6**. Phone-alert provider credentials are requir
 
 ```bash
 npm install
-npm test
-npm run build
+npm run deploy:check
 ```
 
 All tests must pass and the production build must succeed.
@@ -39,49 +52,50 @@ Then complete the **mobile-first manual E2E checklist** before cutover:
 
 ## 2. Configure Vercel environment variables
 
-In the Vercel project (Production):
+Copy values from [`.env.production.example`](../.env.production.example) into Vercel → Project → Settings → Environment Variables (Production):
 
 ```text
+NODE_ENV=production
+BASE_URL=https://trusttap.commiters.com
 DATABASE_URL=
 ADMIN_SECRET=
-BASE_URL=https://feedbackflow.commiters.in
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASS=
-SMTP_FROM=TrustTap <noreply@commiters.in>
-# Primary phone alerts — configure at least one:
-WHATSAPP_PROVIDER=
-WHATSAPP_API_KEY=
-WHATSAPP_FROM=
-SMS_PROVIDER=
-SMS_API_KEY=
-SMS_FROM=
-NODE_ENV=production
+SMTP_FROM=TrustTap <noreply@commiters.com>
+ALERT_PHONE_MODE=twilio
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_SMS_FROM=
+TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
 ```
 
-`vercel.json` already sets `rootDirectory` to `frontend` and builds from the repo root.
+If Twilio is not ready on day one, set `ALERT_PHONE_MODE=log` temporarily (alerts print to server logs). Switch to `twilio` before calling Phase 1 complete.
 
 **Go-live gate:** do not treat Phase 1 as complete until a real owner phone receives an automated ≤3★ alert.
 
 ---
 
-## 3. DNS
+## 3. DNS (GoDaddy)
 
-Add a CNAME (or Vercel-recommended record):
+Add a CNAME for `commiters.com`:
 
-```text
-feedbackflow.commiters.in  →  cname.vercel-dns.com
-```
+| Type | Host | Value |
+|------|------|-------|
+| CNAME | `trusttap` | `cname.vercel-dns.com` |
 
-Enable HTTPS in Vercel for the custom domain.
+In Vercel → Domains, add `trusttap.commiters.com` and wait for SSL.
 
 ---
 
 ## 4. Deploy
 
+1. Vercel project: **Root Directory = `frontend`**
+2. Connect the GitHub repo (or deploy from CLI):
+
 ```bash
-# From repo root, after linking the project:
+# From repo root, after linking the project with root directory frontend:
 npx vercel --prod
 ```
 
@@ -98,7 +112,7 @@ export DATABASE_URL="postgresql://..."
 npm run db:migrate:deploy
 ```
 
-Update `backend/scripts/seed-pilot.ts` with real owner emails, WhatsApp numbers, and Google Place IDs, then:
+Update `backend/lib/fixtures/pilot-businesses.ts` with real owner emails, WhatsApp/SMS numbers, and Google Place IDs, then:
 
 ```bash
 npm run db:seed
@@ -114,7 +128,7 @@ Confirm three businesses:
 
 ## 6. Smoke checklist (production)
 
-- [ ] `GET https://feedbackflow.commiters.in/api/health` → `{ "status": "ok" }`
+- [ ] `GET https://trusttap.commiters.com/api/health` → `{ "status": "ok" }`
 - [ ] Admin login at `/admin/login` with `ADMIN_SECRET`
 - [ ] Create / edit / deactivate a test business
 - [ ] Customer landing `/r/{slug}` shows Google CTA + private feedback link
@@ -141,5 +155,6 @@ Provide these and re-run deploy:
 
 1. Production `DATABASE_URL`
 2. Vercel login / project link (or deploy token)
-3. Confirmation that DNS for `feedbackflow.commiters.in` can be updated
+3. Confirmation that DNS for `trusttap.commiters.com` can be updated in GoDaddy
 4. Real SMTP credentials and pilot Google Place IDs
+5. Twilio credentials (or temporary `ALERT_PHONE_MODE=log`)

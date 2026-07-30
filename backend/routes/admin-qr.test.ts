@@ -20,7 +20,7 @@ vi.mock("@backend/lib/services/index", () => ({
 }));
 
 vi.mock("@backend/lib/env", () => ({
-  getEnv: vi.fn(() => ({ BASE_URL: "https://feedbackflow.commiters.in" })),
+  getEnv: vi.fn(() => ({ BASE_URL: "https://trusttap.commiters.com" })),
 }));
 
 vi.mock("@backend/lib/qr/generate-qr", () => ({

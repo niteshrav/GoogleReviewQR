@@ -12,9 +12,9 @@ vi.mock("@backend/lib/env", () => ({
   getEnv: vi.fn(() => ({
     SMTP_HOST: "smtp.example.com",
     SMTP_PORT: 587,
-    SMTP_USER: "noreply@commiters.in",
+    SMTP_USER: "noreply@commiters.com",
     SMTP_PASS: "secret",
-    SMTP_FROM: "TrustTap <noreply@commiters.in>",
+    SMTP_FROM: "TrustTap <noreply@commiters.com>",
   })),
 }));
 
