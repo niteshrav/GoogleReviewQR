@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "cd .. && NPM_CONFIG_PRODUCTION=false npm ci && ln -sfn \"$(pwd)/node_modules\" frontend/node_modules",
-  "buildCommand": "cd .. && NODE_PATH=\"$(pwd)/node_modules\" npm run build",
+  "installCommand": "cd .. && NPM_CONFIG_PRODUCTION=false npm ci && cd frontend && rm -rf node_modules && ln -s ../node_modules node_modules",
+  "buildCommand": "cd .. && npm run build",
   "regions": ["bom1"]
 }
