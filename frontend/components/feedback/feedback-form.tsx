@@ -6,6 +6,7 @@ import { StarRating } from "@frontend/components/feedback/star-rating";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
 import { Alert } from "@frontend/components/ui/alert";
 import { Button } from "@frontend/components/ui/button";
+import { Input } from "@frontend/components/ui/input";
 import { Textarea } from "@frontend/components/ui/textarea";
 
 type FeedbackFormProps = {
@@ -17,6 +18,7 @@ type FeedbackFormProps = {
 export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: FeedbackFormProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [website, setWebsite] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -40,6 +42,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         businessSlug,
         rating,
         comment,
+        customerPhone,
         honeypot: website,
       }),
     });
@@ -111,6 +114,22 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         />
       </div>
 
+      <div className="mt-6">
+        <Input
+          id="customerPhone"
+          name="customerPhone"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          label="Phone / WhatsApp (optional)"
+          value={customerPhone}
+          onChange={(event) => setCustomerPhone(event.target.value)}
+          className="text-base"
+          placeholder="+91 98765 43210"
+          hint="Leave your number if you'd like us to contact you for a quick resolution."
+        />
+      </div>
+
       <input
         type="text"
         name="website"
@@ -122,7 +141,10 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         aria-hidden="true"
       />
 
-      <p className="mt-4 text-xs text-muted">Your feedback is anonymous. No login required.</p>
+      <p className="mt-4 text-xs text-muted">
+        No login required. Phone / WhatsApp is optional and only used to follow up on your
+        feedback.
+      </p>
 
       <AnimatePresence>
         {error ? (

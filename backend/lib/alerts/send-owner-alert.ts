@@ -9,6 +9,7 @@ export type OwnerAlertInput = {
   businessName: string;
   rating: number;
   comment?: string | null;
+  customerPhone?: string | null;
   timestamp: Date;
 };
 
@@ -22,6 +23,7 @@ export async function sendOwnerAlert(input: OwnerAlertInput): Promise<OwnerAlert
     businessName: input.businessName,
     rating: input.rating,
     comment: input.comment,
+    customerPhone: input.customerPhone,
     timestamp: input.timestamp,
   });
 
@@ -43,6 +45,7 @@ export async function sendOwnerAlert(input: OwnerAlertInput): Promise<OwnerAlert
       businessName: input.businessName,
       rating: input.rating,
       comment: input.comment,
+      customerPhone: input.customerPhone,
       timestamp: input.timestamp,
     });
     emailDelivered = true;

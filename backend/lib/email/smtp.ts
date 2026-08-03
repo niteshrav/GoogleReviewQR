@@ -6,6 +6,7 @@ export type AlertEmailPayload = {
   businessName: string;
   rating: number;
   comment?: string | null;
+  customerPhone?: string | null;
   timestamp: Date;
 };
 
@@ -42,6 +43,7 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     `Business: ${payload.businessName}`,
     `Rating: ${payload.rating}/5`,
     `Comment: ${payload.comment?.trim() ? payload.comment.trim() : "No comment"}`,
+    `Customer contact: ${payload.customerPhone?.trim() ? payload.customerPhone.trim() : "Not shared"}`,
     `Time: ${payload.timestamp.toISOString()}`,
     "",
     "Primary alert channel: automated WhatsApp or SMS to the owner phone.",

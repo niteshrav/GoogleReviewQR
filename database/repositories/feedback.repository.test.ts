@@ -43,6 +43,7 @@ describe("feedbackRepository", () => {
         businessId: "biz-1",
         rating: 2,
         comment: "Slow service",
+        customerPhone: null,
         clickedGoogle: false,
         locationLabel: "main",
       },

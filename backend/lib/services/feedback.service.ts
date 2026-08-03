@@ -17,6 +17,7 @@ export function createFeedbackService(deps: FeedbackServiceDeps) {
       businessSlug: string;
       rating: number;
       comment?: string | null;
+      customerPhone?: string | null;
     }) {
       const business = await deps.businessRepository.findActiveBySlug(input.businessSlug);
       if (!business) {
@@ -27,6 +28,7 @@ export function createFeedbackService(deps: FeedbackServiceDeps) {
         businessId: business.id,
         rating: input.rating,
         comment: input.comment?.trim() || null,
+        customerPhone: input.customerPhone?.trim() || null,
       });
 
       if (shouldTriggerAlert(input.rating)) {
@@ -38,6 +40,7 @@ export function createFeedbackService(deps: FeedbackServiceDeps) {
             businessName: business.name,
             rating: input.rating,
             comment: input.comment,
+            customerPhone: input.customerPhone,
             timestamp: feedback.createdAt,
           });
 

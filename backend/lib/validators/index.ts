@@ -45,6 +45,12 @@ export const feedbackInputSchema = z.object({
   businessSlug: slugSchema,
   rating: z.number().int().min(1).max(5),
   comment: z.string().trim().max(1000).optional(),
+  customerPhone: z
+    .string()
+    .trim()
+    .regex(/^\+?[1-9]\d{7,14}$/, "Phone / WhatsApp must be a valid number")
+    .optional()
+    .or(z.literal("")),
   honeypot: z.string().optional(),
 });
 
