@@ -42,7 +42,7 @@ describe("mobile-first customer UI (pre-deploy)", () => {
 
     const form = read("frontend/components/feedback/feedback-form.tsx");
     expect(form).toMatch(/w-full/);
-    expect(form).toMatch(/Submit private feedback/);
+    expect(form).toMatch(/Send privately/);
   });
 
   it("sizes star rating targets at least 44px for mobile touch", () => {

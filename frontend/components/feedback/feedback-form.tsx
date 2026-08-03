@@ -70,19 +70,16 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
           ✓
         </div>
         <h2 className="mt-4 text-center text-xl font-semibold tracking-tight">
-          Thank you for your feedback
+          Noted. We’ll take it from here.
         </h2>
         <p className="mt-2 text-center text-sm text-muted">
-          We appreciate you taking the time to help {businessName} improve.
-        </p>
-        <p className="mt-3 text-center text-xs text-muted">
-          You can still share your experience on Google — same option for every customer.
+          Thanks for helping {businessName} improve.
         </p>
         <div className="mt-6">
           <GoogleReviewButton
             businessSlug={businessSlug}
             googleReviewUrl={googleReviewUrl}
-            label="Share your experience on Google"
+            label="Also leave a Google review"
           />
         </div>
       </motion.section>
@@ -94,7 +91,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
       onSubmit={handleSubmit}
       className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
     >
-      <label className="block text-sm font-medium">Your rating</label>
+      <label className="block text-sm font-medium">How was it today?</label>
       <div className="mt-3">
         <StarRating value={rating} onChange={setRating} />
       </div>
@@ -103,13 +100,13 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         <Textarea
           id="comment"
           name="comment"
-          label="Comments (optional)"
+          label="What should we know?"
           rows={4}
           maxLength={1000}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           className="text-base"
-          placeholder="Tell us what went well or what could improve"
+          placeholder="Service, food, wait time… anything that helps"
           hint={`${comment.length}/1000`}
         />
       </div>
@@ -121,12 +118,12 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
           type="tel"
           inputMode="tel"
           autoComplete="tel"
-          label="Phone / WhatsApp (optional)"
+          label="WhatsApp / phone"
           value={customerPhone}
           onChange={(event) => setCustomerPhone(event.target.value)}
           className="text-base"
           placeholder="+91 98765 43210"
-          hint="Leave your number if you'd like us to contact you for a quick resolution."
+          hint="Optional — so we can reach you and fix this faster."
         />
       </div>
 
@@ -140,11 +137,6 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         autoComplete="off"
         aria-hidden="true"
       />
-
-      <p className="mt-4 text-xs text-muted">
-        No login required. Phone / WhatsApp is optional and only used to follow up on your
-        feedback.
-      </p>
 
       <AnimatePresence>
         {error ? (
@@ -166,7 +158,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         size="lg"
         className="mt-6 min-h-[44px] w-full"
       >
-        {loading ? "Submitting..." : "Submit private feedback"}
+        {loading ? "Sending..." : "Send privately"}
       </Button>
 
       <div className="mt-4">
