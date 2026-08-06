@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { businessService } from "@backend/lib/services/index";
+import { notFound, redirect } from "next/navigation";
+import { businessService, feedbackService } from "@backend/lib/services/index";
 import { CustomerFooter } from "@frontend/components/customer/customer-footer";
 import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
 import { CustomerPrivacyNotice } from "@frontend/components/customer/customer-privacy-notice";
@@ -10,15 +10,23 @@ export const dynamic = "force-dynamic";
 
 type ReviewPageProps = {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ preview?: string }>;
 };
 
-export default async function ReviewPage({ params }: ReviewPageProps) {
+export default async function ReviewPage({ params, searchParams }: ReviewPageProps) {
   const { slug } = await params;
+  const query = searchParams ? await searchParams : {};
+  const showLanding = query.preview === "1";
 
   const business = await businessService.getActiveBusinessBySlug(slug);
 
   if (!business) {
     notFound();
+  }
+
+  if (!showLanding) {
+    await feedbackService.logGoogleClick(slug);
+    redirect(business.googleReviewUrl);
   }
 
   return (

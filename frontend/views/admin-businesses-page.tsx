@@ -62,8 +62,10 @@ export default async function AdminBusinessesPage() {
       <Card className="border-dashed bg-slate-50/70">
         <p className="text-sm text-muted">
           Tip: After creating a business, download the QR PNG again (old QRs still point to the old
-          URL). Public page:{" "}
-          <code className="rounded bg-white px-1.5 py-0.5 text-xs">/r/[slug]</code>.
+          URL). Scanning the QR opens Google review directly. Private feedback:{" "}
+          <code className="rounded bg-white px-1.5 py-0.5 text-xs">/r/[slug]/feedback</code>.
+          Landing preview:{" "}
+          <code className="rounded bg-white px-1.5 py-0.5 text-xs">/r/[slug]?preview=1</code>.
         </p>
       </Card>
     </div>
