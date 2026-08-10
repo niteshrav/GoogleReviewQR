@@ -136,6 +136,8 @@ package.json       # Single workspace install at repo root
 - [Phase 1 BRD](./docs/PHASE_1_MVP_BRD.md)
 - [Phase 1 deploy runbook](./docs/PHASE_1_DEPLOY.md)
 - [E2E manual test guide (mobile-first)](./docs/PHASE_1_E2E_MANUAL_TEST_GUIDE.md)
+- [Automated testing toolkit (TDD)](./docs/TESTING.md)
+- [Quality gate (mandatory)](./docs/QUALITY_GATE.md)
 - [Beta checklist (30-day pilot)](./docs/PHASE_1_BETA_CHECKLIST.md)
 
 ## Compliance

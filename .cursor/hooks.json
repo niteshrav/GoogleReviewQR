@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/block-quality-bypass.sh",
+        "matcher": "git\\s+(commit|push|rebase|merge)|--no-verify|force|PROTECTED",
+        "failClosed": true
+      }
+    ]
+  }
+}
