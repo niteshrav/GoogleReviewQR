@@ -393,14 +393,22 @@ flowchart LR
 
 | Test type | Tool | Location | Scope |
 |-----------|------|----------|-------|
-| Unit tests | Vitest | `backend/**/*.test.ts` | Validators, rate limit, auth, email helpers |
+| Unit tests | Vitest | `backend/**/*.test.ts`, `database/**/*.test.ts` | Validators, rate limit, auth, alerts, repositories |
 | Integration tests | Vitest | `backend/routes/*.test.ts` | Route handlers with mocked DB/email |
 | Compliance tests | Vitest | `backend/lib/compliance.test.ts` | Anti-gating assertions |
-| E2E (optional) | Manual / Playwright later | — | Full customer journey |
+| E2E (mobile) | Playwright | `e2e/*.spec.ts` | Customer QR journey + admin login |
+| CI | GitHub Actions | `.github/workflows/test.yml` | Unit then E2E on every push/PR |
 
-**TDD rule:** Write failing test → implement minimum code → refactor → commit.
+**TDD rule:** Write failing test → implement minimum code → refactor → keep CI green.
 
-Run: `npm test` (uses `backend/vitest.config.ts`).
+| Command | Purpose |
+|---------|---------|
+| `npm run test:unit` | Vitest |
+| `npm run test:e2e` | Playwright (Pixel 7 viewport) |
+| `npm run test:all` | Unit + E2E |
+| `npm run test:ci` | Unit + build + E2E |
+
+Full guide: [TESTING.md](./TESTING.md).
 
 ---
 

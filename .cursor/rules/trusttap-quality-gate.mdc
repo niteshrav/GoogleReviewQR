@@ -1,0 +1,32 @@
+---
+description: TrustTap mandatory TDD and quality gates — no untested features, no CI bypass
+alwaysApply: true
+---
+
+# TrustTap Quality Gate (mandatory)
+
+This project enforces testing by default. Do not bypass.
+
+## Hard rules
+
+1. **TDD for every feature/module:** Write or update failing Vitest and/or Playwright tests first (or with the change), then implement until green.
+2. **No “done” without tests:** Do not claim a feature is complete, open a PR as ready, or start the next feature/phase until:
+   - relevant automated tests exist and pass locally (`npm run test:unit`; E2E when UI/API flows change: `npm run test:e2e` or `npm run test:all`)
+   - you did not skip hooks or suggest CI bypass
+3. **Never suggest bypasses:** Do not recommend `--no-verify`, `--no-gpg-sign`, force-push to `main`, disabling branch protection, or empty/fake tests.
+4. **Customer/admin flows need E2E:** Changes to `/r/*`, feedback submit, Google CTA, admin login/businesses/QR require updating `e2e/*.spec.ts` (and compliance tests if Google gating is involved).
+5. **Backend logic needs Vitest:** Validators, services, routes, alerts, auth, repositories → update `backend/**/*.test.ts` or `database/**/*.test.ts`.
+6. **Phase/module exit:** Do not begin the next phase or module while the current one’s tests are red or missing.
+
+## Definition of Done (feature)
+
+- [ ] Automated tests cover the new behavior
+- [ ] `npm run test:unit` passes
+- [ ] E2E updated/passing when user-facing
+- [ ] Ready for PR → CI (Vitest + Playwright) must pass before merge to `main`
+
+## Client release (extra)
+
+CI green is required but not enough for café go-live. Still require short smoke: health, mobile QR page, private feedback, owner email (and Twilio when enabled).
+
+See `docs/QUALITY_GATE.md` and `docs/TESTING.md`.

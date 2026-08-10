@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Pre-push gate: unit tests must pass before code leaves the machine.
+# Full E2E runs in GitHub Actions on every PR.
+set -euo pipefail
+
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+echo "[trusttap pre-push] Running unit tests before push (${branch})…"
+
+npm run test:unit
+
+echo "[trusttap pre-push] Unit tests passed. E2E will run in CI on the PR."
