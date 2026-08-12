@@ -21,20 +21,20 @@ test.describe("customer review flow @tdd", () => {
     await page.goto("/r/cafe-edelweiss/feedback");
 
     await page.getByRole("radio", { name: "2 stars" }).click();
-    await page.getByLabel(/comments/i).fill("E2E test — service was slow");
-    await page.getByLabel(/phone \/ whatsapp/i).fill("+919876543210");
-    await page.getByRole("button", { name: /submit private feedback/i }).click();
+    await page.getByLabel(/what should we know/i).fill("E2E test — service was slow");
+    await page.getByLabel(/whatsapp \/ phone/i).fill("+919876543210");
+    await page.getByRole("button", { name: /send privately/i }).click();
 
-    await expect(page.getByRole("heading", { name: /thank you for your feedback/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /noted.*take it from here/i })).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /share your experience on google/i }),
+      page.getByRole("button", { name: /also leave a google review/i }),
     ).toBeVisible();
   });
 
   test("feedback form rejects submit without a rating", async ({ page }) => {
     await page.goto("/r/cafe-edelweiss/feedback");
 
-    await page.getByRole("button", { name: /submit private feedback/i }).click();
+    await page.getByRole("button", { name: /send privately/i }).click();
     await expect(page.getByText(/please select a rating/i)).toBeVisible();
   });
 });
