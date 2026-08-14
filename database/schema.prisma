@@ -28,6 +28,7 @@ model Feedback {
   businessId    String
   rating        Int?
   comment       String?   @db.VarChar(1000)
+  customerName  String?
   customerPhone String?
   clickedGoogle Boolean   @default(false)
   locationLabel String?   @default("main")

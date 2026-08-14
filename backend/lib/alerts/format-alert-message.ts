@@ -2,6 +2,7 @@ export function formatOwnerAlertMessage(input: {
   businessName: string;
   rating: number;
   comment?: string | null;
+  customerName?: string | null;
   customerPhone?: string | null;
   timestamp: Date;
 }): string {
@@ -9,6 +10,7 @@ export function formatOwnerAlertMessage(input: {
     `TrustTap alert — ${input.businessName}`,
     `Rating: ${input.rating}/5`,
     `Comment: ${input.comment?.trim() ? input.comment.trim() : "No comment"}`,
+    `Customer name: ${input.customerName?.trim() ? input.customerName.trim() : "Not shared"}`,
     `Customer contact: ${input.customerPhone?.trim() ? input.customerPhone.trim() : "Not shared"}`,
     `Time: ${input.timestamp.toISOString()}`,
   ];

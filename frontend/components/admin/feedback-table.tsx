@@ -8,6 +8,7 @@ type FeedbackItem = {
   id: string;
   rating: number | null;
   comment: string | null;
+  customerName: string | null;
   customerPhone: string | null;
   clickedGoogle: boolean;
   alertSentAt: string | null;
@@ -30,6 +31,7 @@ export function FeedbackTable({ items }: FeedbackTableProps) {
       const matchesQuery =
         !query ||
         (item.comment ?? "").toLowerCase().includes(query.toLowerCase()) ||
+        (item.customerName ?? "").toLowerCase().includes(query.toLowerCase()) ||
         (item.customerPhone ?? "").toLowerCase().includes(query.toLowerCase()) ||
         String(item.rating ?? "").includes(query);
 
@@ -103,6 +105,7 @@ export function FeedbackTable({ items }: FeedbackTableProps) {
                   <th className="px-4 py-3 font-semibold text-muted">Time</th>
                   <th className="px-4 py-3 font-semibold text-muted">Rating</th>
                   <th className="px-4 py-3 font-semibold text-muted">Comment</th>
+                  <th className="px-4 py-3 font-semibold text-muted">Name</th>
                   <th className="px-4 py-3 font-semibold text-muted">Contact</th>
                   <th className="px-4 py-3 font-semibold text-muted">Google</th>
                   <th className="px-4 py-3 font-semibold text-muted">Alert</th>
@@ -122,6 +125,9 @@ export function FeedbackTable({ items }: FeedbackTableProps) {
                     </td>
                     <td className="max-w-xs px-4 py-3 text-foreground">
                       {item.comment?.trim() ? item.comment : "No comment"}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-foreground">
+                      {item.customerName?.trim() ? item.customerName : "—"}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-foreground">
                       {item.customerPhone?.trim() ? item.customerPhone : "—"}

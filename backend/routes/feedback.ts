@@ -41,6 +41,7 @@ export async function submitFeedback(request: Request) {
     businessSlug: parsed.data.businessSlug,
     rating: parsed.data.rating,
     comment,
+    customerName: parsed.data.customerName?.trim() || null,
     customerPhone: parsed.data.customerPhone?.trim() || null,
   });
 

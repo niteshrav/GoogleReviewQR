@@ -18,6 +18,7 @@ type FeedbackRecord = {
   businessId: string;
   rating: number | null;
   comment: string | null;
+  customerName: string | null;
   customerPhone: string | null;
   clickedGoogle: boolean;
   locationLabel: string;
@@ -99,6 +100,7 @@ function createInMemoryFeedbackRepository() {
         businessId: data.businessId,
         rating: data.rating ?? null,
         comment: data.comment ?? null,
+        customerName: data.customerName ?? null,
         customerPhone: data.customerPhone ?? null,
         clickedGoogle: data.clickedGoogle ?? false,
         locationLabel: data.locationLabel ?? "main",

@@ -264,59 +264,12 @@ export function LandingPage() {
                   "radial-gradient(circle at 30% 20%, rgba(15,76,70,0.16), transparent 55%), radial-gradient(circle at 80% 80%, rgba(61,107,102,0.12), transparent 50%)",
               }}
             />
-            <Card className="relative overflow-hidden p-0 shadow-[var(--shadow-lg)]" padding="none">
-              <div className="border-b border-border bg-brand-soft/60 px-5 py-4">
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#d4a5a5]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#d4c4a5]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#a5c4b5]" />
-                  <span className="ml-3 text-xs font-medium text-muted">/r/cafe-edelweiss</span>
-                </div>
-              </div>
-              <div className="grid gap-6 p-6 sm:grid-cols-[1fr_auto] sm:items-center">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                    Live preview
-                  </p>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight">
-                    How was your experience?
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    One scan opens a polished mobile page with private feedback and Google review.
-                  </p>
-                  <div className="mt-5 space-y-2">
-                    <div className="rounded-xl bg-brand px-4 py-3 text-center text-sm font-semibold text-white">
-                      Leave a Google Review
-                    </div>
-                    <div className="rounded-xl border border-border bg-white px-4 py-3 text-center text-sm font-medium">
-                      Send private feedback
-                    </div>
-                  </div>
-                </div>
-                <div className="mx-auto flex h-44 w-44 flex-col items-center justify-center rounded-2xl border border-border bg-white p-4 shadow-sm">
-                  <div
-                    className="grid h-28 w-28 grid-cols-5 gap-1"
-                    aria-hidden
-                    role="img"
-                    aria-label="QR code preview"
-                  >
-                    {Array.from({ length: 25 }).map((_, i) => (
-                      <span
-                        key={i}
-                        className={`rounded-[2px] ${
-                          [0, 1, 2, 4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 22, 23, 24].includes(i)
-                            ? "bg-foreground"
-                            : "bg-border"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="mt-3 text-[10px] font-medium uppercase tracking-wide text-muted">
-                    Scan to open
-                  </p>
-                </div>
-              </div>
-            </Card>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/trusttap-hero.png"
+              alt="TrustTap QR stand, mobile review page, and live dashboard"
+              className="relative w-full rounded-[28px] object-cover shadow-[var(--shadow-lg)]"
+            />
           </FadeIn>
         </section>
 

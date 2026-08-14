@@ -20,6 +20,7 @@ export type CreateFeedbackInput = {
   businessId: string;
   rating?: number | null;
   comment?: string | null;
+  customerName?: string | null;
   customerPhone?: string | null;
   clickedGoogle?: boolean;
   locationLabel?: string | null;
