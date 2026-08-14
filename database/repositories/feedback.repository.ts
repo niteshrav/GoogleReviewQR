@@ -10,6 +10,7 @@ export function createFeedbackRepository(prisma: PrismaClient) {
           businessId: data.businessId,
           rating: data.rating ?? null,
           comment: data.comment ?? null,
+          customerName: data.customerName ?? null,
           customerPhone: data.customerPhone ?? null,
           clickedGoogle: data.clickedGoogle ?? false,
           locationLabel: data.locationLabel ?? "main",

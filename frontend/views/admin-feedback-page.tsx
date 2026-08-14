@@ -71,6 +71,7 @@ export default async function AdminFeedbackPage({ params }: AdminFeedbackPagePro
           id: item.id,
           rating: item.rating,
           comment: item.comment,
+          customerName: item.customerName,
           customerPhone: item.customerPhone,
           clickedGoogle: item.clickedGoogle,
           alertSentAt: item.alertSentAt?.toISOString() ?? null,

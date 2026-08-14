@@ -18,6 +18,7 @@ type FeedbackFormProps = {
 export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: FeedbackFormProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [website, setWebsite] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +43,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         businessSlug,
         rating,
         comment,
+        customerName,
         customerPhone,
         honeypot: website,
       }),
@@ -91,7 +93,19 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
       onSubmit={handleSubmit}
       className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
     >
-      <label className="block text-sm font-medium">How was it today?</label>
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words">
+          Help us make this better
+        </h1>
+        <p className="text-sm leading-relaxed text-muted break-words">
+          A quick note for {businessName}. We’ll use it to improve.
+        </p>
+        <p className="text-sm leading-relaxed text-muted break-words">
+          No login. Stays with the business — not a public review.
+        </p>
+      </header>
+
+      <label className="mt-6 block text-sm font-medium">How was it today?</label>
       <div className="mt-3">
         <StarRating value={rating} onChange={setRating} />
       </div>
@@ -113,17 +127,32 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
 
       <div className="mt-6">
         <Input
+          id="customerName"
+          name="customerName"
+          type="text"
+          autoComplete="name"
+          label="Name (optional)"
+          value={customerName}
+          onChange={(event) => setCustomerName(event.target.value)}
+          className="text-base"
+          placeholder="Your name"
+          maxLength={80}
+        />
+      </div>
+
+      <div className="mt-6">
+        <Input
           id="customerPhone"
           name="customerPhone"
           type="tel"
           inputMode="tel"
           autoComplete="tel"
-          label="WhatsApp / phone"
+          label="WhatsApp / phone number (optional)"
           value={customerPhone}
           onChange={(event) => setCustomerPhone(event.target.value)}
           className="text-base"
           placeholder="+91 98765 43210"
-          hint="Optional — so we can reach you and fix this faster."
+          hint="So we can reach you and fix this faster."
         />
       </div>
 

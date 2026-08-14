@@ -67,6 +67,26 @@ describe("feedbackInputSchema", () => {
 
     expect(parsed.customerPhone).toBe("");
   });
+
+  it("accepts optional customer name", () => {
+    const parsed = feedbackInputSchema.parse({
+      businessSlug: "cafe-edelweiss",
+      rating: 4,
+      customerName: "Priya",
+    });
+
+    expect(parsed.customerName).toBe("Priya");
+  });
+
+  it("allows empty customer name", () => {
+    const parsed = feedbackInputSchema.parse({
+      businessSlug: "cafe-edelweiss",
+      rating: 4,
+      customerName: "",
+    });
+
+    expect(parsed.customerName).toBe("");
+  });
 });
 
 describe("googleClickInputSchema", () => {

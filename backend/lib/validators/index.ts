@@ -45,6 +45,7 @@ export const feedbackInputSchema = z.object({
   businessSlug: slugSchema,
   rating: z.number().int().min(1).max(5),
   comment: z.string().trim().max(1000).optional(),
+  customerName: z.string().trim().max(80).optional().or(z.literal("")),
   customerPhone: z
     .string()
     .trim()
