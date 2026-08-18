@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { FadeIn } from "@frontend/components/motion/fade-in";
 import { Button } from "@frontend/components/ui/button";
 import { Card } from "@frontend/components/ui/card";
@@ -159,14 +160,9 @@ export function LandingPage() {
   return (
     <div className="bg-mesh min-h-[100dvh]">
       <header className="sticky top-0 z-40 glass pt-[env(safe-area-inset-top)]">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white shadow-sm">
-              T
-            </span>
-            <span className="text-sm font-semibold tracking-tight text-foreground">
-              TrustTap
-            </span>
+        <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-8">
+          <Link href="/" className="flex shrink-0 items-center overflow-visible py-1" aria-label="TrustTap home">
+            <TrustTapLogo variant="horizontal" tagline />
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
             <a href="#features" className="transition-colors hover:text-foreground">
@@ -227,7 +223,7 @@ export function LandingPage() {
       <main>
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
           <FadeIn immediate>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand">
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-navy">
               Commiters TrustTap
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
@@ -261,14 +257,14 @@ export function LandingPage() {
               aria-hidden
               style={{
                 background:
-                  "radial-gradient(circle at 30% 20%, rgba(15,76,70,0.16), transparent 55%), radial-gradient(circle at 80% 80%, rgba(61,107,102,0.12), transparent 50%)",
+                  "radial-gradient(circle at 30% 20%, rgba(30,136,229,0.18), transparent 55%), radial-gradient(circle at 80% 80%, rgba(10,46,80,0.12), transparent 50%)",
               }}
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/trusttap-hero.png"
-              alt="TrustTap QR stand, mobile review page, and live dashboard"
-              className="relative w-full rounded-[28px] object-cover shadow-[var(--shadow-lg)]"
+              alt="TrustTap QR stand, mobile feedback form, and live dashboard"
+              className="relative w-full rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)]"
             />
           </FadeIn>
         </section>
@@ -342,12 +338,10 @@ export function LandingPage() {
 
         <section className="px-5 py-20 sm:px-8">
           <FadeIn>
-            <div
-              className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 rounded-2xl px-8 py-10 sm:px-12 sm:py-12 lg:flex-row lg:items-center"
-              style={{ background: "var(--brand)", color: "#fff" }}
-            >
+            <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 rounded-2xl bg-navy px-8 py-10 text-white sm:px-12 sm:py-12 lg:flex-row lg:items-center">
               <div>
-                <h2 className="text-3xl font-semibold tracking-tight text-white">
+                <TrustTapLogo variant="horizontal" tone="inverse" tagline />
+                <h2 className="mt-5 text-3xl font-semibold tracking-tight text-white">
                   Ready to launch your pilot?
                 </h2>
                 <p className="mt-3 max-w-xl text-base leading-relaxed text-white/85">
@@ -358,7 +352,7 @@ export function LandingPage() {
               <Link
                 href="/admin/login"
                 className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl px-5 py-3 text-base font-semibold transition-colors focus-ring"
-                style={{ background: "#ffffff", color: "var(--brand)" }}
+                style={{ background: "#ffffff", color: "#0A2E50" }}
               >
                 Launch admin
               </Link>
@@ -368,16 +362,9 @@ export function LandingPage() {
       </main>
 
       <footer className="border-t border-border bg-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-5 py-10 sm:px-8 sm:py-12">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">
-            T
-          </span>
-          <div>
-            <p className="text-base font-semibold tracking-tight text-foreground">
-              TrustTap
-            </p>
-            <p className="mt-0.5 text-sm text-muted">Turn every visit into better service.</p>
-          </div>
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-5 py-10 sm:px-8 sm:py-12">
+          <TrustTapLogo variant="horizontal" tagline />
+          <p className="text-sm text-muted">Turn every visit into better service.</p>
         </div>
         <div className="border-t border-border">
           <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">

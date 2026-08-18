@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { CustomerFooter } from "@frontend/components/customer/customer-footer";
 import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
 import { Button } from "@frontend/components/ui/button";
@@ -8,8 +9,8 @@ export default function NotFoundPage() {
   return (
     <CustomerPageShell className="items-center justify-center text-center">
       <Card className="w-full">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
-          ?
+        <div className="mx-auto flex justify-center">
+          <TrustTapLogo variant="mark" markClassName="h-12 w-12" />
         </div>
         <h1 className="mt-4 text-2xl font-semibold tracking-tight">
           This feedback link is not available
