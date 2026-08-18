@@ -1,6 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "@frontend/styles/globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +23,7 @@ export const metadata: Metadata = {
   description:
     "QR-powered customer feedback that helps local businesses improve service and make Google reviews easy.",
   metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),
+  applicationName: "TrustTap",
 };
 
 /** Mobile-first: QR scans open on phones — lock layout to device width. */
@@ -25,7 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#0f4c46",
+  themeColor: "#0A2E50",
 };
 
 export default function RootLayout({
@@ -35,7 +42,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>

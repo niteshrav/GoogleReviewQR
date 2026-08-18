@@ -1,23 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3f4f2;
-  --foreground: #121412;
-  --brand: #0f4c46;
-  --brand-dark: #0a3632;
-  --brand-soft: #e7f0ef;
-  --secondary: #3d6b66;
-  --secondary-dark: #2f5450;
-  --muted: #5c6562;
+  --background: #f5f7f9;
+  --foreground: #0a2e50;
+  --brand: #1e88e5;
+  --brand-dark: #1565c0;
+  --brand-soft: #e3f2fd;
+  --navy: #0a2e50;
+  --gold: #d4af37;
+  --thrive: #00e676;
+  --secondary: #0a2e50;
+  --secondary-dark: #071f38;
+  --muted: #5a6b7c;
   --card: #ffffff;
-  --border: #dde2df;
+  --border: #d5dee7;
   --error: #b42318;
   --warning: #b54708;
-  --success: #0f4c46;
-  --ring: rgba(15, 76, 70, 0.28);
-  --shadow-sm: 0 1px 2px rgba(18, 20, 18, 0.04);
-  --shadow-md: 0 2px 8px rgba(18, 20, 18, 0.05);
-  --shadow-lg: 0 8px 24px rgba(18, 20, 18, 0.07);
+  --success: #067a42;
+  --ring: rgba(30, 136, 229, 0.28);
+  --shadow-sm: 0 1px 2px rgba(10, 46, 80, 0.04);
+  --shadow-md: 0 2px 8px rgba(10, 46, 80, 0.06);
+  --shadow-lg: 0 8px 24px rgba(10, 46, 80, 0.08);
   --radius: 12px;
 }
 
@@ -27,6 +30,9 @@
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
   --color-brand-soft: var(--brand-soft);
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
+  --color-thrive: var(--thrive);
   --color-secondary: var(--secondary);
   --color-secondary-dark: var(--secondary-dark);
   --color-muted: var(--muted);
@@ -35,7 +41,7 @@
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-success: var(--success);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --radius-xl: 12px;
   --radius-2xl: 14px;
@@ -52,7 +58,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -82,8 +88,8 @@ a,
 /* Soft atmosphere for marketing surfaces */
 .bg-mesh {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(15, 76, 70, 0.1), transparent),
-    radial-gradient(ellipse 50% 35% at 100% 0%, rgba(61, 107, 102, 0.06), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 136, 229, 0.12), transparent),
+    radial-gradient(ellipse 50% 35% at 100% 0%, rgba(10, 46, 80, 0.08), transparent),
     var(--background);
 }
 

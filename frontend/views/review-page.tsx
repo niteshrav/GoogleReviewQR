@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { businessService } from "@backend/lib/services/index";
+import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { CustomerFooter } from "@frontend/components/customer/customer-footer";
 import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
 import { CustomerPrivacyNotice } from "@frontend/components/customer/customer-privacy-notice";
@@ -24,6 +25,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   return (
     <CustomerPageShell>
       <header className="space-y-3">
+        <TrustTapLogo variant="horizontal" tagline className="text-sm" markClassName="h-8 w-8" />
         <p className="text-sm font-medium text-muted">{business.name}</p>
         <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words sm:text-3xl">
           How was your experience?
