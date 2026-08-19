@@ -7,11 +7,28 @@ import { Card } from "@frontend/components/ui/card";
 export const dynamic = "force-dynamic";
 
 export default async function AdminBusinessesPage() {
-  const businesses = await businessService.listBusinesses();
   const publicBaseUrl = getPublicBaseUrl();
+  let businesses: Awaited<ReturnType<typeof businessService.listBusinesses>> = [];
+  let loadError: string | null = null;
+
+  try {
+    businesses = await businessService.listBusinesses();
+  } catch (error) {
+    console.error("[admin/businesses] failed to list businesses", error);
+    loadError = "Could not load businesses from the database.";
+  }
 
   return (
     <div className="space-y-8">
+      {loadError ? (
+        <Card className="border-amber-200 bg-amber-50">
+          <p className="text-sm font-semibold text-amber-900">{loadError}</p>
+          <p className="mt-1 text-xs text-amber-800">
+            After a deploy this usually means production is missing a Prisma migration.
+          </p>
+        </Card>
+      ) : null}
+
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">Admin</p>
