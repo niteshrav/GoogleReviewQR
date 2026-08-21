@@ -20,7 +20,15 @@ export default async function AdminFeedbackPage({ params }: AdminFeedbackPagePro
     notFound();
   }
 
-  const feedback = await feedbackService.listFeedbackForBusiness(business.id);
+  let feedback: Awaited<ReturnType<typeof feedbackService.listFeedbackForBusiness>> = [];
+  let loadError: string | null = null;
+
+  try {
+    feedback = await feedbackService.listFeedbackForBusiness(business.id);
+  } catch (error) {
+    console.error("[admin/feedback] failed to list feedback", error);
+    loadError = "Could not load feedback from the database.";
+  }
   const rated = feedback.filter((item) => typeof item.rating === "number");
   const avg =
     rated.length > 0
@@ -86,6 +94,12 @@ export default async function AdminFeedbackPage({ params }: AdminFeedbackPagePro
         </div>
       </div>
 
+      {loadError ? (
+        <Card className="border-amber-200 bg-amber-50">
+          <p className="text-sm font-semibold text-amber-900">{loadError}</p>
+        </Card>
+      ) : null}
+
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card>
           <p className="text-xs font-medium uppercase tracking-wide text-muted">Total entries</p>
@@ -120,9 +134,9 @@ export default async function AdminFeedbackPage({ params }: AdminFeedbackPagePro
           customerName: item.customerName,
           customerPhone: item.customerPhone,
           clickedGoogle: item.clickedGoogle,
-          alertSentAt: item.alertSentAt?.toISOString() ?? null,
+          alertSentAt: item.alertSentAt ? new Date(item.alertSentAt).toISOString() : null,
           alertChannel: item.alertChannel ?? null,
-          createdAt: item.createdAt.toISOString(),
+          createdAt: new Date(item.createdAt).toISOString(),
         }))}
       />
     </div>

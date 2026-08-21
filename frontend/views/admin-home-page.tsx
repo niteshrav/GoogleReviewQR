@@ -9,18 +9,39 @@ import { StatCard } from "@frontend/components/ui/stat-card";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHomePage() {
-  const businesses = await businessService.listBusinesses();
+  let businesses: Awaited<ReturnType<typeof businessService.listBusinesses>> = [];
+  let loadError: string | null = null;
+
+  try {
+    businesses = await businessService.listBusinesses();
+  } catch (error) {
+    console.error("[admin/home] failed to list businesses", error);
+    loadError = "Could not load businesses from the database.";
+  }
+
   const activeCount = businesses.filter((b) => b.isActive).length;
   const paidCount = businesses.filter((b) => b.billingStatus === "paid").length;
   const overdueCount = businesses.filter((b) => b.billingStatus === "overdue").length;
   const premiumCount = businesses.filter((b) => b.plan === "premium").length;
 
-  const feedbackLists = await Promise.all(
-    businesses.map(async (business) => ({
-      business,
-      items: await feedbackService.listFeedbackForBusiness(business.id),
-    })),
-  );
+  let feedbackLists: Array<{
+    business: (typeof businesses)[number];
+    items: Awaited<ReturnType<typeof feedbackService.listFeedbackForBusiness>>;
+  }> = businesses.map((business) => ({ business, items: [] }));
+
+  if (!loadError) {
+    try {
+      feedbackLists = await Promise.all(
+        businesses.map(async (business) => ({
+          business,
+          items: await feedbackService.listFeedbackForBusiness(business.id),
+        })),
+      );
+    } catch (error) {
+      console.error("[admin/home] failed to list feedback", error);
+      loadError = "Could not load feedback from the database.";
+    }
+  }
 
   const totalFeedback = feedbackLists.reduce((sum, e) => sum + e.items.length, 0);
   const googleClicks = feedbackLists.reduce(
@@ -39,11 +60,11 @@ export default async function AdminHomePage() {
     .flatMap((e) =>
       e.items.map((i) => ({ ...i, businessName: e.business.name, businessId: e.business.id })),
     )
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
   const recentBusinesses = [...businesses]
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
   const allItems = feedbackLists.flatMap((e) => e.items);
@@ -59,7 +80,18 @@ export default async function AdminHomePage() {
 
   return (
     <div className="space-y-8">
-      {/* Page header */}
+      {loadError ? (
+        <Card className="border-amber-200 bg-amber-50">
+          <p className="text-sm font-semibold text-amber-900">Dashboard data failed to load</p>
+          <p className="mt-1 text-sm text-amber-900">{loadError}</p>
+          <p className="mt-2 text-xs text-amber-800">
+            After a deploy this usually means production is missing a Prisma migration. Run{" "}
+            <code className="rounded bg-white px-1">npm run db:migrate:deploy</code> with the
+            production DATABASE_URL.
+          </p>
+        </Card>
+      ) : null}
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-brand">Admin dashboard</p>
@@ -240,7 +272,7 @@ export default async function AdminHomePage() {
                       </p>
                     </div>
                     <p className="shrink-0 text-[11px] text-muted">
-                      {item.createdAt.toLocaleDateString()}
+                      {new Date(item.createdAt).toLocaleDateString()}
                     </p>
                   </li>
                 );

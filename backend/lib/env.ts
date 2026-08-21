@@ -53,7 +53,8 @@ export function getEnv(): Env {
 }
 
 export function getPublicBaseUrl(): string {
-  return getEnv().BASE_URL.replace(/\/$/, "");
+  const raw = process.env.BASE_URL?.trim() || "http://localhost:3000";
+  return raw.replace(/\/$/, "");
 }
 
 export function resetEnvCacheForTests(): void {
