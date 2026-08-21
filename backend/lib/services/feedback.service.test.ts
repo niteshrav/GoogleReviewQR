@@ -36,7 +36,11 @@ describe("feedbackService", () => {
       rating: 2,
       createdAt: new Date(),
     });
-    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: true, emailDelivered: true });
+    mocks.sendOwnerAlertFn.mockResolvedValue({
+      phoneDelivered: true,
+      emailDelivered: true,
+      alertChannel: "whatsapp",
+    });
 
     const result = await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
@@ -46,7 +50,9 @@ describe("feedbackService", () => {
 
     expect(result.feedbackId).toBe("fb-1");
     expect(mocks.sendOwnerAlertFn).toHaveBeenCalledOnce();
-    expect(mocks.feedbackRepository.markAlertSent).toHaveBeenCalledWith("fb-1");
+    expect(mocks.feedbackRepository.markAlertSent).toHaveBeenCalledWith("fb-1", {
+      channel: "whatsapp",
+    });
   });
 
   it("returns null business when slug is inactive or missing", async () => {
@@ -108,7 +114,11 @@ describe("feedbackService", () => {
       rating: 1,
       createdAt: new Date(),
     });
-    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: false, emailDelivered: false });
+    mocks.sendOwnerAlertFn.mockResolvedValue({
+      phoneDelivered: false,
+      emailDelivered: false,
+      alertChannel: null,
+    });
 
     const result = await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
@@ -134,13 +144,19 @@ describe("feedbackService", () => {
       rating: 2,
       createdAt: new Date(),
     });
-    mocks.sendOwnerAlertFn.mockResolvedValue({ phoneDelivered: false, emailDelivered: true });
+    mocks.sendOwnerAlertFn.mockResolvedValue({
+      phoneDelivered: false,
+      emailDelivered: true,
+      alertChannel: "email",
+    });
 
     await service.submitPrivateFeedback({
       businessSlug: "cafe-edelweiss",
       rating: 2,
     });
 
-    expect(mocks.feedbackRepository.markAlertSent).toHaveBeenCalledWith("fb-4");
+    expect(mocks.feedbackRepository.markAlertSent).toHaveBeenCalledWith("fb-4", {
+      channel: "email",
+    });
   });
 });

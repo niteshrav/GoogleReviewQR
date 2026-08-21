@@ -14,6 +14,7 @@ export function createFeedbackRepository(prisma: PrismaClient) {
           customerPhone: data.customerPhone ?? null,
           clickedGoogle: data.clickedGoogle ?? false,
           locationLabel: data.locationLabel ?? "main",
+          alertChannel: data.alertChannel ?? null,
         },
       });
     },
@@ -34,7 +35,10 @@ export function createFeedbackRepository(prisma: PrismaClient) {
       return this.findByBusinessId(businessId, limit);
     },
 
-    async markAlertSent(id: string, sentAt: Date = new Date()) {
+    async markAlertSent(
+      id: string,
+      details: { sentAt?: Date; channel?: string | null } = {},
+    ) {
       const existing = await prisma.feedback.findUnique({ where: { id } });
       if (!existing) {
         throw new FeedbackNotFoundError(id);
@@ -46,7 +50,10 @@ export function createFeedbackRepository(prisma: PrismaClient) {
 
       return prisma.feedback.update({
         where: { id },
-        data: { alertSentAt: sentAt },
+        data: {
+          alertSentAt: details.sentAt ?? new Date(),
+          alertChannel: details.channel ?? existing.alertChannel,
+        },
       });
     },
   };

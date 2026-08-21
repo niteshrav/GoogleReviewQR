@@ -48,7 +48,9 @@ export function createFeedbackService(deps: FeedbackServiceDeps) {
           });
 
           if (result.phoneDelivered || result.emailDelivered) {
-            await deps.feedbackRepository.markAlertSent(feedback.id);
+            await deps.feedbackRepository.markAlertSent(feedback.id, {
+              channel: result.alertChannel,
+            });
           }
         } catch (error) {
           console.error("Failed to send owner alert", error);

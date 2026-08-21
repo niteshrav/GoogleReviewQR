@@ -12,6 +12,7 @@ export function createBusinessRepository(prisma: PrismaClient) {
             ...data,
             ownerWhatsApp: data.ownerWhatsApp || null,
             ownerSmsPhone: data.ownerSmsPhone || null,
+            paymentReference: data.paymentReference || null,
           },
         });
       } catch (error) {
@@ -39,6 +40,18 @@ export function createBusinessRepository(prisma: PrismaClient) {
       return prisma.business.findUnique({ where: { slug } });
     },
 
+    async findByOwnerAccessSecret(secret: string) {
+      return prisma.business.findFirst({
+        where: { ownerAccessSecret: secret, isActive: true },
+      });
+    },
+
+    async findByOwnerSessionToken(token: string) {
+      return prisma.business.findFirst({
+        where: { ownerSessionToken: token, isActive: true },
+      });
+    },
+
     async findAll() {
       return prisma.business.findMany({
         orderBy: { createdAt: "desc" },
@@ -59,6 +72,8 @@ export function createBusinessRepository(prisma: PrismaClient) {
             data.ownerWhatsApp === undefined ? undefined : data.ownerWhatsApp || null,
           ownerSmsPhone:
             data.ownerSmsPhone === undefined ? undefined : data.ownerSmsPhone || null,
+          paymentReference:
+            data.paymentReference === undefined ? undefined : data.paymentReference || null,
         },
       });
     },

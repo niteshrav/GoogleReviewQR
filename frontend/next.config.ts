@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { loadRootEnv } from "../backend/lib/load-root-env";
+
+loadRootEnv();
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,

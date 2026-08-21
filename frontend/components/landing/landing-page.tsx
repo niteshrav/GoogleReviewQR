@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { FadeIn } from "@frontend/components/motion/fade-in";
+import {
+  PricingSection,
+  type PublicPlanCard,
+} from "@frontend/components/landing/pricing-section";
 import { Button } from "@frontend/components/ui/button";
 import { Card } from "@frontend/components/ui/card";
 
@@ -154,7 +158,7 @@ function FaqSection() {
   );
 }
 
-export function LandingPage() {
+export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
@@ -170,6 +174,9 @@ export function LandingPage() {
             </a>
             <a href="#how" className="transition-colors hover:text-foreground">
               How it works
+            </a>
+            <a href="#pricing" className="transition-colors hover:text-foreground">
+              Pricing
             </a>
             <a href="#faq" className="transition-colors hover:text-foreground">
               FAQ
@@ -191,7 +198,7 @@ export function LandingPage() {
             >
               Admin
             </Link>
-            <Link href="/admin/login">
+            <Link href="/get-started?plan=core">
               <Button size="sm">Get started</Button>
             </Link>
           </div>
@@ -202,6 +209,7 @@ export function LandingPage() {
               {[
                 { href: "#features", label: "Features" },
                 { href: "#how", label: "How it works" },
+                { href: "#pricing", label: "Pricing" },
                 { href: "#faq", label: "FAQ" },
                 { href: "/admin/login", label: "Admin login" },
               ].map((item) => (
@@ -333,6 +341,8 @@ export function LandingPage() {
             </div>
           </div>
         </section>
+
+        <PricingSection plans={plans} />
 
         <FaqSection />
 

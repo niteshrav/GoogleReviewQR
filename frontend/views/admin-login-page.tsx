@@ -19,7 +19,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
   const cookieStore = await cookies();
   const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
 
-  if (verifyAdminSecret(session)) {
+  if (await verifyAdminSecret(session)) {
     redirect(next && next.startsWith("/admin") ? next : "/admin");
   }
 

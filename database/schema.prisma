@@ -16,11 +16,40 @@ model Business {
   ownerSmsPhone   String?
   googleReviewUrl String
   isActive        Boolean    @default(true)
+  plan            String     @default("pilot")
+  billingStatus   String     @default("trial")
+  setupFeePaid    Boolean    @default(false)
+  lastInvoiceSentAt DateTime?
+  paymentReceivedAt DateTime?
+  paymentAmountInr Int?
+  paymentReference String?
+  paymentMethod   String?
+  ownerAccessSecret String?
+  ownerSessionToken String?  @unique
+  lastWeeklyReportAt DateTime?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   feedbacks       Feedback[]
 
   @@index([isActive])
+}
+
+/** Public pricing catalog — shown on homepage, managed in admin. */
+model SubscriptionPlan {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  name        String
+  tagline     String?
+  priceInr    Int
+  setupFeeInr Int      @default(2999)
+  features    String[]
+  highlighted Boolean  @default(false)
+  isPublic    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublic, sortOrder])
 }
 
 model Feedback {
@@ -33,6 +62,7 @@ model Feedback {
   clickedGoogle Boolean   @default(false)
   locationLabel String?   @default("main")
   alertSentAt   DateTime?
+  alertChannel  String?
   createdAt     DateTime  @default(now())
   business      Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
 

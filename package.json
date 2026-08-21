@@ -27,6 +27,7 @@
     "db:push": "prisma db push --schema=database/schema.prisma",
     "db:studio": "prisma studio --schema=database/schema.prisma",
     "db:seed": "tsx backend/scripts/seed-pilot.ts",
+    "db:seed:demo": "tsx backend/scripts/seed-demo.ts",
     "hooks:setup": "bash scripts/setup-git-hooks.sh",
     "prepare": "bash scripts/setup-git-hooks.sh || true"
   },

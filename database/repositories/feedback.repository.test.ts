@@ -47,6 +47,7 @@ describe("feedbackRepository", () => {
         customerPhone: null,
         clickedGoogle: false,
         locationLabel: "main",
+        alertChannel: null,
       },
     });
   });
@@ -88,7 +89,7 @@ describe("feedbackRepository", () => {
     const sentAt = new Date("2026-07-20T10:00:00Z");
     prisma.feedback.update.mockResolvedValue({ id: "fb-1", alertSentAt: sentAt });
 
-    const result = await repository.markAlertSent("fb-1", sentAt);
+    const result = await repository.markAlertSent("fb-1", { sentAt });
 
     expect(result.alertSentAt).toEqual(sentAt);
   });
@@ -96,7 +97,7 @@ describe("feedbackRepository", () => {
   it("throws FeedbackNotFoundError when marking alert on missing feedback", async () => {
     prisma.feedback.findUnique.mockResolvedValue(null);
 
-    await expect(repository.markAlertSent("missing", new Date())).rejects.toBeInstanceOf(
+    await expect(repository.markAlertSent("missing")).rejects.toBeInstanceOf(
       FeedbackNotFoundError,
     );
   });
@@ -105,7 +106,7 @@ describe("feedbackRepository", () => {
     const existing = { id: "fb-1", alertSentAt: new Date("2026-07-20T09:00:00Z") };
     prisma.feedback.findUnique.mockResolvedValue(existing);
 
-    const result = await repository.markAlertSent("fb-1", new Date());
+    const result = await repository.markAlertSent("fb-1");
 
     expect(result.alertSentAt).toEqual(existing.alertSentAt);
     expect(prisma.feedback.update).not.toHaveBeenCalled();

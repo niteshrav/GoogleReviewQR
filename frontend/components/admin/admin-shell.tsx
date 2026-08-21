@@ -10,6 +10,7 @@ import { cn } from "@frontend/lib/cn";
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/businesses", label: "Businesses" },
+  { href: "/admin/plans", label: "Plans" },
 ];
 
 type AdminShellProps = {
@@ -97,7 +98,9 @@ export function AdminShell({ children }: AdminShellProps) {
           <p className="hidden text-sm text-muted lg:block">
             {pathname.startsWith("/admin/businesses")
               ? "Businesses & QR codes"
-              : "Admin"}
+              : pathname.startsWith("/admin/plans")
+                ? "Subscription plans"
+                : "Admin"}
           </p>
 
           <div className="ml-auto flex items-center gap-2">

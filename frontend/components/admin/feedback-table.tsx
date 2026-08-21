@@ -12,6 +12,7 @@ type FeedbackItem = {
   customerPhone: string | null;
   clickedGoogle: boolean;
   alertSentAt: string | null;
+  alertChannel: string | null;
   createdAt: string;
 };
 
@@ -138,8 +139,12 @@ export function FeedbackTable({ items }: FeedbackTableProps) {
                       </Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={item.alertSentAt ? "warning" : "default"}>
-                        {item.alertSentAt ? "Yes" : "No"}
+                      <Badge variant={item.alertSentAt ? "success" : "default"}>
+                        {item.alertChannel
+                          ? item.alertChannel
+                          : item.alertSentAt
+                            ? "Yes"
+                            : "No"}
                       </Badge>
                     </td>
                   </tr>

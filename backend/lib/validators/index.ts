@@ -26,6 +26,40 @@ export const googleReviewUrlSchema = z
     "Must be a valid Google review URL",
   );
 
+export const billingPlanSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(40)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Plan key must be lowercase alphanumeric with hyphens");
+export const billingStatusSchema = z.enum(["trial", "invoiced", "paid", "overdue"]);
+export const paymentReferenceSchema = z.string().trim().min(2).max(120);
+
+export const subscriptionPlanInputSchema = z.object({
+  key: billingPlanSchema,
+  name: z.string().trim().min(2).max(80),
+  tagline: z.string().trim().max(160).optional().or(z.literal("")),
+  priceInr: z.number().int().min(0).max(1_000_000),
+  setupFeeInr: z.number().int().min(0).max(1_000_000).optional(),
+  features: z.array(z.string().trim().min(1).max(160)).min(1).max(12),
+  highlighted: z.boolean().optional(),
+  isPublic: z.boolean().optional(),
+  sortOrder: z.number().int().min(0).max(999).optional(),
+});
+
+export const subscriptionPlanUpdateSchema = z
+  .object({
+    name: z.string().trim().min(2).max(80).optional(),
+    tagline: z.string().trim().max(160).nullable().optional().or(z.literal("")),
+    priceInr: z.number().int().min(0).max(1_000_000).optional(),
+    setupFeeInr: z.number().int().min(0).max(1_000_000).optional(),
+    features: z.array(z.string().trim().min(1).max(160)).min(1).max(12).optional(),
+    highlighted: z.boolean().optional(),
+    isPublic: z.boolean().optional(),
+    sortOrder: z.number().int().min(0).max(999).optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, "No update fields provided");
+
 export const businessInputSchema = z
   .object({
     name: z.string().trim().min(2).max(120),
@@ -35,6 +69,13 @@ export const businessInputSchema = z
     ownerSmsPhone: phoneFieldSchema,
     googleReviewUrl: googleReviewUrlSchema,
     isActive: z.boolean().optional(),
+    plan: billingPlanSchema.optional(),
+    billingStatus: billingStatusSchema.optional(),
+    setupFeePaid: z.boolean().optional(),
+    lastInvoiceSentAt: z.coerce.date().nullable().optional(),
+    paymentReceivedAt: z.coerce.date().nullable().optional(),
+    paymentAmountInr: z.number().int().min(0).nullable().optional(),
+    paymentReference: paymentReferenceSchema.nullable().optional().or(z.literal("")),
   })
   .refine((data) => Boolean(data.ownerWhatsApp?.trim() || data.ownerSmsPhone?.trim()), {
     message: "Provide owner WhatsApp or SMS phone for automated alerts",

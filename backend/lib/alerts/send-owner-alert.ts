@@ -1,4 +1,7 @@
-import { formatOwnerAlertMessage } from "@backend/lib/alerts/format-alert-message";
+import {
+  formatOwnerAlertSms,
+  formatOwnerAlertWhatsApp,
+} from "@backend/lib/alerts/format-alert-message";
 import { sendLowRatingAlert } from "@backend/lib/email/smtp";
 import { sendPhoneAlert } from "@backend/lib/phone/send-phone-alert";
 
@@ -17,24 +20,26 @@ export type OwnerAlertInput = {
 export type OwnerAlertResult = {
   phoneDelivered: boolean;
   emailDelivered: boolean;
+  alertChannel: "whatsapp" | "sms" | "email" | null;
 };
 
 export async function sendOwnerAlert(input: OwnerAlertInput): Promise<OwnerAlertResult> {
-  const message = formatOwnerAlertMessage({
+  const copyInput = {
     businessName: input.businessName,
     rating: input.rating,
     comment: input.comment,
     customerName: input.customerName,
     customerPhone: input.customerPhone,
     timestamp: input.timestamp,
-  });
+  };
 
-  let phoneDelivered = false;
+  let phoneChannel: "whatsapp" | "sms" | null = null;
   try {
-    phoneDelivered = await sendPhoneAlert({
+    phoneChannel = await sendPhoneAlert({
       ownerWhatsApp: input.ownerWhatsApp,
       ownerSmsPhone: input.ownerSmsPhone,
-      message,
+      message: formatOwnerAlertWhatsApp(copyInput),
+      smsMessage: formatOwnerAlertSms(copyInput),
     });
   } catch (error) {
     console.error("Primary phone alert failed", error);
@@ -56,5 +61,9 @@ export async function sendOwnerAlert(input: OwnerAlertInput): Promise<OwnerAlert
     console.error("Email backup alert failed", error);
   }
 
-  return { phoneDelivered, emailDelivered };
+  return {
+    phoneDelivered: Boolean(phoneChannel),
+    emailDelivered,
+    alertChannel: phoneChannel ?? (emailDelivered ? "email" : null),
+  };
 }
