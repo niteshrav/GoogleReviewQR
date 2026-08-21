@@ -16,7 +16,7 @@ import { sendOwnerAlert } from "@backend/lib/alerts/send-owner-alert";
 describe("sendOwnerAlert", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    sendPhoneAlert.mockResolvedValue(true);
+    sendPhoneAlert.mockResolvedValue("whatsapp");
     sendLowRatingAlert.mockResolvedValue(undefined);
   });
 
@@ -34,8 +34,18 @@ describe("sendOwnerAlert", () => {
     });
 
     expect(sendPhoneAlert).toHaveBeenCalledOnce();
+    expect(sendPhoneAlert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining("Reply to recover this visit."),
+        smsMessage: expect.stringContaining("TrustTap Cafe Edelweiss: 2/5."),
+      }),
+    );
     expect(sendLowRatingAlert).toHaveBeenCalledOnce();
-    expect(result).toEqual({ phoneDelivered: true, emailDelivered: true });
+    expect(result).toEqual({
+      phoneDelivered: true,
+      emailDelivered: true,
+      alertChannel: "whatsapp",
+    });
   });
 
   it("still attempts email when phone fails", async () => {

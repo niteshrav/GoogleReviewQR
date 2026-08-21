@@ -13,30 +13,50 @@ export type AlertEmailPayload = {
 
 let transporter: nodemailer.Transporter | null = null;
 
-function getTransporter() {
+async function getTransporter(): Promise<nodemailer.Transporter> {
   if (transporter) {
     return transporter;
   }
 
   const env = getEnv();
 
-  transporter = nodemailer.createTransport({
-    host: env.SMTP_HOST,
-    port: env.SMTP_PORT,
-    secure: env.SMTP_PORT === 465,
-    auth: {
-      user: env.SMTP_USER,
-      pass: env.SMTP_PASS,
-    },
-  });
+  if (env.ALERT_EMAIL_MODE === "log") {
+    // Safe local/demo mode: capture email payload in logs only.
+    transporter = nodemailer.createTransport({ jsonTransport: true });
+    console.log("[smtp] Email log mode enabled (ALERT_EMAIL_MODE=log).");
+  } else {
+    transporter = nodemailer.createTransport({
+      host: env.SMTP_HOST,
+      port: env.SMTP_PORT,
+      secure: env.SMTP_PORT === 465,
+      auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+  }
 
   return transporter;
 }
 
-export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<void> {
+async function send(options: nodemailer.SendMailOptions): Promise<void> {
   const env = getEnv();
-  const transport = getTransporter();
+  const transport = await getTransporter();
+  const info = await transport.sendMail({ from: env.SMTP_FROM, ...options });
 
+  if (env.ALERT_EMAIL_MODE === "log" && info.message) {
+    try {
+      const parsed = JSON.parse(info.message as string);
+      console.log(`[smtp] EMAIL to=${parsed.to?.[0]?.address ?? options.to}`);
+      console.log(`[smtp]   Subject: ${parsed.subject}`);
+      console.log(`[smtp]   Body preview: ${(parsed.text as string)?.slice(0, 120)}...`);
+    } catch {
+      // ignore parse errors
+    }
+  }
+}
+
+export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<void> {
   const subject = `Low feedback — ${payload.businessName} — ${payload.rating}/5`;
   const lines = [
     "New private feedback received (email backup)",
@@ -54,10 +74,17 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     "Powered by Commiters TrustTap",
   ];
 
-  await transport.sendMail({
-    from: env.SMTP_FROM,
+  await send({ to: payload.to, subject, text: lines.join("\n") });
+}
+
+export async function sendWeeklyReportEmail(payload: {
+  to: string;
+  businessName: string;
+  body: string;
+}): Promise<void> {
+  await send({
     to: payload.to,
-    subject,
-    text: lines.join("\n"),
+    subject: `TrustTap weekly report — ${payload.businessName}`,
+    text: payload.body,
   });
 }

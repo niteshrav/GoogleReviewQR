@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-button";
+import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { cn } from "@frontend/lib/cn";
 
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/businesses", label: "Businesses" },
+  { href: "/admin/plans", label: "Plans" },
 ];
 
 type AdminShellProps = {
@@ -36,13 +38,13 @@ export function AdminShell({ children }: AdminShellProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-white transition-transform duration-200 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-navy text-white transition-transform duration-200 lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center border-b border-border px-5">
-          <Link href="/admin" className="text-base font-semibold tracking-tight">
-            TrustTap
+        <div className="border-b border-white/10 bg-white px-4 py-3">
+          <Link href="/admin" className="flex items-center overflow-visible" aria-label="TrustTap admin">
+            <TrustTapLogo variant="horizontal" tagline />
           </Link>
         </div>
 
@@ -60,8 +62,8 @@ export function AdminShell({ children }: AdminShellProps) {
                 className={cn(
                   "flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                   active
-                    ? "bg-brand-soft text-brand"
-                    : "text-muted hover:bg-background hover:text-foreground",
+                    ? "bg-brand text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white",
                 )}
               >
                 {item.label}
@@ -70,10 +72,10 @@ export function AdminShell({ children }: AdminShellProps) {
           })}
         </nav>
 
-        <div className="border-t border-border p-3">
+        <div className="border-t border-white/10 p-3">
           <Link
             href="/"
-            className="flex items-center rounded-xl px-3 py-2 text-sm text-muted hover:bg-background hover:text-foreground"
+            className="flex items-center rounded-xl px-3 py-2 text-sm text-white/70 hover:bg-white/10 hover:text-white"
           >
             Public site
           </Link>
@@ -91,10 +93,14 @@ export function AdminShell({ children }: AdminShellProps) {
             ☰
           </button>
 
-          <p className="hidden text-sm text-muted md:block">
+          <TrustTapLogo variant="horizontal" tagline className="lg:hidden" />
+
+          <p className="hidden text-sm text-muted lg:block">
             {pathname.startsWith("/admin/businesses")
               ? "Businesses & QR codes"
-              : "Admin"}
+              : pathname.startsWith("/admin/plans")
+                ? "Subscription plans"
+                : "Admin"}
           </p>
 
           <div className="ml-auto flex items-center gap-2">

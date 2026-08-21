@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { ADMIN_SESSION_COOKIE, verifyAdminSecret } from "@backend/lib/auth/admin";
+import {
+  ADMIN_SESSION_COOKIE,
+  createOwnerSessionToken,
+  hashAccessSecret,
+  verifyAdminSecret,
+} from "@backend/lib/auth/admin";
+import { businessRepository } from "@database/index";
 import { jsonError, noStoreHeaders } from "@backend/lib/http";
+import { isSeededLoginSecret } from "@backend/lib/fixtures/seeded-login-credentials";
 
 const loginSchema = z.object({
   secret: z.string().min(1),
@@ -16,7 +23,27 @@ export async function adminLogin(request: Request) {
     return jsonError("Invalid login payload", 400);
   }
 
-  if (!verifyAdminSecret(parsed.data.secret)) {
+  const secret = parsed.data.secret;
+  const expected = process.env.ADMIN_SECRET;
+  const isPrimary = Boolean(expected && secret === expected);
+  const isSeeded = isSeededLoginSecret(secret);
+
+  let cookieValue = secret;
+
+  if (!isPrimary && !isSeeded) {
+    const hashed = hashAccessSecret(secret);
+    const business =
+      (await businessRepository.findByOwnerAccessSecret(hashed)) ??
+      (await businessRepository.findByOwnerAccessSecret(secret));
+
+    if (!business) {
+      return jsonError("Invalid admin secret", 401);
+    }
+
+    const sessionToken = createOwnerSessionToken();
+    await businessRepository.update(business.id, { ownerSessionToken: sessionToken });
+    cookieValue = sessionToken;
+  } else if (!(await verifyAdminSecret(secret))) {
     return jsonError("Invalid admin secret", 401);
   }
 
@@ -27,7 +54,7 @@ export async function adminLogin(request: Request) {
 
   response.cookies.set({
     name: ADMIN_SESSION_COOKIE,
-    value: parsed.data.secret,
+    value: cookieValue,
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

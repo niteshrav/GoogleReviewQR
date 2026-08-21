@@ -20,7 +20,7 @@ describe("admin-feedback routes", () => {
   });
 
   it("returns 401 when unauthorized", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(false);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(false);
 
     const response = await listAdminFeedback(
       new Request("http://localhost/api/admin/feedback?businessId=biz-1"),
@@ -30,7 +30,7 @@ describe("admin-feedback routes", () => {
   });
 
   it("returns feedback list for authorized request", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(feedbackService.listFeedbackForBusiness).mockResolvedValue([
       { id: "fb-1", rating: 2 },
     ] as never);
@@ -45,7 +45,7 @@ describe("admin-feedback routes", () => {
   });
 
   it("returns 400 when businessId missing", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
 
     const response = await listAdminFeedback(
       new Request("http://localhost/api/admin/feedback"),

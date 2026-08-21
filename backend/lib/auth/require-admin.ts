@@ -1,14 +1,11 @@
-import { cookies } from "next/headers";
 import { ADMIN_SESSION_COOKIE, verifyAdminSecret } from "@backend/lib/auth/admin";
 
-export async function isAdminRequestAuthorized(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+export async function isAdminAuthorized(session: string | undefined): Promise<boolean> {
   return verifyAdminSecret(session);
 }
 
-export function isAdminAuthorizedFromHeader(request: Request): boolean {
+export async function isAdminAuthorizedFromHeader(request: Request): Promise<boolean> {
   const cookieHeader = request.headers.get("cookie") ?? "";
   const match = cookieHeader.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`));
-  return verifyAdminSecret(match?.[1]);
+  return verifyAdminSecret(match?.[1] ? decodeURIComponent(match[1]) : undefined);
 }

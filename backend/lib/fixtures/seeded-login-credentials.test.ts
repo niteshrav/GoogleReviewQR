@@ -1,4 +1,12 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("@database/index", () => ({
+  businessRepository: {
+    findByOwnerAccessSecret: vi.fn().mockResolvedValue(null),
+    findByOwnerSessionToken: vi.fn().mockResolvedValue(null),
+  },
+}));
+
 import {
   getSeededLoginCredentials,
   isSeededLoginAllowed,
@@ -47,22 +55,22 @@ describe("seeded login credentials", () => {
     expect(isSeededLoginAllowed()).toBe(false);
   });
 
-  it("accepts each seeded example secret in development", () => {
+  it("accepts each seeded example secret in development", async () => {
     process.env.NODE_ENV = "development";
     process.env.ADMIN_SECRET = "primary-admin-secret-key";
 
     for (const credential of getSeededLoginCredentials()) {
-      expect(verifyAdminSecret(credential.secret)).toBe(true);
+      expect(await verifyAdminSecret(credential.secret)).toBe(true);
     }
   });
 
-  it("rejects seeded example secrets in production", () => {
+  it("rejects seeded example secrets in production", async () => {
     process.env.NODE_ENV = "production";
     process.env.ADMIN_SECRET = "primary-admin-secret-key";
 
     for (const credential of getSeededLoginCredentials()) {
-      expect(verifyAdminSecret(credential.secret)).toBe(false);
+      expect(await verifyAdminSecret(credential.secret)).toBe(false);
     }
-    expect(verifyAdminSecret("primary-admin-secret-key")).toBe(true);
+    expect(await verifyAdminSecret("primary-admin-secret-key")).toBe(true);
   });
 });

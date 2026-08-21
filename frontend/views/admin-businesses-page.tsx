@@ -1,14 +1,27 @@
 import Link from "next/link";
 import { getPublicBaseUrl } from "@backend/lib/env";
-import { businessService } from "@backend/lib/services/index";
-import { AdminBusinessesClient } from "@frontend/components/admin/admin-businesses-client";
+import { businessService, subscriptionPlanService } from "@backend/lib/services/index";
+import {
+  AdminBusinessesClient,
+  type AdminBusinessListItem,
+} from "@frontend/components/admin/admin-businesses-client";
 import { Card } from "@frontend/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBusinessesPage() {
-  const businesses = await businessService.listBusinesses();
+  const [businesses, plans] = await Promise.all([
+    businessService.listBusinesses(),
+    subscriptionPlanService.listPlans().catch(() => []),
+  ]);
   const publicBaseUrl = getPublicBaseUrl();
+  const planOptions = plans.map((plan) => ({
+    key: plan.key,
+    label:
+      plan.priceInr === 0
+        ? `${plan.name} (free)`
+        : `${plan.name} ₹${plan.priceInr}/mo`,
+  }));
 
   return (
     <div className="space-y-8">
@@ -17,7 +30,10 @@ export default async function AdminBusinessesPage() {
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">Admin</p>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight">Businesses</h1>
           <p className="mt-2 text-sm text-muted">
-            Create merchants, download QR codes, and open feedback logs.
+            Create merchants, download QR codes, and open feedback logs.{" "}
+            <Link href="/admin/plans" className="font-medium text-brand hover:underline">
+              Manage plans
+            </Link>
           </p>
         </div>
         <Link href="/admin" className="text-sm font-medium text-brand hover:underline">
@@ -47,6 +63,7 @@ export default async function AdminBusinessesPage() {
 
       <AdminBusinessesClient
         publicBaseUrl={publicBaseUrl}
+        planOptions={planOptions}
         businesses={businesses.map((business) => ({
           id: business.id,
           name: business.name,
@@ -56,6 +73,11 @@ export default async function AdminBusinessesPage() {
           ownerSmsPhone: business.ownerSmsPhone,
           googleReviewUrl: business.googleReviewUrl,
           isActive: business.isActive,
+          plan: business.plan ?? "pilot",
+          billingStatus:
+            (business.billingStatus as AdminBusinessListItem["billingStatus"]) ?? "trial",
+          setupFeePaid: business.setupFeePaid ?? false,
+          lastWeeklyReportAt: business.lastWeeklyReportAt?.toISOString() ?? null,
         }))}
       />
 

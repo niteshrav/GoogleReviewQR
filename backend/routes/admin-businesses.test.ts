@@ -31,7 +31,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("returns 401 for unauthorized list request", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(false);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(false);
 
     const response = await listAdminBusinesses(new Request("http://localhost/api/admin/businesses"));
 
@@ -39,7 +39,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("returns businesses for authorized list request", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.listBusinesses).mockResolvedValue([{ id: "biz-1" }] as never);
 
     const response = await listAdminBusinesses(new Request("http://localhost/api/admin/businesses"));
@@ -50,7 +50,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("returns 201 when creating a business", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.createBusiness).mockResolvedValue({
       id: "biz-1",
       slug: "cafe-edelweiss",
@@ -74,7 +74,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("returns 409 for duplicate slug", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.createBusiness).mockRejectedValue(new DuplicateSlugError("taken"));
 
     const response = await createAdminBusiness(
@@ -95,7 +95,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("updates a business", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.updateBusiness).mockResolvedValue({ id: "biz-1" } as never);
 
     const response = await updateAdminBusiness(
@@ -111,7 +111,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("deactivates a business", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.deactivateBusiness).mockResolvedValue({
       id: "biz-1",
       isActive: false,
@@ -128,7 +128,7 @@ describe("admin-businesses routes", () => {
   });
 
   it("deletes a business", async () => {
-    vi.mocked(isAdminAuthorizedFromHeader).mockReturnValue(true);
+    vi.mocked(isAdminAuthorizedFromHeader).mockResolvedValue(true);
     vi.mocked(businessService.deleteBusiness).mockResolvedValue({
       id: "biz-1",
       slug: "cafe-demo",

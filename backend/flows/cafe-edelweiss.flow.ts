@@ -23,6 +23,7 @@ type FeedbackRecord = {
   clickedGoogle: boolean;
   locationLabel: string;
   alertSentAt: Date | null;
+  alertChannel: string | null;
   createdAt: Date;
 };
 
@@ -105,6 +106,7 @@ function createInMemoryFeedbackRepository() {
         clickedGoogle: data.clickedGoogle ?? false,
         locationLabel: data.locationLabel ?? "main",
         alertSentAt: null,
+        alertChannel: data.alertChannel ?? null,
         createdAt: new Date(clock),
       };
       feedbacks.push(created);
@@ -122,7 +124,7 @@ function createInMemoryFeedbackRepository() {
     async listByBusiness({ businessId, limit }: ListFeedbackOptions) {
       return this.findByBusinessId(businessId, limit);
     },
-    async markAlertSent(id: string, sentAt: Date = new Date()) {
+    async markAlertSent(id: string, details: { sentAt?: Date; channel?: string | null } = {}) {
       const existing = feedbacks.find((f) => f.id === id);
       if (!existing) {
         throw new Error(`Feedback not found: ${id}`);
@@ -130,7 +132,8 @@ function createInMemoryFeedbackRepository() {
       if (existing.alertSentAt) {
         return existing;
       }
-      existing.alertSentAt = sentAt;
+      existing.alertSentAt = details.sentAt ?? new Date();
+      existing.alertChannel = details.channel ?? existing.alertChannel;
       return existing;
     },
   };

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BusinessForm } from "@frontend/components/admin/business-form";
 import { AdminBusinessActions } from "@frontend/components/admin/admin-business-actions";
+import { SendWeeklyReportButton } from "@frontend/components/admin/send-weekly-report-button";
 import { Badge } from "@frontend/components/ui/badge";
 import { Button } from "@frontend/components/ui/button";
 import { EmptyState } from "@frontend/components/ui/empty-state";
@@ -17,19 +18,31 @@ export type AdminBusinessListItem = {
   ownerSmsPhone: string | null;
   googleReviewUrl: string;
   isActive: boolean;
+  plan: string;
+  billingStatus: "trial" | "invoiced" | "paid" | "overdue";
+  setupFeePaid: boolean;
+  lastWeeklyReportAt: string | null;
+};
+
+type PlanOption = {
+  key: string;
+  label: string;
 };
 
 type AdminBusinessesClientProps = {
   businesses: AdminBusinessListItem[];
   publicBaseUrl: string;
+  planOptions?: PlanOption[];
 };
 
 function BusinessCard({
   business,
   publicBaseUrl,
+  planOptions,
 }: {
   business: AdminBusinessListItem;
   publicBaseUrl: string;
+  planOptions?: PlanOption[];
 }) {
   const [editing, setEditing] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -76,6 +89,7 @@ function BusinessCard({
           </button>
         </div>
         <BusinessForm
+          planOptions={planOptions}
           initialValues={{
             id: business.id,
             name: business.name,
@@ -84,6 +98,9 @@ function BusinessCard({
             ownerWhatsApp: business.ownerWhatsApp ?? "",
             ownerSmsPhone: business.ownerSmsPhone ?? "",
             googleReviewUrl: business.googleReviewUrl,
+            plan: business.plan,
+            billingStatus: business.billingStatus,
+            setupFeePaid: business.setupFeePaid,
           }}
           onSuccess={() => setEditing(false)}
         />
@@ -102,9 +119,25 @@ function BusinessCard({
             <h2 className="text-lg font-semibold tracking-tight break-words">{business.name}</h2>
             <p className="mt-0.5 text-sm text-muted">/{business.slug}</p>
             <p className="mt-2 text-sm text-foreground break-all">{business.ownerEmail}</p>
-            <div className="mt-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               <Badge variant={business.isActive ? "success" : "default"}>
                 {business.isActive ? "Active" : "Inactive"}
+              </Badge>
+              <Badge variant={business.plan === "premium" ? "premium" : "brand"}>
+                {business.plan}
+              </Badge>
+              <Badge
+                variant={
+                  business.billingStatus === "paid"
+                    ? "success"
+                    : business.billingStatus === "overdue"
+                      ? "overdue"
+                      : business.billingStatus === "invoiced"
+                        ? "warning"
+                        : "default"
+                }
+              >
+                {business.billingStatus}
               </Badge>
             </div>
           </div>
@@ -173,6 +206,39 @@ function BusinessCard({
             >
               Feedback log
             </Link>
+            <a
+              href={`/api/admin/feedback/export?businessId=${business.id}`}
+              className="font-medium text-brand hover:underline"
+            >
+              Export CSV
+            </a>
+            <Link
+              href={`/admin/businesses/${business.id}/one-pager`}
+              className="font-medium text-brand hover:underline"
+            >
+              Staff one-pager
+            </Link>
+            <Link
+              href={`/admin/businesses/${business.id}/invoice`}
+              className="font-medium text-brand hover:underline"
+            >
+              UPI invoice
+            </Link>
+            <Link
+              href={`/admin/businesses/${business.id}/case-study`}
+              className="font-medium text-brand hover:underline"
+            >
+              Case study
+            </Link>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+            <p className="text-xs text-muted">
+              Last weekly report:{" "}
+              {business.lastWeeklyReportAt
+                ? new Date(business.lastWeeklyReportAt).toLocaleDateString()
+                : "never"}
+            </p>
+            <SendWeeklyReportButton businessId={business.id} label="Send report now" />
           </div>
         </div>
       </div>
@@ -183,6 +249,7 @@ function BusinessCard({
 export function AdminBusinessesClient({
   businesses,
   publicBaseUrl,
+  planOptions,
 }: AdminBusinessesClientProps) {
   const [query, setQuery] = useState("");
 
@@ -203,7 +270,7 @@ export function AdminBusinessesClient({
     <section className="grid min-w-0 gap-8 xl:grid-cols-[340px_minmax(0,1fr)]">
       <div className="xl:sticky xl:top-24 xl:self-start">
         <h2 className="mb-4 text-lg font-semibold">Create business</h2>
-        <BusinessForm />
+        <BusinessForm planOptions={planOptions} />
       </div>
 
       <div className="min-w-0 space-y-4">
@@ -243,6 +310,7 @@ export function AdminBusinessesClient({
                 key={business.id}
                 business={business}
                 publicBaseUrl={publicBaseUrl}
+                planOptions={planOptions}
               />
             ))}
           </div>

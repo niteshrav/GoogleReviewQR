@@ -5,7 +5,7 @@ import { buildBusinessReviewUrl, generateQrPngBuffer } from "@backend/lib/qr/gen
 import { jsonError } from "@backend/lib/http";
 
 export async function downloadAdminQr(request: Request, slug: string) {
-  if (!isAdminAuthorizedFromHeader(request)) {
+  if (!(await isAdminAuthorizedFromHeader(request))) {
     return jsonError("Unauthorized", 401);
   }
 

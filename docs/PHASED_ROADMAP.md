@@ -279,6 +279,7 @@ See **[PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)**.
 | [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) | Deploy runbook |
 | [PHASE_1_E2E_MANUAL_TEST_GUIDE.md](./PHASE_1_E2E_MANUAL_TEST_GUIDE.md) | Manual E2E |
 | [PHASE_1_BETA_CHECKLIST.md](./PHASE_1_BETA_CHECKLIST.md) | Beta ops |
+| [PHASE_2_IMPLEMENTATION.md](./PHASE_2_IMPLEMENTATION.md) | Phase 2 shipping notes |
 
 ---
 

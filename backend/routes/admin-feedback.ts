@@ -3,7 +3,7 @@ import { feedbackService } from "@backend/lib/services/index";
 import { jsonError, jsonOk } from "@backend/lib/http";
 
 export async function listAdminFeedback(request: Request) {
-  if (!isAdminAuthorizedFromHeader(request)) {
+  if (!(await isAdminAuthorizedFromHeader(request))) {
     return jsonError("Unauthorized", 401);
   }
 
