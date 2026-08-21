@@ -45,7 +45,7 @@ describe("businessRepository", () => {
 
     expect(result.slug).toBe("cafe-edelweiss");
     expect(prisma.business.create).toHaveBeenCalledWith({
-      data: { ...input, ownerSmsPhone: null },
+      data: { ...input, ownerSmsPhone: null, paymentReference: null },
     });
   });
 
