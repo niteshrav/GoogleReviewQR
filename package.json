@@ -6,9 +6,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "cd frontend && next dev -H 0.0.0.0 -p 3000",
+    "dev": "node scripts/run-next.js dev -H 0.0.0.0 -p 3000",
     "build": "prisma generate --schema=database/schema.prisma && cd frontend && next build",
-    "start": "cd frontend && next start",
+    "start": "node scripts/run-next.js start",
     "lint": "cd frontend && next lint",
     "deploy:check": "npm test && npm run build",
     "test": "vitest run",

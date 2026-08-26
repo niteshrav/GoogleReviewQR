@@ -9,6 +9,12 @@ import {
 import { resolvePlanPricing } from "@backend/lib/billing/manual-pricing";
 import { getEnv } from "@backend/lib/env";
 import { jsonError, jsonOk, noStoreHeaders } from "@backend/lib/http";
+import {
+  fetchRazorpayPayment,
+  isRazorpayConfigured,
+  mapRazorpayMethod,
+  verifyRazorpayPaymentSignature,
+} from "@backend/lib/payments/razorpay";
 import { businessService, subscriptionPlanService } from "@backend/lib/services/index";
 import {
   billingPlanSchema,
@@ -33,51 +39,32 @@ const signupSchema = z
     ownerSmsPhone: phoneFieldSchema,
     googleReviewUrl: googleReviewUrlSchema,
     password: z.string().min(8).max(72),
-    paymentMethod: z.enum(["cash", "card", "upi"]),
-    paymentReference: z.string().trim().min(2).max(120).optional().or(z.literal("")),
-    cardHolderName: z.string().trim().min(2).max(80).optional().or(z.literal("")),
-    cardLast4: z
-      .string()
-      .trim()
-      .regex(/^\d{4}$/, "Enter last 4 digits")
-      .optional()
-      .or(z.literal("")),
+    paymentMethod: z.enum(["cash", "razorpay"]),
     cashReceiptNote: z.string().trim().max(200).optional().or(z.literal("")),
+    razorpayOrderId: z.string().trim().min(5).max(64).optional().or(z.literal("")),
+    razorpayPaymentId: z.string().trim().min(5).max(64).optional().or(z.literal("")),
+    razorpaySignature: z.string().trim().min(10).max(256).optional().or(z.literal("")),
   })
   .refine((data) => Boolean(data.ownerWhatsApp?.trim() || data.ownerSmsPhone?.trim()), {
     message: "Provide WhatsApp or SMS phone",
     path: ["ownerWhatsApp"],
   })
   .superRefine((data, ctx) => {
-    if (data.paymentMethod === "upi" && !data.paymentReference?.trim()) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["paymentReference"],
-        message: "UPI transaction / reference ID is required",
-      });
-    }
-    if (data.paymentMethod === "card") {
-      if (!data.cardHolderName?.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["cardHolderName"],
-          message: "Cardholder name is required",
-        });
-      }
-      if (!data.cardLast4?.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["cardLast4"],
-          message: "Last 4 card digits are required",
-        });
-      }
-    }
     if (data.paymentMethod === "cash" && !data.cashReceiptNote?.trim()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["cashReceiptNote"],
         message: "Add a short cash payment note / receipt id",
       });
+    }
+    if (data.paymentMethod === "razorpay") {
+      if (!data.razorpayOrderId?.trim() || !data.razorpayPaymentId?.trim() || !data.razorpaySignature?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["razorpayPaymentId"],
+          message: "Complete Razorpay payment before finishing signup",
+        });
+      }
     }
   });
 
@@ -112,14 +99,60 @@ export async function completeSignup(request: Request) {
   const setupFeeInr = "setupFeeInr" in plan ? plan.setupFeeInr : 2999;
   const dueNowInr = setupFeeInr + monthlyInr;
 
-  const paidNow = data.paymentMethod === "upi" || data.paymentMethod === "card";
-  const billingStatus = paidNow ? "paid" : "invoiced";
-  const paymentReference =
-    data.paymentMethod === "upi"
-      ? data.paymentReference!.trim()
-      : data.paymentMethod === "card"
-        ? `CARD-****${data.cardLast4} ${data.cardHolderName}`.trim()
-        : data.cashReceiptNote!.trim();
+  let paidNow = false;
+  let billingStatus: "paid" | "invoiced" = "invoiced";
+  let paymentReference = "";
+  let paymentMethodStored: string = data.paymentMethod;
+
+  if (data.paymentMethod === "cash") {
+    paidNow = false;
+    billingStatus = "invoiced";
+    paymentReference = data.cashReceiptNote!.trim();
+    paymentMethodStored = "cash";
+  } else {
+    if (!isRazorpayConfigured()) {
+      return jsonError("Online payment is not configured on the server.", 503);
+    }
+
+    const orderId = data.razorpayOrderId!.trim();
+    const paymentId = data.razorpayPaymentId!.trim();
+    const signature = data.razorpaySignature!.trim();
+
+    const signatureOk = verifyRazorpayPaymentSignature({
+      orderId,
+      paymentId,
+      signature,
+    });
+
+    if (!signatureOk) {
+      return jsonError("Payment verification failed. Do not refresh — contact support with payment id.", 400);
+    }
+
+    let payment;
+    try {
+      payment = await fetchRazorpayPayment(paymentId);
+    } catch (error) {
+      return jsonError(error instanceof Error ? error.message : "Could not verify payment with Razorpay", 502);
+    }
+
+    if (payment.order_id !== orderId) {
+      return jsonError("Payment does not match this order.", 400);
+    }
+
+    if (payment.status !== "captured" && payment.status !== "authorized") {
+      return jsonError(`Payment not successful (status: ${payment.status}).`, 400);
+    }
+
+    const expectedPaise = Math.round(dueNowInr * 100);
+    if (payment.amount !== expectedPaise) {
+      return jsonError("Paid amount does not match plan total.", 400);
+    }
+
+    paidNow = true;
+    billingStatus = "paid";
+    paymentMethodStored = mapRazorpayMethod(payment.method);
+    paymentReference = paymentId;
+  }
 
   const sessionToken = createOwnerSessionToken();
   const now = new Date();
@@ -138,7 +171,7 @@ export async function completeSignup(request: Request) {
     });
 
     await businessService.updateBusiness(business.id, {
-      paymentMethod: data.paymentMethod,
+      paymentMethod: paymentMethodStored,
       paymentReference,
       paymentAmountInr: dueNowInr,
       paymentReceivedAt: paidNow ? now : null,
@@ -162,9 +195,10 @@ export async function completeSignup(request: Request) {
           dueNowInr,
         },
         payment: {
-          method: data.paymentMethod,
+          method: paymentMethodStored,
           amountInr: dueNowInr,
           status: paidNow ? "completed" : "recorded_pending_cash",
+          reference: paymentReference,
           upiVpa: getEnv().UPI_VPA || undefined,
         },
       },
@@ -198,6 +232,8 @@ export async function getSignupPlan(request: Request) {
     return jsonError("Invalid plan", 400);
   }
 
+  const razorpayEnabled = isRazorpayConfigured();
+
   const plan = await subscriptionPlanService.getByKey(parsed.data);
   if (!plan || !plan.isPublic) {
     const pricing = await resolvePlanPricing(parsed.data);
@@ -212,6 +248,7 @@ export async function getSignupPlan(request: Request) {
         dueNowInr: pricing.setupFeeInr + pricing.monthlyInr,
       },
       upiVpa: getEnv().UPI_VPA || "",
+      razorpayEnabled,
     });
   }
 
@@ -226,5 +263,6 @@ export async function getSignupPlan(request: Request) {
       dueNowInr: plan.setupFeeInr + plan.priceInr,
     },
     upiVpa: getEnv().UPI_VPA || "",
+    razorpayEnabled,
   });
 }
