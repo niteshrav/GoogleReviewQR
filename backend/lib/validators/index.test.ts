@@ -23,8 +23,29 @@ describe("googleReviewUrlSchema", () => {
     expect(googleReviewUrlSchema.parse(url)).toBe(url);
   });
 
-  it("rejects non-Google URLs", () => {
-    expect(googleReviewUrlSchema.safeParse("https://example.com/review").success).toBe(false);
+  it("accepts Google Maps place links and short maps.app links", () => {
+    expect(
+      googleReviewUrlSchema.parse("https://www.google.com/maps/place/Cafe+Edelweiss"),
+    ).toContain("google.com/maps");
+    expect(googleReviewUrlSchema.parse("https://maps.app.goo.gl/abc123")).toBe(
+      "https://maps.app.goo.gl/abc123",
+    );
+    expect(googleReviewUrlSchema.parse("maps.app.goo.gl/abc123")).toBe(
+      "https://maps.app.goo.gl/abc123",
+    );
+  });
+
+  it("rejects non-Google URLs with a clear message", () => {
+    const result = googleReviewUrlSchema.safeParse("https://example.com/review");
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects plain text that is not a URL", () => {
+    const result = googleReviewUrlSchema.safeParse("my cafe google page");
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toMatch(/https:\/\//i);
+    }
   });
 });
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const GOOGLE_REVIEW_URL_PATTERN =
-  /^https:\/\/(search\.google\.com\/local\/writereview|g\.page\/r\/[^/]+\/review|maps\.google\.com\/)/;
+  /^https:\/\/(www\.)?(search\.google\.com\/local\/writereview|g\.page\/r\/[^/]+\/review|maps\.google\.com\/|google\.com\/maps\/|maps\.app\.goo\.gl\/|goo\.gl\/maps\/)/i;
 
 const phoneFieldSchema = z
   .string()
@@ -17,13 +17,32 @@ export const slugSchema = z
   .max(64)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with hyphens");
 
+/** Normalizes common paste mistakes before validation (trim, add https). */
+export function normalizeGoogleReviewUrl(raw: string): string {
+  let url = raw.trim();
+  if (!url) {
+    return url;
+  }
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+  return url;
+}
+
 export const googleReviewUrlSchema = z
   .string()
-  .url()
-  .refine((url) => url.startsWith("https://"), "Google review URL must use HTTPS")
-  .refine(
-    (url) => GOOGLE_REVIEW_URL_PATTERN.test(url),
-    "Must be a valid Google review URL",
+  .trim()
+  .min(1, "Google review URL is required")
+  .transform(normalizeGoogleReviewUrl)
+  .pipe(
+    z
+      .string()
+      .url({ message: "Enter a full Google review link starting with https://" })
+      .refine((url) => url.startsWith("https://"), "Google review URL must use HTTPS")
+      .refine(
+        (url) => GOOGLE_REVIEW_URL_PATTERN.test(url),
+        "Use a Google Maps / review link (maps.google.com, g.page, or writereview URL)",
+      ),
   );
 
 export const billingPlanSchema = z
