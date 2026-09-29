@@ -7,14 +7,14 @@ export async function getHealthStatus() {
 
     return NextResponse.json({
       status: "ok",
-      service: "trusttap",
+      service: "trustTap",
       timestamp: new Date().toISOString(),
     });
   } catch {
     return NextResponse.json(
       {
         status: "degraded",
-        service: "trusttap",
+        service: "trustTap",
         timestamp: new Date().toISOString(),
         database: "unavailable",
       },

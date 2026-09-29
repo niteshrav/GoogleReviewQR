@@ -8,6 +8,7 @@ export const PLAN_MONTHLY_INR: Record<string, number> = {
   pilot: 0,
   core: 499,
   premium: 999,
+  dinepro: 1499,
 };
 
 export function monthlyFeeForPlan(plan: BillingPlan): number {
@@ -24,6 +25,9 @@ export function planLabel(plan: BillingPlan): string {
   }
   if (plan === "pilot") {
     return "Pilot (free)";
+  }
+  if (plan === "dinepro") {
+    return `DinePro ₹${fee}/mo`;
   }
   if (fee === 0) {
     return `${plan} (free)`;

@@ -1,6 +1,6 @@
 # Phase 1 MVP — Use Case Document
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Phase:** 1 — Pilot MVP  
 **Version:** 1.1  
 **Last updated:** July 26, 2026  
@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-This document describes **who** uses TrustTap Phase 1, **what** they do, and **why** — expressed as formal use cases with preconditions, postconditions, main flows, and alternate flows.
+This document describes **who** uses trustTap Phase 1, **what** they do, and **why** — expressed as formal use cases with preconditions, postconditions, main flows, and alternate flows.
 
 It bridges business requirements (BRD) and technical implementation.
 
@@ -20,13 +20,13 @@ It bridges business requirements (BRD) and technical implementation.
 
 ```mermaid
 C4Context
-    title TrustTap Phase 1 — System Context
+    title trustTap Phase 1 — System Context
 
     Person(customer, "Customer", "Scans QR at café/shop")
     Person(owner, "Business Owner", "Receives WhatsApp/SMS (+ email backup)")
     Person(admin, "Commiters Admin", "Onboards pilot merchants")
 
-    System(trusttap, "TrustTap", "QR feedback + Google review facilitation")
+    System(trusttap, "trustTap", "QR feedback + Google review facilitation")
     System_Ext(google, "Google Maps", "Public review destination")
     System_Ext(wa, "WhatsApp Business API or SMS gateway", "Primary phone alerts")
     System_Ext(smtp, "Commiters SMTP", "Email backup alerts")

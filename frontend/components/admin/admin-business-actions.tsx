@@ -17,7 +17,7 @@ export function AdminBusinessActions({
   businessName,
 }: AdminBusinessActionsProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<"deactivate" | "delete" | null>(null);
+  const [loading, setLoading] = useState<"deactivate" | "activate" | "delete" | null>(null);
 
   async function handleDeactivate() {
     const confirmed = window.confirm(
@@ -34,6 +34,32 @@ export function AdminBusinessActions({
       });
       if (response.ok) {
         router.refresh();
+      }
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  async function handleActivate() {
+    const confirmed = window.confirm(
+      `Reactivate “${businessName}”? Its QR links will work again.`,
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    setLoading("activate");
+    try {
+      const response = await fetch(`/api/admin/businesses/${businessId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: true }),
+      });
+      if (response.ok) {
+        router.refresh();
+      } else {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        window.alert(data?.error ?? "Could not reactivate business.");
       }
     } finally {
       setLoading(null);
@@ -81,7 +107,17 @@ export function AdminBusinessActions({
         >
           Deactivate
         </Button>
-      ) : null}
+      ) : (
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          loading={loading === "activate"}
+          onClick={handleActivate}
+        >
+          Reactivate
+        </Button>
+      )}
       <Button
         type="button"
         size="sm"

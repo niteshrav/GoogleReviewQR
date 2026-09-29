@@ -19,11 +19,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TrustTap",
+  title: "trustTap",
   description:
     "QR-powered customer feedback that helps local businesses improve service and make Google reviews easy.",
   metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),
-  applicationName: "TrustTap",
+  applicationName: "trustTap",
 };
 
 /** Mobile-first: QR scans open on phones — lock layout to device width. */

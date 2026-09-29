@@ -1,5 +1,6 @@
 import { db } from "@database/client";
 import { createBusinessRepository } from "@database/repositories/business.repository";
+import { createDineRepository } from "@database/repositories/dine.repository";
 import { createFeedbackRepository } from "@database/repositories/feedback.repository";
 import { createSubscriptionPlanRepository } from "@database/repositories/subscription-plan.repository";
 
@@ -10,6 +11,10 @@ export {
   createBusinessRepository,
   type BusinessRepository,
 } from "@database/repositories/business.repository";
+export {
+  createDineRepository,
+  type DineRepository,
+} from "@database/repositories/dine.repository";
 export {
   createFeedbackRepository,
   type FeedbackRepository,
@@ -26,3 +31,4 @@ export {
 export const businessRepository = createBusinessRepository(db);
 export const feedbackRepository = createFeedbackRepository(db);
 export const subscriptionPlanRepository = createSubscriptionPlanRepository(db);
+export const dineRepository = createDineRepository(db);

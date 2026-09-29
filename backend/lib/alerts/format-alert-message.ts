@@ -19,7 +19,7 @@ function sharedFields(input: OwnerAlertCopyInput) {
 export function formatOwnerAlertMessage(input: OwnerAlertCopyInput): string {
   const fields = sharedFields(input);
   return [
-    `TrustTap alert — ${input.businessName}`,
+    `trustTap alert — ${input.businessName}`,
     `Rating: ${input.rating}/5`,
     `Comment: ${fields.comment}`,
     `Customer name: ${fields.name}`,
@@ -32,7 +32,7 @@ export function formatOwnerAlertMessage(input: OwnerAlertCopyInput): string {
 export function formatOwnerAlertWhatsApp(input: OwnerAlertCopyInput): string {
   const fields = sharedFields(input);
   return [
-    `TrustTap alert — ${input.businessName}`,
+    `trustTap alert — ${input.businessName}`,
     `${input.rating}/5`,
     fields.comment,
     `Name: ${fields.name}`,
@@ -50,5 +50,5 @@ export function formatOwnerAlertSms(input: OwnerAlertCopyInput): string {
       : fields.comment.length > 80
         ? `${fields.comment.slice(0, 77)}...`
         : fields.comment;
-  return `TrustTap ${input.businessName}: ${input.rating}/5. ${snippet}. Name ${fields.name}. Phone ${fields.phone}.`;
+  return `trustTap ${input.businessName}: ${input.rating}/5. ${snippet}. Name ${fields.name}. Phone ${fields.phone}.`;
 }

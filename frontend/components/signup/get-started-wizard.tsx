@@ -309,8 +309,8 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
         key: orderData.keyId,
         amount: orderData.amountPaise,
         currency: orderData.currency ?? "INR",
-        name: "TrustTap",
-        description: orderData.description ?? `TrustTap ${plan.name}`,
+        name: "trustTap",
+        description: orderData.description ?? `trustTap ${plan.name}`,
         order_id: orderData.orderId,
         prefill: orderData.prefill,
         notes: {
@@ -404,7 +404,7 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
       {step === 0 ? (
         <Card>
           <h2 className="text-lg font-semibold">Registration</h2>
-          <p className="mt-1 text-sm text-muted">Create your TrustTap business account.</p>
+          <p className="mt-1 text-sm text-muted">Create your trustTap business account.</p>
           <form onSubmit={goNextFromRegister} className="mt-5 space-y-4">
             <Input
               id="name"
@@ -626,7 +626,7 @@ export function GetStartedShell({ children }: { children: React.ReactNode }) {
     <div className="bg-mesh min-h-[100dvh]">
       <header className="border-b border-border bg-white/90">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-5">
-          <Link href="/" aria-label="TrustTap home">
+          <Link href="/" aria-label="trustTap home">
             <TrustTapLogo variant="horizontal" tagline />
           </Link>
           <Link href="/#pricing" className="text-sm font-medium text-muted hover:text-foreground">

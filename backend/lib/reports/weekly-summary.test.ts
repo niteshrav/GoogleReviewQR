@@ -54,7 +54,7 @@ describe("weekly summary", () => {
       averageRating: 4.2,
     });
 
-    expect(message).toContain("TrustTap weekly report — Cafe Edelweiss");
+    expect(message).toContain("trustTap weekly report — Cafe Edelweiss");
     expect(message).toContain("Google review taps: 8");
     expect(message).toContain("Private feedback: 4");
     expect(message).toContain("Upgrade to Premium");

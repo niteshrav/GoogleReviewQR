@@ -96,7 +96,7 @@ export function CaseStudyOnePager({
 
       {/* How it worked */}
       <section className="mb-8">
-        <h3 className="text-base font-bold text-foreground">How TrustTap worked</h3>
+        <h3 className="text-base font-bold text-foreground">How trustTap worked</h3>
         <ul className="mt-3 space-y-2">
           {[
             "One named QR at the counter — every customer could still open Google freely.",
@@ -125,14 +125,14 @@ export function CaseStudyOnePager({
       <section className="mb-8 rounded-2xl bg-slate-50 px-5 py-5">
         <h3 className="text-sm font-bold text-foreground">Why this is not just a QR poster</h3>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Static Google QR posters cannot alert the owner in time. TrustTap is a real-time recovery
+          Static Google QR posters cannot alert the owner in time. trustTap is a real-time recovery
           system: Google stays ungated, private recovery is optional, and Commiters operates setup plus
           weekly proof. No merchant app needed.
         </p>
       </section>
 
       <p className="border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters TrustTap · trusttap.commiters.com · Designed for merchant pilots
+        Commiters trustTap · trusttap.commiters.com · Designed for merchant pilots
       </p>
     </article>
   );

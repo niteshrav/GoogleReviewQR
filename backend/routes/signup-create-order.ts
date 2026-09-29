@@ -105,7 +105,7 @@ export async function createSignupPaymentOrder(request: Request) {
         email: data.ownerEmail,
         contact: data.ownerWhatsApp || data.ownerSmsPhone || "",
       },
-      description: `TrustTap ${"name" in plan ? plan.name : data.planKey} — setup + first month`,
+      description: `trustTap ${"name" in plan ? plan.name : data.planKey} — setup + first month`,
       upiVpa: getEnv().UPI_VPA || "",
     });
   } catch (error) {

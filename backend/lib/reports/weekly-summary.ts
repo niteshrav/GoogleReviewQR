@@ -61,7 +61,7 @@ export function formatWeeklyReportMessage(
       : "Upgrade to Premium (₹999/mo) for weekly proof plus priority support.";
 
   return [
-    `TrustTap weekly report — ${businessName}`,
+    `trustTap weekly report — ${businessName}`,
     `Period: ${summary.start.toISOString().slice(0, 10)} to ${summary.end.toISOString().slice(0, 10)}`,
     `QR activity (clicks + private notes): ${summary.totalEntries}`,
     `Google review taps: ${summary.googleClicks}`,
@@ -72,6 +72,6 @@ export function formatWeeklyReportMessage(
     "",
     supportLine,
     "Google reviews stay ungated — every customer can still post publicly.",
-    "Powered by Commiters TrustTap",
+    "Powered by Commiters trustTap",
   ].join("\n");
 }

@@ -1,6 +1,6 @@
 # Phase 1 MVP — Pre-Deploy End-to-End Manual Test Guide
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Audience:** Commiters before production cutover  
 **Priority:** Mobile-first (QR scans + feedback happen on phones)  
 **Last updated:** July 26, 2026  

@@ -71,7 +71,7 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     "Primary alert channel: automated WhatsApp or SMS to the owner phone.",
     "",
     "---",
-    "Powered by Commiters TrustTap",
+    "Powered by Commiters trustTap",
   ];
 
   await send({ to: payload.to, subject, text: lines.join("\n") });
@@ -84,7 +84,7 @@ export async function sendWeeklyReportEmail(payload: {
 }): Promise<void> {
   await send({
     to: payload.to,
-    subject: `TrustTap weekly report — ${payload.businessName}`,
+    subject: `trustTap weekly report — ${payload.businessName}`,
     text: payload.body,
   });
 }

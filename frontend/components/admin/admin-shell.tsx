@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/businesses", label: "Businesses" },
   { href: "/admin/plans", label: "Plans" },
+  { href: "/admin/dinepro", label: "DinePro" },
 ];
 
 type AdminShellProps = {
@@ -22,6 +23,10 @@ export function AdminShell({ children }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
+  if (pathname.startsWith("/admin/dinepro")) {
     return <>{children}</>;
   }
 
@@ -43,7 +48,7 @@ export function AdminShell({ children }: AdminShellProps) {
         )}
       >
         <div className="border-b border-white/10 bg-white px-4 py-3">
-          <Link href="/admin" className="flex items-center overflow-visible" aria-label="TrustTap admin">
+          <Link href="/admin" className="flex items-center overflow-visible" aria-label="trustTap admin">
             <TrustTapLogo variant="horizontal" tagline />
           </Link>
         </div>

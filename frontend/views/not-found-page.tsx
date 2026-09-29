@@ -21,7 +21,7 @@ export default function NotFoundPage() {
         <div className="mt-8">
           <Link href="/">
             <Button fullWidth size="lg">
-              Go to TrustTap home
+              Go to trustTap home
             </Button>
           </Link>
         </div>

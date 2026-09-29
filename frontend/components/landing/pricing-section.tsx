@@ -48,6 +48,10 @@ export function PricingSection({ plans }: PricingSectionProps) {
                   <span className="rounded-full bg-brand-soft px-2.5 py-1 text-xs font-semibold text-brand">
                     Popular
                   </span>
+                ) : plan.key === "dinepro" ? (
+                  <span className="rounded-full bg-navy/10 px-2.5 py-1 text-xs font-semibold text-navy">
+                    Restaurants
+                  </span>
                 ) : null}
               </div>
 
@@ -71,12 +75,12 @@ export function PricingSection({ plans }: PricingSectionProps) {
               <a
                 href={`/get-started?plan=${encodeURIComponent(plan.key)}`}
                 className={`mt-8 inline-flex min-h-11 items-center justify-center rounded-xl px-4 text-sm font-semibold transition-colors ${
-                  plan.highlighted
+                  plan.highlighted || plan.key === "dinepro"
                     ? "bg-brand text-white hover:bg-brand-dark"
                     : "border border-border bg-white text-foreground hover:bg-brand-soft"
                 }`}
               >
-                Get started
+                {plan.key === "dinepro" ? "Start DinePro" : "Get started"}
               </a>
             </article>
           ))}

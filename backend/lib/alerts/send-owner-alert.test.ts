@@ -37,7 +37,7 @@ describe("sendOwnerAlert", () => {
     expect(sendPhoneAlert).toHaveBeenCalledWith(
       expect.objectContaining({
         message: expect.stringContaining("Reply to recover this visit."),
-        smsMessage: expect.stringContaining("TrustTap Cafe Edelweiss: 2/5."),
+        smsMessage: expect.stringContaining("trustTap Cafe Edelweiss: 2/5."),
       }),
     );
     expect(sendLowRatingAlert).toHaveBeenCalledOnce();
