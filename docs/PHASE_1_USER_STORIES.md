@@ -1,6 +1,6 @@
 # Phase 1 MVP — User Stories (No Code)
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Phase:** 1 — Pilot MVP  
 **Version:** 1.1  
 **Last updated:** 2026-07-26  
@@ -141,7 +141,7 @@
 ### US-C5: Honest expectation about public Google reviews
 **As a** merchant owner  
 **I want** clear expectations  
-**So that** I don’t think TrustTap blocks bad Google reviews.  
+**So that** I don’t think trustTap blocks bad Google reviews.  
 
 **Acceptance criteria**
 1. Onboarding / pitch materials state that customers who tap Google may still post publicly (positive or negative).

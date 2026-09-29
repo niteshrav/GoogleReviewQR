@@ -3,7 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000";
 
 /**
- * TrustTap E2E toolkit (Playwright).
+ * trustTap E2E toolkit (Playwright).
  * TDD flow: write/red a failing spec → implement/fix → green → refactor.
  */
 export default defineConfig({

@@ -1,6 +1,6 @@
 # Phase 1 MVP — Production Deploy Runbook
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Target URL:** `https://trusttap.commiters.com`  
 **Last updated:** July 29, 2026
 
@@ -62,7 +62,7 @@ SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASS=
-SMTP_FROM=TrustTap <noreply@commiters.com>
+SMTP_FROM=trustTap <noreply@commiters.com>
 ALERT_PHONE_MODE=twilio
 TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=

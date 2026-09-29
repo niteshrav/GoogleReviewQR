@@ -1,4 +1,4 @@
-name: TrustTap CI
+name: trustTap CI
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
       SMTP_PORT: "1025"
       SMTP_USER: noreply@commiters.com
       SMTP_PASS: test
-      SMTP_FROM: TrustTap <noreply@commiters.com>
+      SMTP_FROM: trustTap <noreply@commiters.com>
       ALERT_PHONE_MODE: log
     steps:
       - uses: actions/checkout@v4

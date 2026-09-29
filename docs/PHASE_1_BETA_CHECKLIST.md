@@ -1,14 +1,14 @@
 # Phase 1 Beta — 30-Day Pilot Ops Checklist
 
 **Starts after:** production deploy smoke checklist in [PHASE_1_DEPLOY.md](./PHASE_1_DEPLOY.md) is green.  
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Last updated:** July 26, 2026  
 **Not a build phase** — operational validation after deploy.
 
 ## Week 1 — Install
 
 - [ ] Print laminated QRs for 3 shops with **business name** on each board
-- [ ] One primary TrustTap QR per board (do not rely on Instagram/UPI as the product)
+- [ ] One primary trustTap QR per board (do not rely on Instagram/UPI as the product)
 - [ ] Install at visible scan points (counter / exit)
 - [ ] Verify each `/r/{slug}` loads on mobile data
 - [ ] Confirm admin can see Google click rows after a test scan
@@ -21,7 +21,7 @@
 - [ ] Confirm email backup also arrives
 - [ ] Confirm **no** Commiters staff is manually relaying alerts from the dashboard
 - [ ] Fix provider/template/SMS issues if delivery fails
-- [ ] Explain vs Google: GBP may notify after a *public* review; TrustTap notifies on *private* low feedback
+- [ ] Explain vs Google: GBP may notify after a *public* review; trustTap notifies on *private* low feedback
 
 ## Week 3 — Stories & competition
 

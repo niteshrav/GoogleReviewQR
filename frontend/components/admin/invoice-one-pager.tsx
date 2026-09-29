@@ -171,7 +171,7 @@ export function InvoiceOnePager({
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted">From</p>
           <p className="mt-2 font-semibold text-foreground">Commiters</p>
-          <p className="text-sm text-muted">TrustTap service</p>
+          <p className="text-sm text-muted">trustTap service</p>
           <p className="text-sm text-muted">trusttap.commiters.com</p>
         </div>
         <div className="text-right">
@@ -360,7 +360,7 @@ export function InvoiceOnePager({
       )}
 
       <p className="mt-8 border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters TrustTap · trusttap.commiters.com · Manual billing, Phase 2
+        Commiters trustTap · trusttap.commiters.com · Manual billing, Phase 2
       </p>
     </article>
   );

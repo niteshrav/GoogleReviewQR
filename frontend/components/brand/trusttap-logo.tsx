@@ -11,26 +11,47 @@ type TrustTapLogoProps = {
   markClassName?: string;
 };
 
-function srcFor({
-  variant,
+function Wordmark({
   tone,
   tagline,
+  stacked,
 }: {
-  variant: TrustTapLogoVariant;
   tone: TrustTapLogoTone;
   tagline: boolean;
+  stacked: boolean;
 }) {
   const inverse = tone === "inverse" || tone === "mono";
-  if (variant === "mark") {
-    return inverse ? "/images/brand/logo-mark-inverse.png" : "/images/brand/logo-mark.png";
-  }
-  if (tagline || variant === "stacked") {
-    return inverse ? "/images/brand/logo-inverse.png" : "/images/brand/logo.png";
-  }
-  return inverse ? "/images/brand/logo-compact-inverse.png" : "/images/brand/logo-compact.png";
+  return (
+    <span
+      className={cn(
+        "flex min-w-0 flex-col justify-center leading-none",
+        stacked ? "items-center text-center" : "items-start text-left"
+      )}
+    >
+      <span
+        className={cn(
+          "font-semibold tracking-tight",
+          stacked ? "text-2xl sm:text-3xl" : "text-[1.35rem] sm:text-[1.5rem]"
+        )}
+      >
+        <span className={inverse ? "text-white" : "text-navy"}>trust</span>
+        <span className={inverse ? "text-sky-300" : "text-brand"}>Tap</span>
+      </span>
+      {tagline || stacked ? (
+        <span
+          className={cn(
+            "mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.18em]",
+            inverse ? "text-sky-200/90" : "text-[#5bb8e8]"
+          )}
+        >
+          Tap. Trust. Thrive.
+        </span>
+      ) : null}
+    </span>
+  );
 }
 
-/** Official TrustTap lockup extracted from brand artwork (image 2). */
+/** Official trustTap lockup — mark image + live wordmark so casing stays trustTap. */
 export function TrustTapLogo({
   variant = "horizontal",
   tone = "color",
@@ -38,34 +59,64 @@ export function TrustTapLogo({
   className,
   markClassName,
 }: TrustTapLogoProps) {
-  const src = srcFor({ variant, tone, tagline });
+  const inverse = tone === "inverse" || tone === "mono";
+  const markSrc = inverse
+    ? "/images/brand/logo-mark-inverse.png"
+    : "/images/brand/logo-mark.png";
   const isMark = variant === "mark";
-  const heightClass = isMark
-    ? "h-8"
+  const showTagline = tagline || variant === "stacked";
+  const markHeight = isMark
+    ? "h-8 w-auto"
     : variant === "stacked"
-      ? "h-14 sm:h-16"
-      : tagline
-        ? "h-11 sm:h-12"
-        : "h-8 sm:h-9";
+      ? "h-12 w-auto sm:h-14"
+      : showTagline
+        ? "h-10 w-auto sm:h-11"
+        : "h-8 w-auto sm:h-9";
+
+  if (isMark) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={markSrc}
+        alt="trustTap"
+        className={cn("object-contain", markHeight, markClassName, className)}
+      />
+    );
+  }
+
+  if (variant === "wordmark") {
+    return (
+      <span className={cn("inline-flex", className)} aria-label="trustTap">
+        <Wordmark tone={tone} tagline={showTagline} stacked={false} />
+      </span>
+    );
+  }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt="TrustTap"
+    <span
       className={cn(
-        "w-auto max-w-none shrink-0 object-contain object-left",
-        heightClass,
-        isMark ? markClassName : className,
+        "inline-flex max-w-none shrink-0",
+        variant === "stacked" ? "flex-col items-center gap-2" : "items-center gap-2.5",
+        className
       )}
-    />
+      aria-label="trustTap"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={markSrc}
+        alt=""
+        aria-hidden
+        className={cn("shrink-0 object-contain", markHeight, markClassName)}
+      />
+      <Wordmark tone={tone} tagline={showTagline} stacked={variant === "stacked"} />
+    </span>
   );
 }
 
 export function TrustTapMark({
   tone = "color",
   className,
-  title = "TrustTap",
+  title = "trustTap",
 }: {
   tone?: TrustTapLogoTone;
   className?: string;

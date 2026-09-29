@@ -1,6 +1,6 @@
-# Commiters TrustTap — Phased Product Roadmap
+# Commiters trustTap — Phased Product Roadmap
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Organization:** Commiters (Commit. Code. Connect.)  
 **Document version:** 1.1  
 **Last updated:** July 26, 2026  
@@ -10,19 +10,19 @@
 
 ## 1. Product Vision
 
-TrustTap is a **compliant, QR-powered customer feedback and reputation tool** for local businesses. It helps merchants:
+trustTap is a **compliant, QR-powered customer feedback and reputation tool** for local businesses. It helps merchants:
 
 - Make leaving a **Google review frictionless for every customer** (no review gating)
 - Receive **instant phone alerts** when a customer shares negative private feedback
 - Improve service in real time and build long-term Google Maps trust
 
-For Commiters, TrustTap is a **micro-SaaS and lead-generation engine** that opens upsell paths to websites, WhatsApp automation, and AI systems.
+For Commiters, trustTap is a **micro-SaaS and lead-generation engine** that opens upsell paths to websites, WhatsApp automation, and AI systems.
 
 **Positioning (external):** Customer Experience & Reputation Platform  
-**Working name:** Commiters TrustTap  
+**Working name:** Commiters trustTap  
 **Tagline:** *Turn unhappy customers into repeat customers before they become public complaints.*
 
-**Competitive frame:** Static ₹1,000–1,500 “lifetime QR boards” (Google / Instagram / UPI) are print products with no private recovery path and no updateable system. TrustTap sells a **review recovery system** — not a poster.
+**Competitive frame:** Static ₹1,000–1,500 “lifetime QR boards” (Google / Instagram / UPI) are print products with no private recovery path and no updateable system. trustTap sells a **review recovery system** — not a poster.
 
 ---
 
@@ -38,7 +38,7 @@ These apply across every phase. Non-negotiable.
 | **No human alert relay** | Never staff a person to watch the admin log and manually WhatsApp owners. Alerts are system-sent. |
 | **Sell before over-build** | Validate with 3 live Udaipur businesses before adding self-serve, payments, or AI. |
 | **Commiters leverage** | Every customer touchpoint includes subtle **"Powered by Commiters"** branding for B2B lead gen. |
-| **Honest limits** | Compliant Google access means some customers may still post public negative Google reviews. TrustTap’s value is early private warning + faster response — not “zero bad Google reviews.” |
+| **Honest limits** | Compliant Google access means some customers may still post public negative Google reviews. trustTap’s value is early private warning + faster response — not “zero bad Google reviews.” |
 
 ---
 
@@ -46,7 +46,7 @@ These apply across every phase. Non-negotiable.
 
 ```mermaid
 gantt
-    title TrustTap Roadmap (Indicative)
+    title trustTap Roadmap (Indicative)
     dateFormat YYYY-MM-DD
     section Phase 1
     Pilot MVP           :p1, 2026-07-21, 5d
@@ -107,7 +107,7 @@ gantt
 
 ### Competitive win vs static QR boards
 
-| Static ₹1,500 board | TrustTap Phase 1 |
+| Static ₹1,500 board | trustTap Phase 1 |
 |---------------------|------------------|
 | Print + static links | Print **+** live system |
 | Google (and maybe Instagram/UPI) | Google + **private recovery** |
@@ -134,7 +134,7 @@ See **[PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)**.
 | **Weekly owner report** | Automated Monday summary: scans, Google clicks, feedback count (WhatsApp or email) |
 | **Simple admin improvements** | List businesses, toggle active, view feedback log, export CSV |
 | **Billing (manual v2.0)** | UPI/invoice for ₹2,999 setup + ₹499/mo; no in-app payment yet |
-| **Merchant one-pager** | Printable PDF: how to use TrustTap, Google compliance dos/don’ts for staff |
+| **Merchant one-pager** | Printable PDF: how to use trustTap, Google compliance dos/don’ts for staff |
 | **Case study template** | 1-pager for Commiters portfolio from best pilot |
 | **Premium tier prep** | Weekly report + priority support at ₹999/mo |
 | **Alert reliability polish** | Template variants, SMS fallback if WhatsApp fails, delivery status in admin |
@@ -144,7 +144,7 @@ See **[PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)**.
 - ≥3 paying businesses by end of Phase 2
 - ≥70% pilot-to-paid conversion (of willing pilots)
 - Monthly churn &lt;20% in first 90 days
-- Commiters closes ≥1 website or automation upsell from TrustTap clients
+- Commiters closes ≥1 website or automation upsell from trustTap clients
 
 ### Out of scope (Phase 2)
 
@@ -217,7 +217,7 @@ See **[PHASE_1_MVP_BRD.md](./PHASE_1_MVP_BRD.md)**.
 
 **Bundled:** Per-message cost for **incident** WhatsApp/SMS alerts included in Core from Phase 1 (absorb or pass-through — decide at pilot pricing).
 
-**Upsell path:** TrustTap → Website → WhatsApp ordering → AI chatbot (₹20,000–₹50,000+ beyond SaaS).
+**Upsell path:** trustTap → Website → WhatsApp ordering → AI chatbot (₹20,000–₹50,000+ beyond SaaS).
 
 ---
 

@@ -42,7 +42,7 @@ export function MerchantOnePager({
       </header>
 
       <section>
-        <h2 className="text-xl font-semibold">How to use TrustTap</h2>
+        <h2 className="text-xl font-semibold">How to use trustTap</h2>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground">
           <li>Keep the QR at the counter, table, or billing desk — with the shop name visible.</li>
           <li>Ask every customer to scan after service. Do not only ask happy customers.</li>
@@ -58,7 +58,7 @@ export function MerchantOnePager({
         <h2 className="text-xl font-semibold">Links</h2>
         <ul className="mt-3 space-y-1 text-sm">
           <li>
-            TrustTap page: <span className="break-all font-mono">{publicReviewUrl}</span>
+            trustTap page: <span className="break-all font-mono">{publicReviewUrl}</span>
           </li>
           <li>
             Google review: <span className="break-all font-mono">{googleReviewUrl}</span>
@@ -97,7 +97,7 @@ export function MerchantOnePager({
         </ul>
       </section>
 
-      <p className="text-xs text-muted">Powered by Commiters TrustTap.</p>
+      <p className="text-xs text-muted">Powered by Commiters trustTap.</p>
     </article>
   );
 }

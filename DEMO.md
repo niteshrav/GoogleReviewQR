@@ -1,4 +1,4 @@
-# TrustTap — Phase 2 Demo Setup
+# trustTap — Phase 2 Demo Setup
 
 Quick guide to get the full demo running locally in under 5 minutes.
 
@@ -107,7 +107,7 @@ Demo uses `ALERT_EMAIL_MODE=log` so no real emails are sent.
 Check the **terminal / server console** for lines like:
 ```
 [smtp] EMAIL to=owner@business.com
-[smtp]   Subject: TrustTap weekly report — ...
+[smtp]   Subject: trustTap weekly report — ...
 ```
 Use this as proof that email payload is generated correctly.
 

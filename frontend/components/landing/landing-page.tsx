@@ -65,7 +65,7 @@ const benefits = [
 
 const faqs = [
   {
-    q: "Does TrustTap gate Google reviews by rating?",
+    q: "Does trustTap gate Google reviews by rating?",
     a: "No. Every customer always sees the same Google review option. Private feedback is separate.",
   },
   {
@@ -165,7 +165,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
     <div className="bg-mesh min-h-[100dvh]">
       <header className="sticky top-0 z-40 glass pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex shrink-0 items-center overflow-visible py-1" aria-label="TrustTap home">
+          <Link href="/" className="flex shrink-0 items-center overflow-visible py-1" aria-label="trustTap home">
             <TrustTapLogo variant="horizontal" tagline />
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
@@ -231,8 +231,8 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
       <main>
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
           <FadeIn immediate>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-navy">
-              Commiters TrustTap
+            <p className="text-sm font-semibold tracking-[0.08em] text-navy">
+              Commiters <span className="text-brand">trustTap</span>
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
               Collect better feedback.
@@ -270,8 +270,8 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/trusttap-hero.png"
-              alt="TrustTap QR stand, mobile feedback form, and live dashboard"
+              src="/images/trusttap-hero.png?v=trusttap"
+              alt="trustTap QR stand, mobile feedback form, and live dashboard"
               className="relative w-full rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)]"
             />
           </FadeIn>
@@ -342,6 +342,50 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
           </div>
         </section>
 
+        <section id="dinepro" className="border-t border-border bg-[#f7fbff] py-20">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+            <FadeIn>
+              <p className="text-sm font-semibold text-brand">TrustTap DinePro</p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                Every Table Tells a Story.
+              </h2>
+              <p className="mt-3 max-w-2xl text-muted">
+                Turn every table into a real-time source of customer insight. Know what happened,
+                fix issues before they become bad experiences.
+              </p>
+            </FadeIn>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  title: "Place QR",
+                  body: "Unique printable QR for every table — guests never pick a table manually.",
+                },
+                {
+                  title: "Guest shares",
+                  body: "Food, service, ambience, wait time, and optional menu feedback on mobile.",
+                },
+                {
+                  title: "Live Floor Pulse",
+                  body: "Managers see table health, open issues, and timelines in one dashboard.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-border bg-white p-5 shadow-[var(--shadow-sm)]"
+                >
+                  <p className="font-semibold text-foreground">{item.title}</p>
+                  <p className="mt-2 text-sm text-muted">{item.body}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8">
+              <Link href="/get-started?plan=dinepro">
+                <Button size="lg">Start DinePro</Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <PricingSection plans={plans} />
 
         <FaqSection />
@@ -379,7 +423,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
         <div className="border-t border-border">
           <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
             <p className="text-xs text-muted">
-              © {new Date().getFullYear()} Commiters TrustTap. All rights reserved.
+              © {new Date().getFullYear()} Commiters trustTap. All rights reserved.
             </p>
           </div>
         </div>

@@ -1,6 +1,6 @@
 # Phase 1 MVP — Implementation Document (TDD)
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Phase:** 1 — Pilot MVP  
 **Version:** 1.1  
 **Last updated:** July 26, 2026  

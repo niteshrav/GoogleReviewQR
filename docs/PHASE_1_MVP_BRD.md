@@ -1,6 +1,6 @@
 # Phase 1 MVP — Business Requirements Document
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Phase:** 1 — Pilot MVP  
 **Document version:** 1.1  
 **Last updated:** July 26, 2026  
@@ -161,18 +161,18 @@ Customer scans QR
 | COMP-5 | Internal star rating is **never** used to decide whether Google CTA is shown |
 | COMP-6 | Customer page includes brief note: feedback is anonymous; no account required |
 | COMP-7 | Merchant onboarding includes verbal/written guidance: staff must not pressure customers to review while seated |
-| COMP-8 | Sales and docs must state honestly: customers who tap Google may still post a public negative review; TrustTap does not block that |
+| COMP-8 | Sales and docs must state honestly: customers who tap Google may still post a public negative review; trustTap does not block that |
 
 ### 6.3 Honest product limit (required messaging)
 
 Because Google access is equal for all customers, **some people will tap Google and leave a bad public review**. That is allowed and expected under compliance.
 
-TrustTap differentiates by:
+trustTap differentiates by:
 1. Catching many issues via **private feedback** before/without a public post
 2. **Phone-alerting** the owner on ≤3★ private feedback
 3. Logging Google clicks + private feedback for Commiters/ops follow-up
 
-Google Business Profile may already email/notify owners when a **public** review is posted. That is a Google feature — not a reason to skip TrustTap’s private phone alerts.
+Google Business Profile may already email/notify owners when a **public** review is posted. That is a Google feature — not a reason to skip trustTap’s private phone alerts.
 
 ---
 
@@ -256,7 +256,7 @@ Google Business Profile may already email/notify owners when a **public** review
 | FR-QR-1 | One QR per business pointing to `/r/{slug}` | Must |
 | FR-QR-2 | QR downloadable as PNG (min 300×300px, error correction M or higher) | Should |
 | FR-QR-3 | Physical print for pilot **must include merchant business name** on the board/card (not a generic vendor-only sticker) | Must |
-| FR-QR-4 | Physical layout: one primary TrustTap QR; do not require Instagram/UPI codes inside the software product | Must |
+| FR-QR-4 | Physical layout: one primary trustTap QR; do not require Instagram/UPI codes inside the software product | Must |
 
 ---
 
@@ -416,14 +416,14 @@ Google Business Profile may already email/notify owners when a **public** review
 ### 12.3 Materials needed (non-software)
 
 - Laminated QR card/board with **merchant business name** printed large
-- One primary TrustTap QR (optional small secondary print icons for Instagram/UPI only if merchant insists — **not** in the app)
+- One primary trustTap QR (optional small secondary print icons for Instagram/UPI only if merchant insists — **not** in the app)
 - 30-second verbal pitch card for founder
 - One-page merchant compliance tip sheet (no staff pressure at table)
 - Week-1 value WhatsApp summary template (scans / clicks / private feedback) — may be semi-manual for 3 pilots **without** becoming an alert-relay desk
 
 ### 12.4 Competitive positioning (Phase 1)
 
-| Static print board | TrustTap |
+| Static print board | trustTap |
 |--------------------|----------|
 | Cheap lifetime print | Free pilot → SaaS |
 | Static Google (and maybe Instagram/UPI) | Google + private recovery |

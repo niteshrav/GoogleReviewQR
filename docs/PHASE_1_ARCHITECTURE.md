@@ -1,6 +1,6 @@
 # Phase 1 MVP — Architecture Document
 
-**Product:** Commiters TrustTap  
+**Product:** Commiters trustTap  
 **Phase:** 1 — Pilot MVP  
 **Version:** 1.1  
 **Last updated:** July 26, 2026  
@@ -10,7 +10,7 @@
 
 ## 1. Architecture Overview
 
-TrustTap Phase 1 is a **monolithic Next.js application** organized into three logical layers deployed as a single Vercel project:
+trustTap Phase 1 is a **monolithic Next.js application** organized into three logical layers deployed as a single Vercel project:
 
 | Layer | Folder | Responsibility |
 |-------|--------|----------------|
@@ -31,7 +31,7 @@ flowchart TB
         Browser[Mobile Browser]
     end
 
-    subgraph Vercel["Vercel (trusttap.commiters.com / TrustTap)"]
+    subgraph Vercel["Vercel (trusttap.commiters.com / trustTap)"]
         subgraph Frontend["frontend/"]
             AppRouter[App Router]
             Middleware[Admin Middleware]

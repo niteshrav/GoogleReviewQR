@@ -29,6 +29,8 @@ Use this checklist before going live with Phase 2 (Monetize & Retain).
 - Verify weekly reports:
   - Manual trigger works from admin (`Send report now`)
   - Cron route secured by `CRON_SECRET`
+  - Vercel Cron registered: Monday `30 3 * * 1` → `/api/cron/weekly-reports` (`frontend/vercel.json`)
+- Verify admin can **Reactivate** a deactivated business (QR works again)
 
 ## 4) Billing Workflow Verification
 

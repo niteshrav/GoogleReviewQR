@@ -8,30 +8,38 @@ datasource db {
 }
 
 model Business {
-  id              String     @id @default(uuid())
-  slug            String     @unique
-  name            String
-  ownerEmail      String
-  ownerWhatsApp   String?
-  ownerSmsPhone   String?
-  googleReviewUrl String
-  isActive        Boolean    @default(true)
-  plan            String     @default("pilot")
-  billingStatus   String     @default("trial")
-  setupFeePaid    Boolean    @default(false)
+  id                String     @id @default(uuid())
+  slug              String     @unique
+  name              String
+  ownerEmail        String
+  ownerWhatsApp     String?
+  ownerSmsPhone     String?
+  googleReviewUrl   String
+  isActive          Boolean    @default(true)
+  plan              String     @default("pilot")
+  billingStatus     String     @default("trial")
+  setupFeePaid      Boolean    @default(false)
   lastInvoiceSentAt DateTime?
   paymentReceivedAt DateTime?
-  paymentAmountInr Int?
-  paymentReference String?
-  paymentMethod   String?
+  paymentAmountInr  Int?
+  paymentReference  String?
+  paymentMethod     String?
   ownerAccessSecret String?
-  ownerSessionToken String?  @unique
+  ownerSessionToken String?    @unique
   lastWeeklyReportAt DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  feedbacks       Feedback[]
+  logoUrl           String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  feedbacks         Feedback[]
+  dineBranches      DineBranch[]
+  dineTables        DineTable[]
+  dineMenuItems     DineMenuItem[]
+  dineFeedbacks     DineFeedback[]
+  dineIssues        DineIssue[]
+  dineActivities    DineActivity[]
 
   @@index([isActive])
+  @@index([plan])
 }
 
 /** Public pricing catalog — shown on homepage, managed in admin. */
@@ -68,4 +76,146 @@ model Feedback {
 
   @@index([businessId, createdAt(sort: Desc)])
   @@index([alertSentAt])
+}
+
+// ─── DinePro ─────────────────────────────────────────────────────────────────
+
+model DineBranch {
+  id         String     @id @default(uuid())
+  businessId String
+  name       String
+  slug       String
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  business   Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  floors     DineFloor[]
+  tables     DineTable[]
+  menuItems  DineMenuItem[]
+
+  @@unique([businessId, slug])
+  @@index([businessId, isActive])
+}
+
+model DineFloor {
+  id        String      @id @default(uuid())
+  branchId  String
+  name      String
+  slug      String
+  sortOrder Int         @default(0)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  branch    DineBranch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  tables    DineTable[]
+
+  @@unique([branchId, slug])
+  @@index([branchId, isActive])
+}
+
+model DineTable {
+  id           String         @id @default(uuid())
+  businessId   String
+  branchId     String
+  floorId      String
+  tableNumber  String
+  slug         String
+  qrToken      String         @unique @default(uuid())
+  status       String         @default("active")
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  business     Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  branch       DineBranch     @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  floor        DineFloor      @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  feedbacks    DineFeedback[]
+  issues       DineIssue[]
+  activities   DineActivity[]
+
+  @@unique([branchId, slug])
+  @@unique([floorId, tableNumber])
+  @@index([businessId, isActive])
+  @@index([floorId, isActive])
+  @@index([branchId, isActive])
+}
+
+model DineMenuItem {
+  id         String   @id @default(uuid())
+  businessId String
+  branchId   String?
+  name       String
+  category   String?
+  isActive   Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  branch     DineBranch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  feedbacks  DineFeedback[]
+
+  @@index([businessId, isActive])
+  @@index([branchId, isActive])
+}
+
+model DineFeedback {
+  id               String        @id @default(uuid())
+  businessId       String
+  tableId          String
+  foodRating       Int?
+  serviceRating    Int?
+  ambienceRating   Int?
+  waitTimeRating   Int?
+  overallRating    Int
+  comment          String?       @db.VarChar(1000)
+  issueTags        String[]
+  menuItemId       String?
+  menuItemRating   Int?
+  createdAt        DateTime      @default(now())
+  business         Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  table            DineTable     @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  menuItem         DineMenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+  issues           DineIssue[]
+
+  @@index([businessId, createdAt(sort: Desc)])
+  @@index([tableId, createdAt(sort: Desc)])
+  @@index([menuItemId])
+}
+
+model DineIssue {
+  id               String        @id @default(uuid())
+  businessId       String
+  tableId          String
+  feedbackId       String?
+  category         String
+  severity         String        @default("MEDIUM")
+  status           String        @default("OPEN")
+  summary          String
+  resolvedBy       String?
+  resolvedAt       DateTime?
+  resolutionNote   String?       @db.VarChar(1000)
+  alertSentAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  business         Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  table            DineTable     @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  feedback         DineFeedback? @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, status, createdAt(sort: Desc)])
+  @@index([tableId, status])
+  @@index([createdAt])
+}
+
+model DineActivity {
+  id         String    @id @default(uuid())
+  businessId String
+  tableId    String
+  type       String
+  message    String
+  metaJson   String?
+  createdAt  DateTime  @default(now())
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  table      DineTable @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@index([tableId, createdAt(sort: Desc)])
+  @@index([businessId, createdAt(sort: Desc)])
 }
