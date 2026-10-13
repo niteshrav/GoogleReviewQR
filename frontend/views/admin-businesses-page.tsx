@@ -91,6 +91,7 @@ export default async function AdminBusinessesPage() {
           ownerWhatsApp: business.ownerWhatsApp,
           ownerSmsPhone: business.ownerSmsPhone,
           googleReviewUrl: business.googleReviewUrl,
+          justdialReviewUrl: business.justdialReviewUrl,
           isActive: business.isActive,
           plan: business.plan ?? "pilot",
           billingStatus:

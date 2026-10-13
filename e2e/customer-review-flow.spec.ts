@@ -24,7 +24,7 @@ test.describe("customer review flow @tdd", () => {
     await page.getByLabel(/what should we know/i).fill("E2E test — service was slow");
     await page.getByLabel(/^name \(optional\)$/i).fill("Priya");
     await page.getByLabel(/whatsapp \/ phone number/i).fill("+919876543210");
-    await page.getByRole("button", { name: /send privately/i }).click();
+    await page.getByRole("button", { name: /^save & send privately$/i }).click();
 
     await expect(page.getByRole("heading", { name: /noted.*take it from here/i })).toBeVisible();
     await expect(
@@ -35,7 +35,7 @@ test.describe("customer review flow @tdd", () => {
   test("feedback form rejects submit without a rating", async ({ page }) => {
     await page.goto("/r/cafe-edelweiss/feedback");
 
-    await page.getByRole("button", { name: /send privately/i }).click();
+    await page.getByRole("button", { name: /^send privately$/i }).click();
     await expect(page.getByText(/please select a rating/i)).toBeVisible();
   });
 });

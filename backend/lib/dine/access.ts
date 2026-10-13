@@ -5,38 +5,60 @@ import {
 } from "@backend/lib/auth/admin";
 import { businessRepository } from "@database/index";
 import { getEnv } from "@backend/lib/env";
+import { isSeededLoginSecret } from "@backend/lib/fixtures/seeded-login-credentials";
 
 export const DINEPRO_PLAN_KEY = "dinepro";
 
-export function sessionFromRequest(request: Request): string | undefined {
+/** Platform admin's chosen restaurant; ignored for owner sessions. */
+export const DINEPRO_SELECTED_COOKIE = "dinepro_business";
+
+type DineAccessContext = {
+  ownerBusinessId: string | null;
+  isPlatform: boolean;
+  selectedBusinessId?: string | null;
+};
+
+function readCookie(request: Request, name: string): string | undefined {
   const cookieHeader = request.headers.get("cookie") ?? "";
-  const match = cookieHeader.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`));
+  const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
   return match?.[1] ? decodeURIComponent(match[1]) : undefined;
 }
 
+export function sessionFromRequest(request: Request): string | undefined {
+  return readCookie(request, ADMIN_SESSION_COOKIE);
+}
+
+export async function listDineProRestaurants() {
+  const businesses = await businessRepository.findAll();
+  return businesses
+    .filter((b) => b.isActive && b.plan === DINEPRO_PLAN_KEY)
+    .map((b) => ({ id: b.id, name: b.name, slug: b.slug }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Seeded demo logins (non-production only) already get global access in classic admin. */
 export function isPlatformAdmin(session: string | undefined): boolean {
   if (!session) return false;
   const expected = process.env.ADMIN_SECRET;
   if (expected && session === expected) return true;
-  return false;
+  return isSeededLoginSecret(session);
 }
 
-export async function requireDineSession(request: Request): Promise<{
-  session: string;
-  ownerBusinessId: string | null;
-  isPlatform: boolean;
-}> {
+export async function requireDineSession(request: Request): Promise<
+  DineAccessContext & { session: string }
+> {
   const session = sessionFromRequest(request);
   if (!(await verifyAdminSecret(session))) {
     throw new DineAuthError("Unauthorized", 401);
   }
   const isPlatform = isPlatformAdmin(session);
   const ownerBusinessId = isPlatform ? null : await resolveOwnerBusinessId(session);
-  return { session: session!, ownerBusinessId, isPlatform };
+  const selectedBusinessId = isPlatform ? (readCookie(request, DINEPRO_SELECTED_COOKIE) ?? null) : null;
+  return { session: session!, ownerBusinessId, isPlatform, selectedBusinessId };
 }
 
 export async function assertBusinessAccess(
-  ctx: { ownerBusinessId: string | null; isPlatform: boolean },
+  ctx: DineAccessContext,
   businessId: string,
 ): Promise<void> {
   if (ctx.isPlatform) return;
@@ -57,15 +79,22 @@ export async function assertDineProBusiness(businessId: string) {
 }
 
 export async function resolveAccessibleDineBusinessId(
-  ctx: { ownerBusinessId: string | null; isPlatform: boolean },
+  ctx: DineAccessContext,
   requestedId?: string | null,
 ): Promise<string> {
   if (ctx.isPlatform) {
-    if (!requestedId) {
-      throw new DineAuthError("businessId required", 400);
+    if (requestedId) {
+      await assertDineProBusiness(requestedId);
+      return requestedId;
     }
-    await assertDineProBusiness(requestedId);
-    return requestedId;
+    const restaurants = await listDineProRestaurants();
+    if (restaurants.length === 0) {
+      throw new DineAuthError(
+        "No DinePro restaurants yet. In Admin → Businesses, set a business's plan to DinePro.",
+        404,
+      );
+    }
+    return (restaurants.find((r) => r.id === ctx.selectedBusinessId) ?? restaurants[0]).id;
   }
   if (!ctx.ownerBusinessId) {
     throw new DineAuthError("Forbidden", 403);

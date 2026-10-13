@@ -36,21 +36,18 @@ export function DineProOverviewClient() {
   const [data, setData] = useState<OverviewData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [businessId, setBusinessId] = useState("");
 
-  const load = useCallback(async (bid?: string) => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const q = bid ? `?businessId=${encodeURIComponent(bid)}` : "";
       const [cRes, oRes] = await Promise.all([
-        fetch(`/api/dinepro/context${q}`),
-        fetch(`/api/dinepro/overview${q}`),
+        fetch("/api/dinepro/context"),
+        fetch("/api/dinepro/overview"),
       ]);
       const cJson = await cRes.json();
       if (!cRes.ok) throw new Error(cJson.error ?? "Context failed");
       setCtx(cJson);
-      if (cJson.business?.id) setBusinessId(cJson.business.id);
 
       if (oRes.ok) {
         setData(await oRes.json());
@@ -72,26 +69,6 @@ export function DineProOverviewClient() {
 
   return (
     <DineProShell restaurantName={ctx?.business?.name}>
-      {ctx?.isPlatform ? (
-        <form
-          className="mb-4 flex flex-wrap gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void load(businessId);
-          }}
-        >
-          <input
-            className="min-w-[280px] flex-1 rounded-xl border border-border px-3 py-2 text-sm"
-            placeholder="Business UUID (platform admin)"
-            value={businessId}
-            onChange={(e) => setBusinessId(e.target.value)}
-          />
-          <button type="submit" className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white">
-            Load
-          </button>
-        </form>
-      ) : null}
-
       {loading ? <Loader /> : null}
       {error ? (
         <EmptyState

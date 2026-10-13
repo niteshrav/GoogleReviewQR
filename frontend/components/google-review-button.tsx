@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { cn } from "@frontend/lib/cn";
 
 type GoogleReviewButtonProps = {
@@ -7,11 +8,13 @@ type GoogleReviewButtonProps = {
   googleReviewUrl: string;
   label?: string;
   className?: string;
+  children?: ReactNode;
 };
 
 export function GoogleReviewButton({
   businessSlug,
   googleReviewUrl,
+  children,
   label = "Leave a Google Review",
   className = "customer-cta block rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.99]",
 }: GoogleReviewButtonProps) {
@@ -31,7 +34,7 @@ export function GoogleReviewButton({
 
   return (
     <button type="button" onClick={handleClick} className={cn(className)}>
-      {label}
+      {children ?? label}
     </button>
   );
 }

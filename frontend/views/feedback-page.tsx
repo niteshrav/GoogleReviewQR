@@ -5,6 +5,8 @@ import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
 import { CustomerFooter } from "@frontend/components/customer/customer-footer";
 import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
 import { FeedbackForm } from "@frontend/components/feedback/feedback-form";
+import { ToastHouseFeedback } from "@frontend/components/customer/themes/toast-house-feedback";
+import { getReviewTheme } from "@frontend/lib/review-themes";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +21,17 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
 
   if (!business) {
     notFound();
+  }
+
+  if (getReviewTheme(slug) === "toast-house") {
+    return (
+      <ToastHouseFeedback
+        slug={slug}
+        businessName={business.name}
+        googleReviewUrl={business.googleReviewUrl}
+        justdialReviewUrl={business.justdialReviewUrl}
+      />
+    );
   }
 
   return (
@@ -36,6 +49,7 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
           businessSlug={slug}
           businessName={business.name}
           googleReviewUrl={business.googleReviewUrl}
+          justdialReviewUrl={business.justdialReviewUrl}
         />
       </div>
       <CustomerFooter />

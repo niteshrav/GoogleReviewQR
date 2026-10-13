@@ -12,7 +12,7 @@ test.describe("compliance ungated Google CTA @tdd", () => {
   test("thank-you path still offers Google after low private rating", async ({ page }) => {
     await page.goto("/r/cafe-edelweiss/feedback");
     await page.getByRole("radio", { name: "1 star" }).click();
-    await page.getByRole("button", { name: /send privately/i }).click();
+    await page.getByRole("button", { name: /^send privately$/i }).click();
 
     await expect(page.getByRole("heading", { name: /noted.*take it from here/i })).toBeVisible();
     await expect(

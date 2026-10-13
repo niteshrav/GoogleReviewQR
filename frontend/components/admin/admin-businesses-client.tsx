@@ -17,6 +17,7 @@ export type AdminBusinessListItem = {
   ownerWhatsApp: string | null;
   ownerSmsPhone: string | null;
   googleReviewUrl: string;
+  justdialReviewUrl: string | null;
   isActive: boolean;
   plan: string;
   billingStatus: "trial" | "invoiced" | "paid" | "overdue";
@@ -98,6 +99,7 @@ function BusinessCard({
             ownerWhatsApp: business.ownerWhatsApp ?? "",
             ownerSmsPhone: business.ownerSmsPhone ?? "",
             googleReviewUrl: business.googleReviewUrl,
+            justdialReviewUrl: business.justdialReviewUrl ?? "",
             plan: business.plan,
             billingStatus: business.billingStatus,
             setupFeePaid: business.setupFeePaid,

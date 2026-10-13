@@ -2,8 +2,10 @@
 
 import { FormEvent, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CopyTextButton } from "@frontend/components/feedback/copy-text-button";
 import { StarRating } from "@frontend/components/feedback/star-rating";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
+import { JustdialReviewLink } from "@frontend/components/justdial-review-link";
 import { Alert } from "@frontend/components/ui/alert";
 import { Button } from "@frontend/components/ui/button";
 import { Input } from "@frontend/components/ui/input";
@@ -13,9 +15,15 @@ type FeedbackFormProps = {
   businessSlug: string;
   businessName: string;
   googleReviewUrl: string;
+  justdialReviewUrl?: string | null;
 };
 
-export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: FeedbackFormProps) {
+export function FeedbackForm({
+  businessSlug,
+  businessName,
+  googleReviewUrl,
+  justdialReviewUrl,
+}: FeedbackFormProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [customerName, setCustomerName] = useState("");
@@ -60,6 +68,18 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
     setLoading(false);
   }
 
+  const hasComment = comment.trim().length > 0;
+
+  const errorAlert = (
+    <AnimatePresence>
+      {error ? (
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <Alert variant="error">{error}</Alert>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+
   if (submitted) {
     return (
       <motion.section
@@ -77,11 +97,15 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         <p className="mt-2 text-center text-sm text-muted">
           Thanks for helping {businessName} improve.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 space-y-3">
           <GoogleReviewButton
             businessSlug={businessSlug}
             googleReviewUrl={googleReviewUrl}
             label="Also leave a Google review"
+          />
+          <JustdialReviewLink
+            justdialReviewUrl={justdialReviewUrl}
+            label="Also rate us on Justdial"
           />
         </div>
       </motion.section>
@@ -123,6 +147,25 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
           placeholder="Service, food, wait time… anything that helps"
           hint={`${comment.length}/1000`}
         />
+        {hasComment ? (
+          <div className="mt-3 space-y-2">
+            {errorAlert}
+            <div className="flex flex-wrap gap-2">
+              <CopyTextButton text={comment} />
+              <Button
+                type="submit"
+                loading={loading}
+                disabled={rating < 1}
+                className="min-h-[44px] min-w-[12rem] flex-1"
+              >
+                {loading ? "Saving..." : "Save & send privately"}
+              </Button>
+            </div>
+            {rating < 1 ? (
+              <p className="text-xs text-muted">Pick a star rating above to save your comment.</p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-6">
@@ -167,18 +210,7 @@ export function FeedbackForm({ businessSlug, businessName, googleReviewUrl }: Fe
         aria-hidden="true"
       />
 
-      <AnimatePresence>
-        {error ? (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="mt-3"
-          >
-            <Alert variant="error">{error}</Alert>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {!hasComment && error ? <div className="mt-3">{errorAlert}</div> : null}
 
       <Button
         type="submit"

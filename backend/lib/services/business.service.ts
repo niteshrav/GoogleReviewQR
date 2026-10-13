@@ -12,6 +12,7 @@ export function createBusinessService(repository: BusinessRepository) {
         ownerWhatsApp: input.ownerWhatsApp || null,
         ownerSmsPhone: input.ownerSmsPhone || null,
         googleReviewUrl: input.googleReviewUrl,
+        justdialReviewUrl: input.justdialReviewUrl ?? null,
         plan: input.plan ?? "pilot",
         billingStatus: input.billingStatus ?? "trial",
         setupFeePaid: input.setupFeePaid ?? false,

@@ -3,6 +3,7 @@ import {
   feedbackInputSchema,
   googleClickInputSchema,
   googleReviewUrlSchema,
+  justdialReviewUrlSchema,
   slugSchema,
   businessInputSchema,
 } from "@backend/lib/validators";
@@ -45,6 +46,27 @@ describe("googleReviewUrlSchema", () => {
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.issues[0]?.message).toMatch(/https:\/\//i);
+    }
+  });
+});
+
+describe("justdialReviewUrlSchema", () => {
+  it("accepts justdial.com and jsdl.in links, adding https when missing", () => {
+    const url = "https://www.justdial.com/Udaipur/Cafe-Edelweiss/0294PX294-X294-123_BZDET";
+    expect(justdialReviewUrlSchema.parse(url)).toBe(url);
+    expect(justdialReviewUrlSchema.parse("jsdl.in/DT-12ABC")).toBe("https://jsdl.in/DT-12ABC");
+  });
+
+  it("turns an empty value into null so the link can be cleared", () => {
+    expect(justdialReviewUrlSchema.parse("")).toBeNull();
+    expect(justdialReviewUrlSchema.parse("   ")).toBeNull();
+  });
+
+  it("rejects non-Justdial URLs", () => {
+    const result = justdialReviewUrlSchema.safeParse("https://example.com/justdial");
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toMatch(/justdial/i);
     }
   });
 });
@@ -142,5 +164,19 @@ describe("businessInputSchema", () => {
     });
 
     expect(parsed.ownerWhatsApp).toBe("+919876543210");
+    expect(parsed.justdialReviewUrl).toBeUndefined();
+  });
+
+  it("accepts an optional Justdial review link", () => {
+    const parsed = businessInputSchema.parse({
+      name: "Cafe",
+      slug: "cafe-edelweiss",
+      ownerEmail: "owner@example.com",
+      ownerWhatsApp: "+919876543210",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+      justdialReviewUrl: "https://www.justdial.com/Udaipur/Cafe-Edelweiss",
+    });
+
+    expect(parsed.justdialReviewUrl).toBe("https://www.justdial.com/Udaipur/Cafe-Edelweiss");
   });
 });

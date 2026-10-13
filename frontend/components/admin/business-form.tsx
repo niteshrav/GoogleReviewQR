@@ -20,6 +20,7 @@ type BusinessFormProps = {
     ownerWhatsApp?: string;
     ownerSmsPhone?: string;
     googleReviewUrl?: string;
+    justdialReviewUrl?: string;
     plan?: string;
     billingStatus?: "trial" | "invoiced" | "paid" | "overdue";
     setupFeePaid?: boolean;
@@ -45,6 +46,9 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
   const [ownerWhatsApp, setOwnerWhatsApp] = useState(initialValues?.ownerWhatsApp ?? "");
   const [ownerSmsPhone, setOwnerSmsPhone] = useState(initialValues?.ownerSmsPhone ?? "");
   const [googleReviewUrl, setGoogleReviewUrl] = useState(initialValues?.googleReviewUrl ?? "");
+  const [justdialReviewUrl, setJustdialReviewUrl] = useState(
+    initialValues?.justdialReviewUrl ?? "",
+  );
   const [plan, setPlan] = useState(initialValues?.plan ?? "pilot");
   const [billingStatus, setBillingStatus] = useState(initialValues?.billingStatus ?? "trial");
   const [setupFeePaid, setSetupFeePaid] = useState(initialValues?.setupFeePaid ?? false);
@@ -63,6 +67,7 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
       ownerWhatsApp,
       ownerSmsPhone,
       googleReviewUrl,
+      justdialReviewUrl,
       plan,
       billingStatus,
       setupFeePaid,
@@ -93,6 +98,7 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
       setOwnerWhatsApp("");
       setOwnerSmsPhone("");
       setGoogleReviewUrl("");
+      setJustdialReviewUrl("");
       setPlan(plans[0]?.key ?? "pilot");
       setBillingStatus("trial");
       setSetupFeePaid(false);
@@ -160,6 +166,15 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
         value={googleReviewUrl}
         onChange={(event) => setGoogleReviewUrl(event.target.value)}
         placeholder="https://g.page/r/..."
+      />
+
+      <Input
+        id="justdialReviewUrl"
+        label="Justdial review URL (optional)"
+        value={justdialReviewUrl}
+        onChange={(event) => setJustdialReviewUrl(event.target.value)}
+        placeholder="https://www.justdial.com/..."
+        hint="Adds a Justdial review button on the customer QR page. Leave empty to hide it."
       />
 
       <div className="grid gap-4 sm:grid-cols-2">

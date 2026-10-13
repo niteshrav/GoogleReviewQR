@@ -4,6 +4,7 @@ import {
   DineAuthError,
   assertBusinessAccess,
   buildTableQrUrl,
+  listDineProRestaurants,
   requireDineSession,
   resolveAccessibleDineBusinessId,
 } from "@backend/lib/dine/access";
@@ -26,6 +27,12 @@ async function handleAuthError(error: unknown) {
   if (error instanceof DineAuthError) {
     return jsonError(error.message, error.status);
   }
+  if (error instanceof z.ZodError) {
+    return jsonError(error.issues[0]?.message ?? "Invalid request", 400);
+  }
+  if ((error as { code?: string } | null)?.code === "P2002") {
+    return jsonError("That name or number already exists here. Choose a different one.", 409);
+  }
   console.error("[dinepro]", error);
   return jsonError("Internal error", 500);
 }
@@ -46,6 +53,22 @@ export async function listFeedbackHandler(request: Request) {
       limit: 100,
     });
     return jsonOk({ feedback });
+  } catch (error) {
+    return handleAuthError(error);
+  }
+}
+
+export async function listDineRestaurants(request: Request) {
+  try {
+    const ctx = await requireDineSession(request);
+    if (!ctx.isPlatform) {
+      throw new DineAuthError("Forbidden", 403);
+    }
+    const restaurants = await listDineProRestaurants();
+    const selectedId = restaurants.length
+      ? await resolveAccessibleDineBusinessId(ctx)
+      : null;
+    return jsonOk({ restaurants, selectedId });
   } catch (error) {
     return handleAuthError(error);
   }
