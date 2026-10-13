@@ -9,7 +9,7 @@
 - Seeded `dinepro` subscription plan (₹1,499/mo, ₹2,999 setup) via migration into existing `SubscriptionPlan` catalog.
 - Added guest table QR flow `/dine/{restaurant}/{branch}/{table}` with category ratings, tags, optional menu rating, ungated Google CTA.
 - Added DinePro ops dashboard under `/admin/dinepro/*` (Live Floor, Issues, Analytics, QR Manager, Setup wizard, Menu).
-- Access control: owner sessions scoped to their business; platform admin can pass `businessId`; requires `Business.plan === "dinepro"`.
+- Access control: owner sessions scoped to their business; platform admin picks a restaurant from the header picker (`dinepro_business` cookie, defaults to the first DinePro restaurant) or passes `businessId`; requires `Business.plan === "dinepro"`.
 - Reused TrustTap QR PNG helper, alerts, admin cookie auth, pricing/signup, design tokens.
 
 ## 2. Key files
@@ -40,7 +40,7 @@ New models: `DineBranch`, `DineFloor`, `DineTable`, `DineMenuItem`, `DineFeedbac
 
 ## 5. API endpoints added
 
-- `GET /api/dinepro/context|overview|floor-pulse|tables|feedback|issues|analytics|menu`
+- `GET /api/dinepro/context|overview|floor-pulse|tables|feedback|issues|analytics|menu|restaurants`
 - `POST /api/dinepro/branches|floors|tables|menu`
 - `GET|PATCH /api/dinepro/tables/[id]`, `GET .../qr`
 - `PATCH /api/dinepro/issues/[id]`
@@ -53,13 +53,12 @@ Plan catalog · structure CRUD · unique table QR · guest dine form · issues +
 
 ## 7. Tests
 
-- Unit: `backend/lib/dine/table-health.test.ts` (health, pulse, helpers)
-- Full suite: **127** unit tests passing
+- Unit: `backend/lib/dine/table-health.test.ts` (health, pulse, helpers), `backend/lib/dine/access.test.ts` (restaurant selection, owner isolation)
+- Full suite: **137** unit tests passing
 - `tsc --noEmit` clean for frontend project
 
 ## 8. Remaining limitations
 
-- Platform admin must paste business UUID on overview (no restaurant picker UI yet).
 - Owner scoping for classic `/admin/businesses` still global (pre-existing); DinePro APIs are scoped.
 - Live Floor polls every 30s (no websockets).
 - Bulk ZIP download / PDF pack not included (PNG + print card yes).
@@ -71,5 +70,5 @@ Plan catalog · structure CRUD · unique table QR · guest dine form · issues +
 1. `npx prisma migrate deploy --schema=database/schema.prisma`
 2. Ensure `dinepro` plan row exists (migration seeds it).
 3. Assign `Business.plan = 'dinepro'` (signup with `?plan=dinepro` or admin edit).
-4. Run setup wizard → place table QR cards.
+4. Run setup wizard (safe to re-run: pick an existing branch/floor, tables continue from the next free number) → place table QR cards.
 5. Env unchanged beyond existing SMTP/Twilio/Razorpay for alerts & billing.

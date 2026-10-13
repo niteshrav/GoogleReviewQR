@@ -15,6 +15,7 @@ model Business {
   ownerWhatsApp     String?
   ownerSmsPhone     String?
   googleReviewUrl   String
+  justdialReviewUrl String?
   isActive          Boolean    @default(true)
   plan              String     @default("pilot")
   billingStatus     String     @default("trial")

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { CopyTextButton } from "@frontend/components/feedback/copy-text-button";
 import { StarRating } from "@frontend/components/feedback/star-rating";
 import { Button } from "@frontend/components/ui/button";
 import { Textarea } from "@frontend/components/ui/textarea";
@@ -96,6 +97,8 @@ export function DineGuestForm({ restaurant, branch, table, menuItems }: DineGues
     }
   }
 
+  const errorMessage = error ? <p className="text-sm text-error">{error}</p> : null;
+
   if (done) {
     return (
       <div className="space-y-6 text-center">
@@ -147,6 +150,22 @@ export function DineGuestForm({ restaurant, branch, table, menuItems }: DineGues
           maxLength={1000}
           rows={3}
         />
+        {comment.trim() ? (
+          <div className="mt-3 space-y-2">
+            {errorMessage}
+            <div className="flex flex-wrap gap-2">
+              <CopyTextButton text={comment} />
+              <Button type="submit" disabled={!canSubmit} className="min-h-[44px] min-w-[12rem] flex-1">
+                {submitting ? "Saving…" : "Save & send feedback"}
+              </Button>
+            </div>
+            {overall < 1 ? (
+              <p className="text-xs text-muted">
+                Rate your overall experience above to save your comment.
+              </p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div>
@@ -207,7 +226,7 @@ export function DineGuestForm({ restaurant, branch, table, menuItems }: DineGues
         aria-hidden
       />
 
-      {error ? <p className="text-sm text-error">{error}</p> : null}
+      {comment.trim() ? null : errorMessage}
 
       <Button type="submit" fullWidth size="lg" disabled={!canSubmit}>
         {submitting ? "Sending…" : "Submit feedback"}

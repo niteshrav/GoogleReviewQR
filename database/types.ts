@@ -9,6 +9,7 @@ export type CreateBusinessInput = {
   ownerWhatsApp?: string | null;
   ownerSmsPhone?: string | null;
   googleReviewUrl: string;
+  justdialReviewUrl?: string | null;
   plan?: BillingPlan;
   billingStatus?: BillingStatus;
   setupFeePaid?: boolean;
@@ -27,6 +28,7 @@ export type UpdateBusinessInput = {
   ownerWhatsApp?: string | null;
   ownerSmsPhone?: string | null;
   googleReviewUrl?: string;
+  justdialReviewUrl?: string | null;
   isActive?: boolean;
   plan?: BillingPlan;
   billingStatus?: BillingStatus;

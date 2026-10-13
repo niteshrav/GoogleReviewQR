@@ -45,6 +45,23 @@ export const googleReviewUrlSchema = z
       ),
   );
 
+const JUSTDIAL_URL_PATTERN = /^https:\/\/((www|m)\.)?(justdial\.com|jsdl\.in)\//i;
+
+/** Optional; empty input clears the link (stored as null). */
+export const justdialReviewUrlSchema = z
+  .string()
+  .trim()
+  .transform((value) => (value ? normalizeGoogleReviewUrl(value) : ""))
+  .pipe(
+    z.literal("").or(
+      z
+        .string()
+        .url({ message: "Enter a full Justdial link starting with https://" })
+        .refine((url) => JUSTDIAL_URL_PATTERN.test(url), "Use a Justdial link (justdial.com or jsdl.in)"),
+    ),
+  )
+  .transform((value) => value || null);
+
 export const billingPlanSchema = z
   .string()
   .trim()
@@ -87,6 +104,7 @@ export const businessInputSchema = z
     ownerWhatsApp: phoneFieldSchema,
     ownerSmsPhone: phoneFieldSchema,
     googleReviewUrl: googleReviewUrlSchema,
+    justdialReviewUrl: justdialReviewUrlSchema.nullable().optional(),
     isActive: z.boolean().optional(),
     plan: billingPlanSchema.optional(),
     billingStatus: billingStatusSchema.optional(),

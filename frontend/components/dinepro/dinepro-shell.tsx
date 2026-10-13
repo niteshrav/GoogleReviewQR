@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-button";
 import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { DineProRestaurantPicker } from "@frontend/components/dinepro/dinepro-restaurant-picker";
 import { cn } from "@frontend/lib/cn";
 
 const navItems = [
@@ -98,9 +99,12 @@ export function DineProShell({ children, restaurantName }: DineProShellProps) {
             </p>
             <p className="text-xs text-muted">Every table tells a story.</p>
           </div>
-          <Link href="/admin/dinepro/setup" className="text-sm font-medium text-brand">
-            Setup
-          </Link>
+          <div className="flex items-center gap-3">
+            <DineProRestaurantPicker />
+            <Link href="/admin/dinepro/setup" className="text-sm font-medium text-brand">
+              Setup
+            </Link>
+          </div>
         </header>
         <main className="p-4 sm:p-6">{children}</main>
       </div>

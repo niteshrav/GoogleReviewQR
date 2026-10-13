@@ -15,6 +15,8 @@ const viewFiles = [
   "frontend/views/feedback-page.tsx",
   "frontend/components/feedback/feedback-form.tsx",
   "frontend/components/google-review-button.tsx",
+  "frontend/components/customer/themes/toast-house-landing.tsx",
+  "frontend/components/customer/themes/toast-house-feedback.tsx",
 ];
 
 const routeFiles = ["backend/routes/feedback.ts", "backend/routes/google-click.ts"];
