@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { Alert } from "@frontend/components/ui/alert";
 import { Button } from "@frontend/components/ui/button";
 import { Card } from "@frontend/components/ui/card";
@@ -309,8 +309,8 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
         key: orderData.keyId,
         amount: orderData.amountPaise,
         currency: orderData.currency ?? "INR",
-        name: "trustTap",
-        description: orderData.description ?? `trustTap ${plan.name}`,
+        name: "Prooflyn",
+        description: orderData.description ?? `Prooflyn ${plan.name}`,
         order_id: orderData.orderId,
         prefill: orderData.prefill,
         notes: {
@@ -404,7 +404,7 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
       {step === 0 ? (
         <Card>
           <h2 className="text-lg font-semibold">Registration</h2>
-          <p className="mt-1 text-sm text-muted">Create your trustTap business account.</p>
+          <p className="mt-1 text-sm text-muted">Create your Prooflyn business account.</p>
           <form onSubmit={goNextFromRegister} className="mt-5 space-y-4">
             <Input
               id="name"
@@ -626,8 +626,8 @@ export function GetStartedShell({ children }: { children: React.ReactNode }) {
     <div className="bg-mesh min-h-[100dvh]">
       <header className="border-b border-border bg-white/90">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-5">
-          <Link href="/" aria-label="trustTap home">
-            <TrustTapLogo variant="horizontal" tagline />
+          <Link href="/" aria-label="Prooflyn home">
+            <ProoflynLogo variant="horizontal" tagline />
           </Link>
           <Link href="/#pricing" className="text-sm font-medium text-muted hover:text-foreground">
             All plans

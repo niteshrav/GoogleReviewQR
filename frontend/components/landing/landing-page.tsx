@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { FadeIn } from "@frontend/components/motion/fade-in";
 import {
   PricingSection,
@@ -65,7 +65,7 @@ const benefits = [
 
 const faqs = [
   {
-    q: "Does trustTap gate Google reviews by rating?",
+    q: "Does Prooflyn gate Google reviews by rating?",
     a: "No. Every customer always sees the same Google review option. Private feedback is separate.",
   },
   {
@@ -165,8 +165,8 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
     <div className="bg-mesh min-h-[100dvh]">
       <header className="sticky top-0 z-40 glass pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex shrink-0 items-center overflow-visible py-1" aria-label="trustTap home">
-            <TrustTapLogo variant="horizontal" tagline />
+          <Link href="/" className="flex shrink-0 items-center overflow-visible py-1" aria-label="Prooflyn home">
+            <ProoflynLogo variant="horizontal" tagline />
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
             <a href="#features" className="transition-colors hover:text-foreground">
@@ -232,7 +232,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
           <FadeIn immediate>
             <p className="text-sm font-semibold tracking-[0.08em] text-navy">
-              Commiters <span className="text-brand">trustTap</span>
+              Commiters <span className="text-brand">Prooflyn</span>
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
               Collect better feedback.
@@ -270,8 +270,8 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/trusttap-hero.png?v=trusttap"
-              alt="trustTap QR stand, mobile feedback form, and live dashboard"
+              src="/images/prooflyn-hero.png?v=prooflyn2"
+              alt="Prooflyn QR stand, mobile feedback form, and live dashboard"
               className="relative w-full rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)]"
             />
           </FadeIn>
@@ -345,7 +345,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
         <section id="dinepro" className="border-t border-border bg-[#f7fbff] py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <FadeIn>
-              <p className="text-sm font-semibold text-brand">TrustTap DinePro</p>
+              <p className="text-sm font-semibold text-brand">Prooflyn DinePro</p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight">
                 Every Table Tells a Story.
               </h2>
@@ -394,7 +394,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
           <FadeIn>
             <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 rounded-2xl bg-navy px-8 py-10 text-white sm:px-12 sm:py-12 lg:flex-row lg:items-center">
               <div>
-                <TrustTapLogo variant="horizontal" tone="inverse" tagline />
+                <ProoflynLogo variant="horizontal" tone="inverse" tagline />
                 <h2 className="mt-5 text-3xl font-semibold tracking-tight text-white">
                   Ready to launch your pilot?
                 </h2>
@@ -417,13 +417,13 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
 
       <footer className="border-t border-border bg-white">
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-5 py-10 sm:px-8 sm:py-12">
-          <TrustTapLogo variant="horizontal" tagline />
+          <ProoflynLogo variant="horizontal" tagline />
           <p className="text-sm text-muted">Turn every visit into better service.</p>
         </div>
         <div className="border-t border-border">
           <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
             <p className="text-xs text-muted">
-              © {new Date().getFullYear()} Commiters trustTap. All rights reserved.
+              © {new Date().getFullYear()} Commiters Prooflyn. All rights reserved.
             </p>
           </div>
         </div>

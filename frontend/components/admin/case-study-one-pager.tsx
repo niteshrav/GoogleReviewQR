@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 
 type CaseStudyOnePagerProps = {
   businessName: string;
@@ -30,14 +30,14 @@ export function CaseStudyOnePager({
     <article className="mx-auto max-w-2xl bg-white p-6 print:p-0 sm:p-10">
       {/* Print header */}
       <div className="mb-8 hidden print:flex print:items-center print:justify-between">
-        <TrustTapLogo variant="horizontal" tagline className="text-sm" />
+        <ProoflynLogo variant="horizontal" tagline className="text-sm" />
         <p className="text-xs text-slate-500">Commiters portfolio · {periodLabel}</p>
       </div>
 
       {/* Screen header */}
       <header className="mb-8 flex items-start justify-between gap-4 print:hidden">
         <div>
-          <TrustTapLogo variant="horizontal" tagline className="text-sm" />
+          <ProoflynLogo variant="horizontal" tagline className="text-sm" />
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">Case study</h1>
           <p className="mt-1 text-sm text-muted">{businessName} · {periodLabel}</p>
         </div>
@@ -96,7 +96,7 @@ export function CaseStudyOnePager({
 
       {/* How it worked */}
       <section className="mb-8">
-        <h3 className="text-base font-bold text-foreground">How trustTap worked</h3>
+        <h3 className="text-base font-bold text-foreground">How Prooflyn worked</h3>
         <ul className="mt-3 space-y-2">
           {[
             "One named QR at the counter — every customer could still open Google freely.",
@@ -125,14 +125,14 @@ export function CaseStudyOnePager({
       <section className="mb-8 rounded-2xl bg-slate-50 px-5 py-5">
         <h3 className="text-sm font-bold text-foreground">Why this is not just a QR poster</h3>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Static Google QR posters cannot alert the owner in time. trustTap is a real-time recovery
+          Static Google QR posters cannot alert the owner in time. Prooflyn is a real-time recovery
           system: Google stays ungated, private recovery is optional, and Commiters operates setup plus
           weekly proof. No merchant app needed.
         </p>
       </section>
 
       <p className="border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters trustTap · trusttap.commiters.com · Designed for merchant pilots
+        Commiters Prooflyn · trusttap.commiters.com · Designed for merchant pilots
       </p>
     </article>
   );

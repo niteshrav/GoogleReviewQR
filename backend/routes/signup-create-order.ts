@@ -89,7 +89,7 @@ export async function createSignupPaymentOrder(request: Request) {
         planKey: data.planKey,
         slug: data.slug,
         ownerEmail: data.ownerEmail,
-        product: "trusttap-signup",
+        product: "Prooflyn-signup",
       },
     });
 
@@ -105,7 +105,7 @@ export async function createSignupPaymentOrder(request: Request) {
         email: data.ownerEmail,
         contact: data.ownerWhatsApp || data.ownerSmsPhone || "",
       },
-      description: `trustTap ${"name" in plan ? plan.name : data.planKey} — setup + first month`,
+      description: `Prooflyn ${"name" in plan ? plan.name : data.planKey} — setup + first month`,
       upiVpa: getEnv().UPI_VPA || "",
     });
   } catch (error) {

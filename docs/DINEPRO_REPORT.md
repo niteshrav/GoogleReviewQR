@@ -1,7 +1,7 @@
-# TrustTap DinePro — Implementation Report
+# Prooflyn DinePro — Implementation Report
 
 **Date:** 2026-09-18  
-**Status:** Phase 1 DinePro module shipped on top of existing TrustTap (no rebuild).
+**Status:** Phase 1 DinePro module shipped on top of existing Prooflyn (no rebuild).
 
 ## 1. What changed
 
@@ -10,7 +10,7 @@
 - Added guest table QR flow `/dine/{restaurant}/{branch}/{table}` with category ratings, tags, optional menu rating, ungated Google CTA.
 - Added DinePro ops dashboard under `/admin/dinepro/*` (Live Floor, Issues, Analytics, QR Manager, Setup wizard, Menu).
 - Access control: owner sessions scoped to their business; platform admin picks a restaurant from the header picker (`dinepro_business` cookie, defaults to the first DinePro restaurant) or passes `businessId`; requires `Business.plan === "dinepro"`.
-- Reused TrustTap QR PNG helper, alerts, admin cookie auth, pricing/signup, design tokens.
+- Reused Prooflyn QR PNG helper, alerts, admin cookie auth, pricing/signup, design tokens.
 
 ## 2. Key files
 

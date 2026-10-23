@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 
 type MerchantOnePagerProps = {
   businessName: string;
@@ -19,11 +19,11 @@ export function MerchantOnePager({
   return (
     <article className="mx-auto max-w-3xl space-y-8 bg-white p-6 print:p-0 sm:p-10">
       <div className="hidden print:block">
-        <TrustTapLogo variant="horizontal" tagline className="text-base" />
+        <ProoflynLogo variant="horizontal" tagline className="text-base" />
       </div>
       <header className="flex items-start justify-between gap-4 print:hidden">
         <div>
-          <TrustTapLogo variant="horizontal" tagline className="text-sm" />
+          <ProoflynLogo variant="horizontal" tagline className="text-sm" />
           <h1 className="mt-3 text-3xl font-semibold tracking-tight">Staff one-pager</h1>
           <p className="mt-2 text-sm text-muted">{businessName}</p>
         </div>
@@ -42,7 +42,7 @@ export function MerchantOnePager({
       </header>
 
       <section>
-        <h2 className="text-xl font-semibold">How to use trustTap</h2>
+        <h2 className="text-xl font-semibold">How to use Prooflyn</h2>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground">
           <li>Keep the QR at the counter, table, or billing desk — with the shop name visible.</li>
           <li>Ask every customer to scan after service. Do not only ask happy customers.</li>
@@ -58,7 +58,7 @@ export function MerchantOnePager({
         <h2 className="text-xl font-semibold">Links</h2>
         <ul className="mt-3 space-y-1 text-sm">
           <li>
-            trustTap page: <span className="break-all font-mono">{publicReviewUrl}</span>
+            Prooflyn page: <span className="break-all font-mono">{publicReviewUrl}</span>
           </li>
           <li>
             Google review: <span className="break-all font-mono">{googleReviewUrl}</span>
@@ -97,7 +97,7 @@ export function MerchantOnePager({
         </ul>
       </section>
 
-      <p className="text-xs text-muted">Powered by Commiters trustTap.</p>
+      <p className="text-xs text-muted">Powered by Commiters Prooflyn.</p>
     </article>
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-button";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { DineProRestaurantPicker } from "@frontend/components/dinepro/dinepro-restaurant-picker";
 import { cn } from "@frontend/lib/cn";
 
@@ -48,7 +48,7 @@ export function DineProShell({ children, restaurantName }: DineProShellProps) {
       >
         <div className="border-b border-white/10 bg-white px-4 py-3">
           <Link href="/admin/dinepro" aria-label="DinePro home">
-            <TrustTapLogo variant="horizontal" tagline />
+            <ProoflynLogo variant="horizontal" tagline />
           </Link>
           <p className="mt-1 text-xs font-semibold tracking-wide text-brand">DinePro</p>
         </div>

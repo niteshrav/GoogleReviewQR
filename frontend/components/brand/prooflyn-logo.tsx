@@ -1,11 +1,11 @@
 import { cn } from "@frontend/lib/cn";
 
-export type TrustTapLogoVariant = "horizontal" | "stacked" | "mark" | "wordmark";
-export type TrustTapLogoTone = "color" | "inverse" | "mono";
+export type ProoflynLogoVariant = "horizontal" | "stacked" | "mark" | "wordmark";
+export type ProoflynLogoTone = "color" | "inverse" | "mono";
 
-type TrustTapLogoProps = {
-  variant?: TrustTapLogoVariant;
-  tone?: TrustTapLogoTone;
+type ProoflynLogoProps = {
+  variant?: ProoflynLogoVariant;
+  tone?: ProoflynLogoTone;
   tagline?: boolean;
   className?: string;
   markClassName?: string;
@@ -16,7 +16,7 @@ function Wordmark({
   tagline,
   stacked,
 }: {
-  tone: TrustTapLogoTone;
+  tone: ProoflynLogoTone;
   tagline: boolean;
   stacked: boolean;
 }) {
@@ -34,8 +34,8 @@ function Wordmark({
           stacked ? "text-2xl sm:text-3xl" : "text-[1.35rem] sm:text-[1.5rem]"
         )}
       >
-        <span className={inverse ? "text-white" : "text-navy"}>trust</span>
-        <span className={inverse ? "text-sky-300" : "text-brand"}>Tap</span>
+        <span className={inverse ? "text-white" : "text-navy"}>Proof</span>
+        <span className={inverse ? "text-sky-300" : "text-brand"}>lyn</span>
       </span>
       {tagline || stacked ? (
         <span
@@ -44,21 +44,21 @@ function Wordmark({
             inverse ? "text-sky-200/90" : "text-[#5bb8e8]"
           )}
         >
-          Tap. Trust. Thrive.
+          Prove. Improve. Grow.
         </span>
       ) : null}
     </span>
   );
 }
 
-/** Official trustTap lockup — mark image + live wordmark so casing stays trustTap. */
-export function TrustTapLogo({
+/** Official Prooflyn lockup — mark image + live wordmark. */
+export function ProoflynLogo({
   variant = "horizontal",
   tone = "color",
   tagline = false,
   className,
   markClassName,
-}: TrustTapLogoProps) {
+}: ProoflynLogoProps) {
   const inverse = tone === "inverse" || tone === "mono";
   const markSrc = inverse
     ? "/images/brand/logo-mark-inverse.png"
@@ -78,7 +78,7 @@ export function TrustTapLogo({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={markSrc}
-        alt="trustTap"
+        alt="Prooflyn"
         className={cn("object-contain", markHeight, markClassName, className)}
       />
     );
@@ -86,7 +86,7 @@ export function TrustTapLogo({
 
   if (variant === "wordmark") {
     return (
-      <span className={cn("inline-flex", className)} aria-label="trustTap">
+      <span className={cn("inline-flex", className)} aria-label="Prooflyn">
         <Wordmark tone={tone} tagline={showTagline} stacked={false} />
       </span>
     );
@@ -99,7 +99,7 @@ export function TrustTapLogo({
         variant === "stacked" ? "flex-col items-center gap-2" : "items-center gap-2.5",
         className
       )}
-      aria-label="trustTap"
+      aria-label="Prooflyn"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -113,12 +113,12 @@ export function TrustTapLogo({
   );
 }
 
-export function TrustTapMark({
+export function ProoflynMark({
   tone = "color",
   className,
-  title = "trustTap",
+  title = "Prooflyn",
 }: {
-  tone?: TrustTapLogoTone;
+  tone?: ProoflynLogoTone;
   className?: string;
   title?: string;
 }) {

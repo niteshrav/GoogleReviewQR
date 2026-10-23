@@ -7,11 +7,11 @@ test.describe("smoke @tdd", () => {
 
     const body = (await response.json()) as { status?: string; service?: string };
     expect(body.status).toBe("ok");
-    expect(body.service).toBe("trustTap");
+    expect(body.service).toBe("Prooflyn");
   });
 
-  test("home page loads trustTap brand", async ({ page }) => {
+  test("home page loads Prooflyn brand", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("trustTap").first()).toBeVisible();
+    await expect(page.getByLabel(/Prooflyn/i).first()).toBeVisible();
   });
 });

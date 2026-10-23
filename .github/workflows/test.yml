@@ -1,4 +1,4 @@
-name: trustTap CI
+name: Prooflyn CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 concurrency:
-  group: trusttap-ci-${{ github.ref }}
+  group: Prooflyn-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
       SMTP_PORT: "1025"
       SMTP_USER: noreply@commiters.com
       SMTP_PASS: test
-      SMTP_FROM: trustTap <noreply@commiters.com>
+      SMTP_FROM: Prooflyn <noreply@commiters.com>
       ALERT_PHONE_MODE: log
     steps:
       - uses: actions/checkout@v4

@@ -1,4 +1,4 @@
-# trustTap
+# Prooflyn
 
 QR-powered customer feedback for local businesses. **Phase 1 MVP — ready for testing deploy.**
 
@@ -91,7 +91,7 @@ Copy from [`.env.production.example`](./.env.production.example):
 ### 4. DNS (GoDaddy)
 
 ```
-Host: trusttap   Type: CNAME   Value: cname.vercel-dns.com
+Host: Prooflyn   Type: CNAME   Value: cname.vercel-dns.com
 ```
 
 ### 5. Deploy + database

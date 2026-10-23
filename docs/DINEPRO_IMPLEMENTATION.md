@@ -1,6 +1,6 @@
-# TrustTap DinePro — Implementation Plan
+# Prooflyn DinePro — Implementation Plan
 
-> Audit date: 2026-09-18. Extends existing TrustTap; does **not** rebuild the core product.
+> Audit date: 2026-09-18. Extends existing Prooflyn; does **not** rebuild the core product.
 
 ## Audit summary (reuse)
 
@@ -8,7 +8,7 @@
 |----------|------------------|
 | `Business` | Restaurant tenant (no duplicate org model) |
 | `SubscriptionPlan` | Catalog — add `dinepro` row (₹1499 / setup ₹2999) |
-| `Feedback` + `/r/[slug]` | Keep as-is for classic TrustTap QR |
+| `Feedback` + `/r/[slug]` | Keep as-is for classic Prooflyn QR |
 | QR `generateQrPngBuffer` | Reuse for table QR PNGs |
 | Admin cookie + owner session | Gate `/admin/dinepro/*` + APIs; scope owners via `resolveOwnerBusinessId` |
 | Alerts (SMTP / Twilio) | Reuse for HIGH/MEDIUM dine issues |

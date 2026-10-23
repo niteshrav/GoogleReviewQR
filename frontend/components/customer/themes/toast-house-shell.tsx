@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import type { CSSProperties, ReactNode } from "react";
 import { Fraunces } from "next/font/google";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { cn } from "@frontend/lib/cn";
 
 export const toastHouseSerif = Fraunces({
@@ -103,7 +103,7 @@ export function ToastHouseFooter() {
       style={{ "--brand": "#1e88e5", "--navy": "#0a2e50" } as CSSProperties}
     >
       <span>Powered by</span>
-      <TrustTapLogo variant="wordmark" tagline className="text-[13px]" />
+      <ProoflynLogo variant="wordmark" tagline className="text-[13px]" />
     </footer>
   );
 }

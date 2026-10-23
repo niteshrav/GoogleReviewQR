@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { AdminLogoutButton } from "@frontend/components/admin/admin-logout-button";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { cn } from "@frontend/lib/cn";
 
 const navItems = [
@@ -48,8 +48,8 @@ export function AdminShell({ children }: AdminShellProps) {
         )}
       >
         <div className="border-b border-white/10 bg-white px-4 py-3">
-          <Link href="/admin" className="flex items-center overflow-visible" aria-label="trustTap admin">
-            <TrustTapLogo variant="horizontal" tagline />
+          <Link href="/admin" className="flex items-center overflow-visible" aria-label="Prooflyn admin">
+            <ProoflynLogo variant="horizontal" tagline />
           </Link>
         </div>
 
@@ -98,7 +98,7 @@ export function AdminShell({ children }: AdminShellProps) {
             ☰
           </button>
 
-          <TrustTapLogo variant="horizontal" tagline className="lg:hidden" />
+          <ProoflynLogo variant="horizontal" tagline className="lg:hidden" />
 
           <p className="hidden text-sm text-muted lg:block">
             {pathname.startsWith("/admin/businesses")
