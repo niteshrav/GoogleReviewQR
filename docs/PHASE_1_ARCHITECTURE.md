@@ -31,7 +31,7 @@ flowchart TB
         Browser[Mobile Browser]
     end
 
-    subgraph Vercel["Vercel (trusttap.commiters.com / Prooflyn)"]
+    subgraph Vercel["Vercel (prooflyn.commiters.com / Prooflyn)"]
         subgraph Frontend["frontend/"]
             AppRouter[App Router]
             Middleware[Admin Middleware]
@@ -338,7 +338,7 @@ if (rating >= 4) { showGoogleReview(); } else { showPrivateFormOnly(); }
 ```mermaid
 flowchart LR
     subgraph DNS
-        CNAME["trusttap.commiters.com"]
+        CNAME["prooflyn.commiters.com"]
     end
 
     subgraph Vercel
@@ -363,7 +363,7 @@ flowchart LR
 
 | Setting | Value |
 |---------|-------|
-| Domain | `trusttap.commiters.com` |
+| Domain | `prooflyn.commiters.com` |
 | Vercel Root Directory | `frontend/` |
 | Install / build | `frontend/vercel.json` → `cd .. && npm ci` / `npm run build` |
 | Region | `bom1` (Mumbai) |
@@ -379,7 +379,7 @@ flowchart LR
 |----------|-------|----------|---------|
 | `DATABASE_URL` | database | Yes | PostgreSQL connection |
 | `ADMIN_SECRET` | backend | Yes | Admin authentication |
-| `BASE_URL` | backend | Yes | Public URL for QR generation (`https://trusttap.commiters.com`) |
+| `BASE_URL` | backend | Yes | Public URL for QR generation (`https://prooflyn.commiters.com`) |
 | `SMTP_HOST/PORT/USER/PASS/FROM` | backend | Yes | Backup email alerts |
 | `ALERT_PHONE_MODE` | backend | Yes | `log` (dev) or `twilio` (production) |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` | backend | When mode=`twilio` | Twilio auth |

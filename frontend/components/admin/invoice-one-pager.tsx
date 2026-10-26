@@ -172,7 +172,7 @@ export function InvoiceOnePager({
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted">From</p>
           <p className="mt-2 font-semibold text-foreground">Commiters</p>
           <p className="text-sm text-muted">Prooflyn service</p>
-          <p className="text-sm text-muted">trusttap.commiters.com</p>
+          <p className="text-sm text-muted">prooflyn.commiters.com</p>
         </div>
         <div className="text-right">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Bill to</p>
@@ -360,7 +360,7 @@ export function InvoiceOnePager({
       )}
 
       <p className="mt-8 border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters Prooflyn · trusttap.commiters.com · Manual billing, Phase 2
+        Commiters Prooflyn · prooflyn.commiters.com · Manual billing, Phase 2
       </p>
     </article>
   );
