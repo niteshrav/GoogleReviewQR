@@ -59,7 +59,7 @@ QR scans happen on phones. Use a real device:
 
 ## Deploy to Vercel (testing / production)
 
-**Production URL:** `https://trusttap.commiters.com`
+**Production URL:** `https://prooflyn.commiters.com`
 
 ### 1. Pre-deploy gate
 
@@ -84,14 +84,14 @@ Copy from [`.env.production.example`](./.env.production.example):
 
 - `DATABASE_URL` — Neon or Supabase Postgres
 - `ADMIN_SECRET` — long random string
-- `BASE_URL` — `https://trusttap.commiters.com`
+- `BASE_URL` — `https://prooflyn.commiters.com`
 - `SMTP_*` — Commiters mail (backup alerts)
 - `ALERT_PHONE_MODE` + `TWILIO_*` — primary phone alerts (`log` until Twilio is ready)
 
 ### 4. DNS (GoDaddy)
 
 ```
-Host: Prooflyn   Type: CNAME   Value: cname.vercel-dns.com
+Host: prooflyn   Type: CNAME   Value: cname.vercel-dns.com
 ```
 
 ### 5. Deploy + database

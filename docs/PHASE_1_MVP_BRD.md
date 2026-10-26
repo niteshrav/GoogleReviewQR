@@ -489,7 +489,7 @@ Google Business Profile may already email/notify owners when a **public** review
 
 | # | Question | Decision | Date |
 |---|----------|----------|------|
-| OQ-1 | Production domain | **`trusttap.commiters.com`** — subdomain on existing `commiters.com` infrastructure; no new domain purchase or separate hosting | 2026-07-20 |
+| OQ-1 | Production domain | **`prooflyn.commiters.com`** — subdomain on existing `commiters.com` infrastructure; no new domain purchase or separate hosting | 2026-07-20 |
 | OQ-2 | Email provider | **Existing Commiters SMTP** (backup alerts only) | 2026-07-20 |
 | OQ-ALERT-1 | Primary phone channel | **WhatsApp Business API preferred; SMS acceptable as Phase 1 primary/fallback** | 2026-07-26 |
 | OQ-ALERT-2 | Manual alert relay | **Rejected** — no dedicated staff watching dashboard | 2026-07-26 |
@@ -499,11 +499,11 @@ Google Business Profile may already email/notify owners when a **public** review
 
 ### Infrastructure note (no extra cost)
 
-`trusttap.commiters.com` is a **DNS subdomain** of `commiters.com`. It does not require buying a new domain. Typical setup on existing resources:
+`prooflyn.commiters.com` is a **DNS subdomain** of `commiters.com`. It does not require buying a new domain. Typical setup on existing resources:
 
 1. Deploy the Next.js app to the **same Vercel project** (or existing host) as Commiters, or a new Vercel project on the **free/hobby tier** linked to the same account.
-2. In Vercel → Project → Domains → add `trusttap.commiters.com`.
-3. In your DNS provider (where `commiters.com` is managed) → add a **CNAME** record: `trusttap` → `cname.vercel-dns.com` (or the target Vercel provides).
+2. In Vercel → Project → Domains → add `prooflyn.commiters.com`.
+3. In your DNS provider (where `commiters.com` is managed) → add a **CNAME** record: `prooflyn` → `cname.vercel-dns.com` (or the target Vercel provides).
 4. No additional domain registration fee; SSL is automatic via Vercel.
 
 SMTP remains for **backup** email. Phase 1 also requires WhatsApp API and/or SMS gateway credentials in environment variables.

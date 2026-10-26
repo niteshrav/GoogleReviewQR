@@ -132,7 +132,7 @@ export function CaseStudyOnePager({
       </section>
 
       <p className="border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters Prooflyn · trusttap.commiters.com · Designed for merchant pilots
+        Commiters Prooflyn · prooflyn.commiters.com · Designed for merchant pilots
       </p>
     </article>
   );
