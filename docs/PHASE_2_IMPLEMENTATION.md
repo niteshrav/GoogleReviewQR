@@ -1,6 +1,6 @@
 # Phase 2 — Implementation notes
 
-**Product:** Commiters trustTap  
+**Product:** Commiters Prooflyn  
 **Phase:** 2 — Monetize & Retain  
 **Last updated:** September 18, 2026  
 **Related:** [PHASED_ROADMAP.md](./PHASED_ROADMAP.md) §5

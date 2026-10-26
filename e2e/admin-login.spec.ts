@@ -15,7 +15,7 @@ test.describe("admin access @tdd", () => {
     await page.getByRole("button", { name: /sign in/i }).click();
 
     await expect(page).toHaveURL(/\/admin\/?$/);
-    await expect(page.getByText(/businesses|feedback|trusttap/i).first()).toBeVisible();
+    await expect(page.getByText(/businesses|feedback|Prooflyn/i).first()).toBeVisible();
   });
 
   test("invalid admin secret stays on login with error", async ({ page }) => {

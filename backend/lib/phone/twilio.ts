@@ -85,6 +85,6 @@ export async function sendTwilioWhatsApp(to: string, message: string): Promise<T
 }
 
 export async function sendLogPhoneAlert(channel: "whatsapp" | "sms", to: string, message: string) {
-  console.info(`[trusttap-phone:${channel}] to=${to}\n${message}`);
+  console.info(`[Prooflyn-phone:${channel}] to=${to}\n${message}`);
   return { sid: `log-${Date.now()}` };
 }

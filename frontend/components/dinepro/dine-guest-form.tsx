@@ -6,7 +6,7 @@ import { StarRating } from "@frontend/components/feedback/star-rating";
 import { Button } from "@frontend/components/ui/button";
 import { Textarea } from "@frontend/components/ui/textarea";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 
 const ISSUE_TAGS = [
   "Food quality",
@@ -102,7 +102,7 @@ export function DineGuestForm({ restaurant, branch, table, menuItems }: DineGues
   if (done) {
     return (
       <div className="space-y-6 text-center">
-        <TrustTapLogo variant="horizontal" tagline className="mx-auto justify-center" />
+        <ProoflynLogo variant="horizontal" tagline className="mx-auto justify-center" />
         <h1 className="text-2xl font-semibold text-foreground">Thank you</h1>
         <p className="text-muted">
           Your feedback for table {table.number} helps {restaurant.name} improve every service.
@@ -118,7 +118,7 @@ export function DineGuestForm({ restaurant, branch, table, menuItems }: DineGues
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="text-center">
-        <TrustTapLogo variant="horizontal" tagline className="mx-auto justify-center" />
+        <ProoflynLogo variant="horizontal" tagline className="mx-auto justify-center" />
         <p className="mt-3 text-lg font-semibold text-foreground">{restaurant.name}</p>
         <p className="text-sm text-muted">
           {branch.name} · Table {table.number}

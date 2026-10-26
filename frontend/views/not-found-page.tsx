@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 import { CustomerFooter } from "@frontend/components/customer/customer-footer";
 import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
 import { Button } from "@frontend/components/ui/button";
@@ -10,7 +10,7 @@ export default function NotFoundPage() {
     <CustomerPageShell className="items-center justify-center text-center">
       <Card className="w-full">
         <div className="mx-auto flex justify-center">
-          <TrustTapLogo variant="mark" markClassName="h-12 w-12" />
+          <ProoflynLogo variant="mark" markClassName="h-12 w-12" />
         </div>
         <h1 className="mt-4 text-2xl font-semibold tracking-tight">
           This feedback link is not available
@@ -21,7 +21,7 @@ export default function NotFoundPage() {
         <div className="mt-8">
           <Link href="/">
             <Button fullWidth size="lg">
-              Go to trustTap home
+              Go to Prooflyn home
             </Button>
           </Link>
         </div>

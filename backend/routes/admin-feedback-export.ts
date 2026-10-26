@@ -22,7 +22,7 @@ export async function exportAdminFeedbackCsv(request: Request) {
     status: 200,
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="trusttap-feedback-${businessId}.csv"`,
+      "Content-Disposition": `attachment; filename="Prooflyn-feedback-${businessId}.csv"`,
       "Cache-Control": "no-store",
     },
   });

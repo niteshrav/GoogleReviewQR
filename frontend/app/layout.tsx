@@ -19,11 +19,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "trustTap",
+  title: "Prooflyn",
   description:
     "QR-powered customer feedback that helps local businesses improve service and make Google reviews easy.",
   metadataBase: new URL(process.env.BASE_URL ?? "http://localhost:3000"),
-  applicationName: "trustTap",
+  applicationName: "Prooflyn",
 };
 
 /** Mobile-first: QR scans open on phones — lock layout to device width. */

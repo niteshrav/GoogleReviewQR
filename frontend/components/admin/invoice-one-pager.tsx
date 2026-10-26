@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { TrustTapLogo } from "@frontend/components/brand/trusttap-logo";
+import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
 
 type InvoiceOnePagerProps = {
   businessId: string;
@@ -138,14 +138,14 @@ export function InvoiceOnePager({
     <article className="mx-auto max-w-2xl bg-white p-6 print:p-0 sm:p-10">
       {/* Print-only header */}
       <div className="mb-8 hidden print:flex print:items-center print:justify-between">
-        <TrustTapLogo variant="horizontal" tagline className="text-sm" />
+        <ProoflynLogo variant="horizontal" tagline className="text-sm" />
         <p className="text-xs text-slate-500">Invoice date: {invoiceDate}</p>
       </div>
 
       {/* Screen header */}
       <header className="mb-8 flex items-start justify-between gap-4 print:hidden">
         <div>
-          <TrustTapLogo variant="horizontal" tagline className="text-sm" />
+          <ProoflynLogo variant="horizontal" tagline className="text-sm" />
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">UPI invoice</h1>
           <p className="mt-1 text-sm text-muted">Manual billing · {invoiceDate}</p>
         </div>
@@ -171,7 +171,7 @@ export function InvoiceOnePager({
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted">From</p>
           <p className="mt-2 font-semibold text-foreground">Commiters</p>
-          <p className="text-sm text-muted">trustTap service</p>
+          <p className="text-sm text-muted">Prooflyn service</p>
           <p className="text-sm text-muted">trusttap.commiters.com</p>
         </div>
         <div className="text-right">
@@ -360,7 +360,7 @@ export function InvoiceOnePager({
       )}
 
       <p className="mt-8 border-t border-border pt-4 text-center text-[11px] text-muted">
-        Commiters trustTap · trusttap.commiters.com · Manual billing, Phase 2
+        Commiters Prooflyn · trusttap.commiters.com · Manual billing, Phase 2
       </p>
     </article>
   );
