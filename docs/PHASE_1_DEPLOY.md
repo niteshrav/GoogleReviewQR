@@ -1,7 +1,7 @@
 # Phase 1 MVP — Production Deploy Runbook
 
 **Product:** Commiters Prooflyn  
-**Target URL:** `https://trusttap.commiters.com`  
+**Target URL:** `https://prooflyn.commiters.com`  
 **Last updated:** July 29, 2026
 
 This runbook finishes **Phase 1.6**. Phone-alert provider credentials are required in addition to database, Vercel, DNS, and SMTP.
@@ -55,7 +55,7 @@ Then complete the **mobile-first manual E2E checklist** before cutover:
 Copy values from [`.env.production.example`](../.env.production.example) into Vercel → Project → Settings → Environment Variables (Production):
 
 ```text
-BASE_URL=https://trusttap.commiters.com
+BASE_URL=https://prooflyn.commiters.com
 DATABASE_URL=
 ADMIN_SECRET=
 SMTP_HOST=
@@ -84,9 +84,9 @@ Add a CNAME for `commiters.com`:
 
 | Type | Host | Value |
 |------|------|-------|
-| CNAME | `trusttap` | `cname.vercel-dns.com` |
+| CNAME | `prooflyn` | `cname.vercel-dns.com` |
 
-In Vercel → Domains, add `trusttap.commiters.com` and wait for SSL.
+In Vercel → Domains, add `prooflyn.commiters.com` and wait for SSL.
 
 ---
 
@@ -129,7 +129,7 @@ Confirm three businesses:
 
 ## 6. Smoke checklist (production)
 
-- [ ] `GET https://trusttap.commiters.com/api/health` → `{ "status": "ok" }`
+- [ ] `GET https://prooflyn.commiters.com/api/health` → `{ "status": "ok" }`
 - [ ] Admin login at `/admin/login` with `ADMIN_SECRET`
 - [ ] Create / edit / deactivate a test business
 - [ ] Customer landing `/r/{slug}` shows Google CTA + private feedback link
@@ -156,6 +156,6 @@ Provide these and re-run deploy:
 
 1. Production `DATABASE_URL`
 2. Vercel login / project link (or deploy token)
-3. Confirmation that DNS for `trusttap.commiters.com` can be updated in GoDaddy
+3. Confirmation that DNS for `prooflyn.commiters.com` can be updated in GoDaddy
 4. Real SMTP credentials and pilot Google Place IDs
 5. Twilio credentials (or temporary `ALERT_PHONE_MODE=log`)
