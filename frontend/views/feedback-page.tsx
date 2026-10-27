@@ -36,7 +36,7 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
 
   return (
     <CustomerPageShell>
-      <ProoflynLogo variant="horizontal" tagline className="text-sm" markClassName="h-8 w-8" />
+      <ProoflynLogo variant="horizontal" tagline className="text-sm" markClassName="h-9 w-auto" />
       <Link
         href={`/r/${slug}`}
         className="mt-3 inline-flex min-h-[44px] items-center gap-1 text-base font-medium text-brand hover:underline sm:text-sm"
