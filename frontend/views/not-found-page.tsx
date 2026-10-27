@@ -10,7 +10,7 @@ export default function NotFoundPage() {
     <CustomerPageShell className="items-center justify-center text-center">
       <Card className="w-full">
         <div className="mx-auto flex justify-center">
-          <ProoflynLogo variant="mark" markClassName="h-12 w-12" />
+          <ProoflynLogo variant="mark" markClassName="h-14 w-auto" />
         </div>
         <h1 className="mt-4 text-2xl font-semibold tracking-tight">
           This feedback link is not available

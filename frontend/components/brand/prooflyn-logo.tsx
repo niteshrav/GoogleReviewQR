@@ -12,15 +12,14 @@ type ProoflynLogoProps = {
 };
 
 function Wordmark({
-  tone,
+  inverse,
   tagline,
   stacked,
 }: {
-  tone: ProoflynLogoTone;
+  inverse: boolean;
   tagline: boolean;
   stacked: boolean;
 }) {
-  const inverse = tone === "inverse" || tone === "mono";
   return (
     <span
       className={cn(
@@ -28,20 +27,17 @@ function Wordmark({
         stacked ? "items-center text-center" : "items-start text-left"
       )}
     >
-      <span
-        className={cn(
-          "font-semibold tracking-tight",
-          stacked ? "text-2xl sm:text-3xl" : "text-[1.35rem] sm:text-[1.5rem]"
-        )}
-      >
-        <span className={inverse ? "text-white" : "text-navy"}>Proof</span>
-        <span className={inverse ? "text-sky-300" : "text-brand"}>lyn</span>
-      </span>
-      {tagline || stacked ? (
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={inverse ? "/images/brand/prooflyn-word-inverse.png" : "/images/brand/prooflyn-word.png"}
+        alt=""
+        className={cn("w-auto object-contain", tagline ? "h-6 sm:h-7" : "h-7 sm:h-8")}
+      />
+      {tagline ? (
         <span
           className={cn(
-            "mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.18em]",
-            inverse ? "text-sky-200/90" : "text-[#5bb8e8]"
+            "mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.16em]",
+            inverse ? "text-white/80" : "text-[#506070]"
           )}
         >
           Prove. Improve. Grow.
@@ -51,7 +47,7 @@ function Wordmark({
   );
 }
 
-/** Official Prooflyn lockup — mark image + live wordmark. */
+/** Official Prooflyn lockup — supplied mark and wordmark. */
 export function ProoflynLogo({
   variant = "horizontal",
   tone = "color",
@@ -61,17 +57,17 @@ export function ProoflynLogo({
 }: ProoflynLogoProps) {
   const inverse = tone === "inverse" || tone === "mono";
   const markSrc = inverse
-    ? "/images/brand/logo-mark-inverse.png"
-    : "/images/brand/logo-mark.png";
+    ? "/images/brand/prooflyn-mark-inverse.png"
+    : "/images/brand/prooflyn-mark.png";
   const isMark = variant === "mark";
   const showTagline = tagline || variant === "stacked";
   const markHeight = isMark
-    ? "h-8 w-auto"
+    ? "h-10 w-auto"
     : variant === "stacked"
-      ? "h-12 w-auto sm:h-14"
+      ? "h-14 w-auto sm:h-16"
       : showTagline
-        ? "h-10 w-auto sm:h-11"
-        : "h-8 w-auto sm:h-9";
+        ? "h-11 w-auto sm:h-12"
+        : "h-9 w-auto sm:h-10";
 
   if (isMark) {
     return (
@@ -87,7 +83,7 @@ export function ProoflynLogo({
   if (variant === "wordmark") {
     return (
       <span className={cn("inline-flex", className)} aria-label="Prooflyn">
-        <Wordmark tone={tone} tagline={showTagline} stacked={false} />
+        <Wordmark inverse={inverse} tagline={showTagline} stacked={false} />
       </span>
     );
   }
@@ -108,7 +104,7 @@ export function ProoflynLogo({
         aria-hidden
         className={cn("shrink-0 object-contain", markHeight, markClassName)}
       />
-      <Wordmark tone={tone} tagline={showTagline} stacked={variant === "stacked"} />
+      <Wordmark inverse={inverse} tagline={showTagline} stacked={variant === "stacked"} />
     </span>
   );
 }
@@ -124,8 +120,8 @@ export function ProoflynMark({
 }) {
   const src =
     tone === "inverse" || tone === "mono"
-      ? "/images/brand/logo-mark-inverse.png"
-      : "/images/brand/logo-mark.png";
+      ? "/images/brand/prooflyn-mark-inverse.png"
+      : "/images/brand/prooflyn-mark.png";
 
   return (
     // eslint-disable-next-line @next/next/no-img-element

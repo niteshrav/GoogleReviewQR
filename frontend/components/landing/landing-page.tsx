@@ -270,7 +270,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/prooflyn-hero.png?v=prooflyn2"
+              src="/images/prooflyn-hero.png?v=prooflyn4"
               alt="Prooflyn QR stand, mobile feedback form, and live dashboard"
               className="relative w-full rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)]"
             />
