@@ -229,7 +229,7 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16">
+        <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-16 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-10">
           <FadeIn immediate>
             <p className="text-sm font-semibold tracking-[0.08em] text-navy">
               Commiters <span className="text-brand">Prooflyn</span>
@@ -270,9 +270,9 @@ export function LandingPage({ plans = [] }: { plans?: PublicPlanCard[] }) {
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/prooflyn-hero.png?v=prooflyn4"
+              src="/images/prooflyn-hero.jpg?v=prooflyn5"
               alt="Prooflyn QR stand, mobile feedback form, and live dashboard"
-              className="relative w-full rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)]"
+              className="relative w-full origin-center scale-[1.06] rounded-[28px] border border-border bg-white object-contain shadow-[var(--shadow-lg)] sm:scale-110"
             />
           </FadeIn>
         </section>
