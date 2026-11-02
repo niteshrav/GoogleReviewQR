@@ -62,6 +62,51 @@ export const justdialReviewUrlSchema = z
   )
   .transform((value) => value || null);
 
+function isAllowedBusinessLogo(value: string): boolean {
+  if (!value) {
+    return true;
+  }
+  if (value.startsWith("/") && !value.startsWith("//") && !value.includes("..")) {
+    return true;
+  }
+  if (value.startsWith("https://")) {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return /^data:image\/(png|jpeg|jpg|webp);base64,[a-z0-9+/=\r\n]+$/i.test(value);
+}
+
+/** https URL, site path, or a small uploaded image. Empty clears the logo. Omitted leaves it unchanged. */
+export const businessLogoUrlSchema = z
+  .union([z.string().trim().max(180_000, "Logo image is too large. Use a smaller file."), z.literal(""), z.null()])
+  .optional()
+  .transform((value) => {
+    if (value === undefined) {
+      return undefined;
+    }
+    const trimmed = typeof value === "string" ? value.trim() : "";
+    return trimmed || null;
+  })
+  .refine(
+    (value) => value === undefined || value === null || isAllowedBusinessLogo(value),
+    "Logo must be an https link, a site image path, or a PNG/JPEG/WebP file.",
+  );
+
+export const businessTaglineSchema = z
+  .union([z.string().trim().max(160, "Tagline must be 160 characters or less"), z.literal(""), z.null()])
+  .optional()
+  .transform((value) => {
+    if (value === undefined) {
+      return undefined;
+    }
+    const trimmed = typeof value === "string" ? value.trim() : "";
+    return trimmed || null;
+  });
+
 export const billingPlanSchema = z
   .string()
   .trim()
@@ -105,6 +150,8 @@ export const businessInputSchema = z
     ownerSmsPhone: phoneFieldSchema,
     googleReviewUrl: googleReviewUrlSchema,
     justdialReviewUrl: justdialReviewUrlSchema.nullable().optional(),
+    logoUrl: businessLogoUrlSchema,
+    tagline: businessTaglineSchema,
     isActive: z.boolean().optional(),
     plan: billingPlanSchema.optional(),
     billingStatus: billingStatusSchema.optional(),

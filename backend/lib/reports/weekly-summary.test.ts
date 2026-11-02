@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatWeeklyReportHtml,
   formatWeeklyReportMessage,
   getLastSevenDaysWindow,
   summarizeFeedbackWeek,
@@ -78,5 +79,30 @@ describe("weekly summary", () => {
 
     expect(message).toContain("Premium support");
     expect(message).not.toContain("Upgrade to Premium");
+  });
+
+  it("renders a branded HTML report and escapes the business name", () => {
+    const html = formatWeeklyReportHtml(
+      "Cafe <Edelweiss>",
+      {
+        start: new Date("2026-08-07T00:00:00.000Z"),
+        end: new Date("2026-08-14T00:00:00.000Z"),
+        totalEntries: 12,
+        googleClicks: 8,
+        privateFeedback: 4,
+        lowRatings: 1,
+        alertsSent: 1,
+        averageRating: 4.2,
+      },
+    );
+
+    expect(html).toContain("Prooflyn");
+    expect(html).toContain("Weekly report");
+    expect(html).toContain("Cafe &lt;Edelweiss&gt;");
+    expect(html).not.toContain("Cafe <Edelweiss>");
+    expect(html).toContain("Google review taps");
+    expect(html).toContain(">8<");
+    expect(html).toContain("Upgrade to Premium");
+    expect(html).toContain("Powered by Commiters Prooflyn");
   });
 });

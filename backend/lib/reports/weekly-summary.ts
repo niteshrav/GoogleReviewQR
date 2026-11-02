@@ -1,3 +1,10 @@
+import {
+  escapeHtml,
+  renderEmailNote,
+  renderEmailRows,
+  renderProoflynEmail,
+} from "@backend/lib/email/layout";
+
 export type WeeklyFeedbackItem = {
   createdAt: Date;
   rating: number | null;
@@ -49,16 +56,57 @@ export function summarizeFeedbackWeek(
   };
 }
 
+function formatReportDate(date: Date): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+export function weeklyReportSupportLine(plan: string): string {
+  return plan === "premium"
+    ? "Premium support: reply to this message and Commiters will follow up the same day."
+    : "Upgrade to Premium (₹999/mo) for weekly proof plus priority support.";
+}
+
+export function formatWeeklyReportHtml(
+  businessName: string,
+  summary: WeeklySummary,
+  plan: string = "core",
+): string {
+  const avg = summary.averageRating == null ? "—" : `${summary.averageRating}/5`;
+  const period = `${formatReportDate(summary.start)} – ${formatReportDate(summary.end)}`;
+
+  const body = [
+    renderEmailRows([
+      { label: "QR activity", value: String(summary.totalEntries) },
+      { label: "Google review taps", value: String(summary.googleClicks) },
+      { label: "Private feedback", value: String(summary.privateFeedback) },
+      { label: "Average private rating", value: avg },
+      { label: "Low ratings (3 or below)", value: String(summary.lowRatings) },
+      { label: "Owner alerts sent", value: String(summary.alertsSent) },
+    ]),
+    renderEmailNote(escapeHtml(weeklyReportSupportLine(plan))),
+    `<p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#506070;">Google reviews stay ungated — every customer can still post publicly.</p>`,
+  ].join("");
+
+  return renderProoflynEmail({
+    eyebrow: "Weekly report",
+    title: escapeHtml(businessName),
+    intro: escapeHtml(period),
+    bodyHtml: body,
+  });
+}
+
 export function formatWeeklyReportMessage(
   businessName: string,
   summary: WeeklySummary,
   plan: string = "core",
 ): string {
   const avg = summary.averageRating == null ? "—" : `${summary.averageRating}/5`;
-  const supportLine =
-    plan === "premium"
-      ? "Premium support: reply to this message and Commiters will follow up the same day."
-      : "Upgrade to Premium (₹999/mo) for weekly proof plus priority support.";
+  const supportLine = weeklyReportSupportLine(plan);
 
   return [
     `Prooflyn weekly report — ${businessName}`,
