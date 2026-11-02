@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
-import { BusinessLogo } from "@frontend/components/customer/business-logo";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
 import { JustdialReviewLink } from "@frontend/components/justdial-review-link";
+import { ReviewPageFrame } from "@frontend/components/customer/review-page-frame";
 
 const features = [
   { label: "Better Services", icon: "services" },
@@ -97,79 +96,57 @@ export function BusinessReviewTemplate({
   justdialReviewUrl,
 }: BusinessReviewTemplateProps) {
   return (
-    <main className="relative min-h-[100dvh] overflow-x-hidden bg-white text-[#0a2e50]">
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(circle at 12% 8%, rgba(30,136,229,0.16), transparent 32%), radial-gradient(circle at 92% 18%, rgba(10,46,80,0.10), transparent 28%), radial-gradient(circle at 80% 88%, rgba(30,136,229,0.12), transparent 30%)",
-        }}
-      />
-      <div className="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-[#1e88e5]/10 blur-2xl" aria-hidden />
-      <div className="pointer-events-none absolute -right-10 bottom-16 h-48 w-48 rounded-full bg-[#0a2e50]/10 blur-3xl" aria-hidden />
-
-      <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-lg flex-col px-5 pb-[max(1.75rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))] sm:max-w-xl sm:px-8">
-        <div className="flex flex-col items-center text-center">
-          <BusinessLogo name={name} logoUrl={logoUrl} />
-          <p className="mt-4 text-lg font-semibold tracking-tight sm:text-xl">{name}</p>
-          {tagline ? <p className="mt-1 max-w-sm text-sm text-[#506070]">{tagline}</p> : null}
-
-          <h1 className="mt-8 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            How was your experience with {name}?
-          </h1>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-[#506070]">
-            Your feedback helps us improve our services and create a better experience for you.
-          </p>
-        </div>
-
-        <section className="mt-8 space-y-3">
-          <GoogleReviewButton
-            businessSlug={slug}
-            googleReviewUrl={googleReviewUrl}
-            className="customer-cta flex items-center justify-center gap-3 rounded-2xl bg-[#0a2e50] px-4 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#1565c0]"
-          >
-            <GoogleMark />
-            <span className="flex-1 text-left">Leave a Google Review</span>
-          </GoogleReviewButton>
-
-          <Link
-            href={`/r/${slug}/feedback`}
-            className="customer-cta flex items-center justify-center gap-3 rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-semibold text-[#0a2e50] shadow-sm transition-colors hover:bg-[#e3f2fd]"
-          >
-            <ChatIcon />
-            <span className="flex-1 text-left">Send Private Feedback</span>
-          </Link>
-
-          <JustdialReviewLink
-            justdialReviewUrl={justdialReviewUrl}
-            className="customer-cta flex items-center justify-center rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-medium text-[#0a2e50]"
-          />
-        </section>
-
-        <p className="mt-4 text-center text-xs leading-relaxed text-[#506070]">
-          Google reviews are always available — we never hide them by rating.
+    <ReviewPageFrame name={name} logoUrl={logoUrl} tagline={tagline}>
+      <div className="mt-8 text-center">
+        <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+          How was your experience with {name}?
+        </h1>
+        <p className="mt-4 text-base leading-relaxed text-[#506070]">
+          Your feedback helps us improve our services and create a better experience for you.
         </p>
-
-        <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {features.map((feature) => (
-            <li
-              key={feature.label}
-              className="flex flex-col items-center rounded-2xl border border-[#e3eef8] bg-white/80 px-2 py-4 text-center shadow-sm"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e3f2fd] text-[#1565c0]">
-                <FeatureIcon name={feature.icon} />
-              </span>
-              <span className="mt-2 text-xs font-semibold leading-snug">{feature.label}</span>
-            </li>
-          ))}
-        </ul>
-
-        <footer className="mt-auto flex flex-col items-center gap-2 pt-10 text-center">
-          <p className="text-xs font-medium text-[#506070]">Powered by</p>
-          <ProoflynLogo variant="horizontal" className="text-sm" markClassName="h-8 w-auto" />
-        </footer>
       </div>
-    </main>
+
+      <section className="mt-8 space-y-3">
+        <GoogleReviewButton
+          businessSlug={slug}
+          googleReviewUrl={googleReviewUrl}
+          className="customer-cta flex items-center justify-center gap-3 rounded-2xl bg-[#0a2e50] px-4 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#1565c0]"
+        >
+          <GoogleMark />
+          <span className="flex-1 text-left">Leave a Google Review</span>
+        </GoogleReviewButton>
+
+        <Link
+          href={`/r/${slug}/feedback`}
+          className="customer-cta flex items-center justify-center gap-3 rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-semibold text-[#0a2e50] shadow-sm transition-colors hover:bg-[#e3f2fd]"
+        >
+          <ChatIcon />
+          <span className="flex-1 text-left">Send Private Feedback</span>
+        </Link>
+
+        <JustdialReviewLink
+          justdialReviewUrl={justdialReviewUrl}
+          className="customer-cta flex items-center justify-center rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-medium text-[#0a2e50]"
+        />
+      </section>
+
+      <p className="mt-4 text-center text-xs leading-relaxed text-[#506070]">
+        Google reviews are always available — we never hide them by rating.
+      </p>
+
+      <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {features.map((feature) => (
+          <li
+            key={feature.label}
+            className="flex flex-col items-center rounded-2xl border border-[#e3eef8] bg-white/80 px-2 py-4 text-center shadow-sm"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e3f2fd] text-[#1565c0]">
+              <FeatureIcon name={feature.icon} />
+            </span>
+            <span className="mt-2 text-xs font-semibold leading-snug">{feature.label}</span>
+          </li>
+        ))}
+      </ul>
+    </ReviewPageFrame>
   );
 }

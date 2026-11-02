@@ -86,7 +86,7 @@ export function FeedbackForm({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35 }}
-        className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
+        className="rounded-2xl border border-[#e3eef8] bg-white p-6 text-[#0a2e50] shadow-sm"
       >
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-secondary">
           ✓
@@ -94,7 +94,7 @@ export function FeedbackForm({
         <h2 className="mt-4 text-center text-xl font-semibold tracking-tight">
           Noted. We’ll take it from here.
         </h2>
-        <p className="mt-2 text-center text-sm text-muted">
+        <p className="mt-2 text-center text-sm text-[#506070]">
           Thanks for helping {businessName} improve.
         </p>
         <div className="mt-6 space-y-3">
@@ -102,6 +102,7 @@ export function FeedbackForm({
             businessSlug={businessSlug}
             googleReviewUrl={googleReviewUrl}
             label="Also leave a Google review"
+            className="customer-cta flex items-center justify-center rounded-2xl bg-[#0a2e50] px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-[#1565c0]"
           />
           <JustdialReviewLink
             justdialReviewUrl={justdialReviewUrl}
@@ -115,16 +116,16 @@ export function FeedbackForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
+      className="rounded-2xl border border-[#e3eef8] bg-white p-5 text-[#0a2e50] shadow-sm sm:p-6"
     >
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground break-words">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#0a2e50] break-words">
           Help us make this better
         </h1>
-        <p className="text-sm leading-relaxed text-muted break-words">
+        <p className="text-sm leading-relaxed text-[#506070] break-words">
           A quick note for {businessName}. We’ll use it to improve.
         </p>
-        <p className="text-sm leading-relaxed text-muted break-words">
+        <p className="text-sm leading-relaxed text-[#506070] break-words">
           No login. Stays with the business — not a public review.
         </p>
       </header>
@@ -156,7 +157,7 @@ export function FeedbackForm({
                 type="submit"
                 loading={loading}
                 disabled={rating < 1}
-                className="min-h-[44px] min-w-[12rem] flex-1"
+                className="min-h-[48px] min-w-[12rem] flex-1 rounded-2xl !bg-[#0a2e50] text-base font-semibold hover:!bg-[#1565c0]"
               >
                 {loading ? "Saving..." : "Save & send privately"}
               </Button>
@@ -217,7 +218,7 @@ export function FeedbackForm({
         loading={loading}
         fullWidth
         size="lg"
-        className="mt-6 min-h-[44px] w-full"
+        className="mt-6 min-h-[48px] w-full rounded-2xl !bg-[#0a2e50] text-base font-semibold hover:!bg-[#1565c0]"
       >
         {loading ? "Sending..." : "Send privately"}
       </Button>
@@ -226,7 +227,7 @@ export function FeedbackForm({
         <GoogleReviewButton
           businessSlug={businessSlug}
           googleReviewUrl={googleReviewUrl}
-          className="customer-cta block rounded-xl border border-border px-4 py-3 text-center text-base font-medium text-foreground transition-colors hover:bg-background active:bg-brand-soft"
+          className="customer-cta block rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-center text-base font-semibold text-[#0a2e50] shadow-sm hover:bg-[#e3f2fd]"
           label="Share your experience on Google"
         />
       </div>

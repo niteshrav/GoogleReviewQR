@@ -30,16 +30,19 @@ describe("mobile-first customer UI (pre-deploy)", () => {
     expect(shell).toMatch(/px-4|px-5/);
 
     const feedback = read("frontend/views/feedback-page.tsx");
-    expect(feedback).toContain("CustomerPageShell");
+    expect(feedback).toContain("ReviewPageFrame");
     expect(feedback).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
+
+    const frame = read("frontend/components/customer/review-page-frame.tsx");
+    expect(frame).toMatch(/max-w-/);
+    expect(frame).toMatch(/px-5|px-4/);
 
     const review = read("frontend/views/review-page.tsx");
     expect(review).toContain("BusinessReviewTemplate");
     expect(review).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
 
     const template = read("frontend/components/customer/business-review-template.tsx");
-    expect(template).toMatch(/max-w-/);
-    expect(template).toMatch(/px-5|px-4/);
+    expect(template).toContain("ReviewPageFrame");
     expect(template).not.toMatch(/lg:grid-cols-2/);
   });
 

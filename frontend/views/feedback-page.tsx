@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { businessService } from "@backend/lib/services/index";
-import { ProoflynLogo } from "@frontend/components/brand/prooflyn-logo";
-import { CustomerFooter } from "@frontend/components/customer/customer-footer";
-import { CustomerPageShell } from "@frontend/components/customer/customer-page-shell";
+import { ReviewPageFrame } from "@frontend/components/customer/review-page-frame";
 import { FeedbackForm } from "@frontend/components/feedback/feedback-form";
-import { ToastHouseFeedback } from "@frontend/components/customer/themes/toast-house-feedback";
-import { getReviewTheme } from "@frontend/lib/review-themes";
 
 export const dynamic = "force-dynamic";
 
@@ -23,23 +19,11 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
     notFound();
   }
 
-  if (getReviewTheme(slug) === "toast-house") {
-    return (
-      <ToastHouseFeedback
-        slug={slug}
-        businessName={business.name}
-        googleReviewUrl={business.googleReviewUrl}
-        justdialReviewUrl={business.justdialReviewUrl}
-      />
-    );
-  }
-
   return (
-    <CustomerPageShell>
-      <ProoflynLogo variant="horizontal" tagline className="text-sm" markClassName="h-9 w-auto" />
+    <ReviewPageFrame name={business.name} logoUrl={business.logoUrl} tagline={business.tagline}>
       <Link
         href={`/r/${slug}`}
-        className="mt-3 inline-flex min-h-[44px] items-center gap-1 text-base font-medium text-brand hover:underline sm:text-sm"
+        className="mt-6 inline-flex min-h-[44px] items-center gap-1 self-start text-base font-medium text-[#1e88e5] hover:underline"
       >
         ← Back
       </Link>
@@ -52,7 +36,6 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
           justdialReviewUrl={business.justdialReviewUrl}
         />
       </div>
-      <CustomerFooter />
-    </CustomerPageShell>
+    </ReviewPageFrame>
   );
 }
