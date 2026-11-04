@@ -21,6 +21,8 @@ type BusinessFormProps = {
     ownerSmsPhone?: string;
     googleReviewUrl?: string;
     justdialReviewUrl?: string;
+    logoUrl?: string | null;
+    tagline?: string | null;
     plan?: string;
     billingStatus?: "trial" | "invoiced" | "paid" | "overdue";
     setupFeePaid?: boolean;
@@ -28,6 +30,44 @@ type BusinessFormProps = {
   planOptions?: PlanOption[];
   onSuccess?: () => void;
 };
+
+function readLogoFile(file: File): Promise<string> {
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+    return Promise.reject(new Error("Use a PNG, JPEG, or WebP logo."));
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read that logo."));
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const max = 320;
+        const scale = Math.min(1, max / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        const context = canvas.getContext("2d");
+        if (!context) {
+          reject(new Error("Could not prepare that logo."));
+          return;
+        }
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.86);
+        if (dataUrl.length > 180_000) {
+          reject(new Error("Logo is too large. Use a smaller image."));
+          return;
+        }
+        resolve(dataUrl);
+      };
+      image.onerror = () => reject(new Error("Could not read that logo."));
+      image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 const fallbackPlanOptions: PlanOption[] = [
   { key: "pilot", label: "Pilot (free)" },
@@ -49,6 +89,8 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
   const [justdialReviewUrl, setJustdialReviewUrl] = useState(
     initialValues?.justdialReviewUrl ?? "",
   );
+  const [logoUrl, setLogoUrl] = useState(initialValues?.logoUrl ?? "");
+  const [tagline, setTagline] = useState(initialValues?.tagline ?? "");
   const [plan, setPlan] = useState(initialValues?.plan ?? "pilot");
   const [billingStatus, setBillingStatus] = useState(initialValues?.billingStatus ?? "trial");
   const [setupFeePaid, setSetupFeePaid] = useState(initialValues?.setupFeePaid ?? false);
@@ -68,6 +110,8 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
       ownerSmsPhone,
       googleReviewUrl,
       justdialReviewUrl,
+      logoUrl,
+      tagline,
       plan,
       billingStatus,
       setupFeePaid,
@@ -99,6 +143,8 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
       setOwnerSmsPhone("");
       setGoogleReviewUrl("");
       setJustdialReviewUrl("");
+      setLogoUrl("");
+      setTagline("");
       setPlan(plans[0]?.key ?? "pilot");
       setBillingStatus("trial");
       setSetupFeePaid(false);
@@ -117,8 +163,66 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
         required
         value={name}
         onChange={(event) => setName(event.target.value)}
-        placeholder="Cafe Edelweiss"
+        placeholder="100 Bikes"
       />
+
+      <Input
+        id="tagline"
+        label="Tagline (optional)"
+        value={tagline}
+        onChange={(event) => setTagline(event.target.value)}
+        placeholder="Ride better. Every day."
+        maxLength={160}
+      />
+
+      <div>
+        <label htmlFor="logoFile" className="mb-2 block text-sm font-medium text-foreground">
+          Business logo
+        </label>
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoUrl} alt="" className="mb-3 h-16 w-auto max-w-[180px] object-contain" />
+        ) : (
+          <p className="mb-3 text-sm text-muted">No logo yet. The review page will show initials.</p>
+        )}
+        <input
+          id="logoFile"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="block w-full text-sm text-muted file:mr-3 file:rounded-xl file:border-0 file:bg-brand-soft file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (!file) {
+              return;
+            }
+            void readLogoFile(file)
+              .then(setLogoUrl)
+              .catch((readError: unknown) => {
+                setError(readError instanceof Error ? readError.message : "Could not read that logo.");
+              });
+          }}
+        />
+        <div className="mt-3">
+          <Input
+            id="logoUrl"
+            label="Or logo URL"
+            value={logoUrl.startsWith("data:") ? "" : logoUrl}
+            onChange={(event) => setLogoUrl(event.target.value)}
+            placeholder="https://example.com/logo.png"
+            hint="Shown on the customer review page. Leave empty to use initials."
+          />
+        </div>
+        {logoUrl ? (
+          <button
+            type="button"
+            className="mt-2 text-sm text-muted hover:underline"
+            onClick={() => setLogoUrl("")}
+          >
+            Remove logo
+          </button>
+        ) : null}
+      </div>
 
       <Input
         id="slug"

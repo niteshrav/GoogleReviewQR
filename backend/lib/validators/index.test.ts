@@ -179,4 +179,45 @@ describe("businessInputSchema", () => {
 
     expect(parsed.justdialReviewUrl).toBe("https://www.justdial.com/Udaipur/Cafe-Edelweiss");
   });
+
+  it("stores a logo URL and tagline, and clears them when blank", () => {
+    const parsed = businessInputSchema.parse({
+      name: "100 Bikes",
+      slug: "100-bikes",
+      ownerEmail: "owner@example.com",
+      ownerWhatsApp: "+919876543210",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+      logoUrl: "https://cdn.example.com/100-bikes.png",
+      tagline: "Ride better",
+    });
+
+    expect(parsed.logoUrl).toBe("https://cdn.example.com/100-bikes.png");
+    expect(parsed.tagline).toBe("Ride better");
+
+    const cleared = businessInputSchema.parse({
+      name: "100 Bikes",
+      slug: "100-bikes",
+      ownerEmail: "owner@example.com",
+      ownerWhatsApp: "+919876543210",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+      logoUrl: "",
+      tagline: "",
+    });
+
+    expect(cleared.logoUrl).toBeNull();
+    expect(cleared.tagline).toBeNull();
+  });
+
+  it("rejects a logo that is not an image URL", () => {
+    const result = businessInputSchema.safeParse({
+      name: "100 Bikes",
+      slug: "100-bikes",
+      ownerEmail: "owner@example.com",
+      ownerWhatsApp: "+919876543210",
+      googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJ123",
+      logoUrl: "javascript:alert(1)",
+    });
+
+    expect(result.success).toBe(false);
+  });
 });

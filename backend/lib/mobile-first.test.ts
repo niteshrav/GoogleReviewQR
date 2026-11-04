@@ -10,6 +10,7 @@ function read(relativePath: string) {
 
 const customerUiFiles = [
   "frontend/views/review-page.tsx",
+  "frontend/components/customer/business-review-template.tsx",
   "frontend/views/feedback-page.tsx",
   "frontend/components/feedback/feedback-form.tsx",
   "frontend/components/feedback/star-rating.tsx",
@@ -28,11 +29,21 @@ describe("mobile-first customer UI (pre-deploy)", () => {
     expect(shell).toMatch(/max-w-(lg|md)/);
     expect(shell).toMatch(/px-4|px-5/);
 
-    for (const file of ["frontend/views/review-page.tsx", "frontend/views/feedback-page.tsx"]) {
-      const contents = read(file);
-      expect(contents).toContain("CustomerPageShell");
-      expect(contents).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
-    }
+    const feedback = read("frontend/views/feedback-page.tsx");
+    expect(feedback).toContain("ReviewPageFrame");
+    expect(feedback).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
+
+    const frame = read("frontend/components/customer/review-page-frame.tsx");
+    expect(frame).toMatch(/max-w-/);
+    expect(frame).toMatch(/px-5|px-4/);
+
+    const review = read("frontend/views/review-page.tsx");
+    expect(review).toContain("BusinessReviewTemplate");
+    expect(review).not.toMatch(/md:grid-cols-|lg:grid-cols-/);
+
+    const template = read("frontend/components/customer/business-review-template.tsx");
+    expect(template).toContain("ReviewPageFrame");
+    expect(template).not.toMatch(/lg:grid-cols-2/);
   });
 
   it("uses full-width primary CTAs sized for thumb taps", () => {

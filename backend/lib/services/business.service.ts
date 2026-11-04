@@ -13,6 +13,8 @@ export function createBusinessService(repository: BusinessRepository) {
         ownerSmsPhone: input.ownerSmsPhone || null,
         googleReviewUrl: input.googleReviewUrl,
         justdialReviewUrl: input.justdialReviewUrl ?? null,
+        logoUrl: input.logoUrl ?? null,
+        tagline: input.tagline ?? null,
         plan: input.plan ?? "pilot",
         billingStatus: input.billingStatus ?? "trial",
         setupFeePaid: input.setupFeePaid ?? false,

@@ -1,6 +1,7 @@
 import { sendPhoneAlert } from "@backend/lib/phone/send-phone-alert";
 import { sendWeeklyReportEmail } from "@backend/lib/email/smtp";
 import {
+  formatWeeklyReportHtml,
   formatWeeklyReportMessage,
   getLastSevenDaysWindow,
   summarizeFeedbackWeek,
@@ -61,6 +62,7 @@ export async function sendWeeklyReports(options: SendWeeklyReportsOptions = {}) 
         to: business.ownerEmail,
         businessName: business.name,
         body: message,
+        html: formatWeeklyReportHtml(business.name, summary, plan),
       });
     } catch (error) {
       console.error(`Weekly email report failed for ${business.slug}`, error);

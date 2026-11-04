@@ -33,7 +33,7 @@ test.describe("admin businesses @tdd", () => {
 
     await page.goto(`/r/${slug}`);
     await expect(page.getByRole("heading", { name: /how was your experience/i })).toBeVisible();
-    await expect(page.getByText(name)).toBeVisible();
+    await expect(page.getByText(name, { exact: true })).toBeVisible();
   });
 
   test("edit business updates owner email on the card", async ({ page }) => {

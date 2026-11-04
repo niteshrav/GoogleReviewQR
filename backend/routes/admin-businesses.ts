@@ -3,7 +3,7 @@ import { isAdminAuthorizedFromHeader } from "@backend/lib/auth/require-admin";
 import { businessService } from "@backend/lib/services/index";
 import { jsonError, jsonOk } from "@backend/lib/http";
 import { z } from "zod";
-import { googleReviewUrlSchema, justdialReviewUrlSchema, slugSchema, businessInputSchema, billingPlanSchema, billingStatusSchema, paymentReferenceSchema } from "@backend/lib/validators";
+import { googleReviewUrlSchema, justdialReviewUrlSchema, slugSchema, businessInputSchema, businessLogoUrlSchema, businessTaglineSchema, billingPlanSchema, billingStatusSchema, paymentReferenceSchema } from "@backend/lib/validators";
 
 const updateBusinessSchema = z
   .object({
@@ -24,6 +24,8 @@ const updateBusinessSchema = z
       .or(z.literal("")),
     googleReviewUrl: googleReviewUrlSchema.optional(),
     justdialReviewUrl: justdialReviewUrlSchema.nullable().optional(),
+    logoUrl: businessLogoUrlSchema,
+    tagline: businessTaglineSchema,
     isActive: z.boolean().optional(),
     plan: billingPlanSchema.optional(),
     billingStatus: billingStatusSchema.optional(),

@@ -15,6 +15,7 @@ const viewFiles = [
   "frontend/views/feedback-page.tsx",
   "frontend/components/feedback/feedback-form.tsx",
   "frontend/components/google-review-button.tsx",
+  "frontend/components/customer/business-review-template.tsx",
   "frontend/components/customer/themes/toast-house-landing.tsx",
   "frontend/components/customer/themes/toast-house-feedback.tsx",
 ];
@@ -49,7 +50,10 @@ describe("compliance: no review gating", () => {
   });
 
   it("landing and thank-you paths always expose Google CTA component", () => {
-    const review = readFileSync(join(process.cwd(), "frontend/views/review-page.tsx"), "utf8");
+    const review = readFileSync(
+      join(process.cwd(), "frontend/components/customer/business-review-template.tsx"),
+      "utf8",
+    );
     const form = readFileSync(
       join(process.cwd(), "frontend/components/feedback/feedback-form.tsx"),
       "utf8",

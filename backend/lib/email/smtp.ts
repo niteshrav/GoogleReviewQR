@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { getEnv } from "@backend/lib/env";
+import { escapeHtml, renderEmailNote, renderEmailRows, renderProoflynEmail } from "@backend/lib/email/layout";
 
 export type AlertEmailPayload = {
   to: string;
@@ -74,17 +75,42 @@ export async function sendLowRatingAlert(payload: AlertEmailPayload): Promise<vo
     "Powered by Commiters Prooflyn",
   ];
 
-  await send({ to: payload.to, subject, text: lines.join("\n") });
+  const time = new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
+  }).format(payload.timestamp);
+
+  const html = renderProoflynEmail({
+    eyebrow: "Private feedback",
+    title: escapeHtml(`${payload.rating}/5 · ${payload.businessName}`),
+    intro: "A customer shared a low rating. This email is the backup copy. The owner phone alert is still the primary channel.",
+    bodyHtml: [
+      renderEmailRows([
+        { label: "Business", value: payload.businessName },
+        { label: "Rating", value: `${payload.rating}/5` },
+        { label: "Comment", value: payload.comment?.trim() || "No comment" },
+        { label: "Customer name", value: payload.customerName?.trim() || "Not shared" },
+        { label: "Customer contact", value: payload.customerPhone?.trim() || "Not shared" },
+        { label: "Time", value: time },
+      ]),
+      renderEmailNote("Primary alert channel: automated WhatsApp or SMS to the owner phone."),
+    ].join(""),
+  });
+
+  await send({ to: payload.to, subject, text: lines.join("\n"), html });
 }
 
 export async function sendWeeklyReportEmail(payload: {
   to: string;
   businessName: string;
   body: string;
+  html: string;
 }): Promise<void> {
   await send({
     to: payload.to,
     subject: `Prooflyn weekly report — ${payload.businessName}`,
     text: payload.body,
+    html: payload.html,
   });
 }
