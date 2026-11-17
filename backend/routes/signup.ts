@@ -96,8 +96,9 @@ export async function completeSignup(request: Request) {
   }
 
   const monthlyInr = "priceInr" in plan ? plan.priceInr : 0;
-  const setupFeeInr = "setupFeeInr" in plan ? plan.setupFeeInr : 2999;
+  const setupFeeInr = "setupFeeInr" in plan ? plan.setupFeeInr : 0;
   const dueNowInr = setupFeeInr + monthlyInr;
+  const setupWaived = setupFeeInr === 0;
 
   let paidNow = false;
   let billingStatus: "paid" | "invoiced" = "invoiced";
@@ -167,7 +168,7 @@ export async function completeSignup(request: Request) {
       googleReviewUrl: data.googleReviewUrl,
       plan: data.planKey,
       billingStatus,
-      setupFeePaid: paidNow,
+      setupFeePaid: paidNow || setupWaived,
     });
 
     await businessService.updateBusiness(business.id, {
@@ -178,7 +179,8 @@ export async function completeSignup(request: Request) {
       lastInvoiceSentAt: now,
       ownerAccessSecret: hashAccessSecret(data.password),
       ownerSessionToken: sessionToken,
-      setupFeePaid: paidNow,
+      // Free onboarding promo: waive setup for new customers even on cash signup.
+      setupFeePaid: paidNow || setupWaived,
       billingStatus,
     });
 

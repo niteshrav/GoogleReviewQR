@@ -51,7 +51,7 @@ model SubscriptionPlan {
   name        String
   tagline     String?
   priceInr    Int
-  setupFeeInr Int      @default(2999)
+  setupFeeInr Int      @default(0)
   features    String[]
   highlighted Boolean  @default(false)
   isPublic    Boolean  @default(true)

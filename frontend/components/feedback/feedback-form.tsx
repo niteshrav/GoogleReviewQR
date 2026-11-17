@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { CopyTextButton } from "@frontend/components/feedback/copy-text-button";
 import { StarRating } from "@frontend/components/feedback/star-rating";
 import { GoogleReviewButton } from "@frontend/components/google-review-button";
@@ -70,24 +69,11 @@ export function FeedbackForm({
 
   const hasComment = comment.trim().length > 0;
 
-  const errorAlert = (
-    <AnimatePresence>
-      {error ? (
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-          <Alert variant="error">{error}</Alert>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
+  const errorAlert = error ? <Alert variant="error">{error}</Alert> : null;
 
   if (submitted) {
     return (
-      <motion.section
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.35 }}
-        className="rounded-2xl border border-[#e3eef8] bg-white p-6 text-[#0a2e50] shadow-sm"
-      >
+      <section className="rounded-2xl border border-[#e3eef8] bg-white p-6 text-[#0a2e50] shadow-sm">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-secondary">
           ✓
         </div>
@@ -109,7 +95,7 @@ export function FeedbackForm({
             label="Also rate us on Justdial"
           />
         </div>
-      </motion.section>
+      </section>
     );
   }
 

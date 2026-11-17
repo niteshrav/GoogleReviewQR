@@ -116,10 +116,11 @@ export function BusinessReviewTemplate({
           <span className="flex-1 text-left">Leave a Google Review</span>
         </GoogleReviewButton>
 
-        <Link
-          href={`/r/${slug}/feedback`}
-          className="customer-cta flex items-center justify-center gap-3 rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-semibold text-[#0a2e50] shadow-sm transition-colors hover:bg-[#e3f2fd]"
-        >
+          <Link
+            href={`/r/${slug}/feedback`}
+            prefetch
+            className="customer-cta flex items-center justify-center gap-3 rounded-2xl border border-[#d7e3f0] bg-white px-4 py-3 text-base font-semibold text-[#0a2e50] shadow-sm transition-colors hover:bg-[#e3f2fd]"
+          >
           <ChatIcon />
           <span className="flex-1 text-left">Send Private Feedback</span>
         </Link>

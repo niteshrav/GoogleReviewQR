@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { businessService } from "@backend/lib/services/index";
 import { ReviewPageFrame } from "@frontend/components/customer/review-page-frame";
 import { FeedbackForm } from "@frontend/components/feedback/feedback-form";
+import { getCustomerBusinessBySlug } from "@frontend/lib/customer-business";
 
-export const dynamic = "force-dynamic";
+/** Private feedback — same short cache as the QR landing page. */
+export const revalidate = 60;
 
 type FeedbackPageProps = {
   params: Promise<{ slug: string }>;
@@ -12,8 +13,7 @@ type FeedbackPageProps = {
 
 export default async function FeedbackPage({ params }: FeedbackPageProps) {
   const { slug } = await params;
-
-  const business = await businessService.getActiveBusinessBySlug(slug);
+  const business = await getCustomerBusinessBySlug(slug);
 
   if (!business) {
     notFound();
@@ -23,6 +23,7 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
     <ReviewPageFrame name={business.name} logoUrl={business.logoUrl} tagline={business.tagline}>
       <Link
         href={`/r/${slug}`}
+        prefetch
         className="mt-6 inline-flex min-h-[44px] items-center gap-1 self-start text-base font-medium text-[#1e88e5] hover:underline"
       >
         ← Back

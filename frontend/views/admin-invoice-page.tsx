@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { resolvePlanPricing } from "@backend/lib/billing/manual-pricing";
 import { getEnv } from "@backend/lib/env";
-import { businessService } from "@backend/lib/services/index";
+import { businessService, subscriptionPlanService } from "@backend/lib/services/index";
 import { InvoiceOnePager } from "@frontend/components/admin/invoice-one-pager";
 import type { BillingPlan, BillingStatus } from "@database/types";
 
@@ -10,6 +10,12 @@ export const dynamic = "force-dynamic";
 type InvoicePageProps = {
   params: Promise<{ id: string }>;
 };
+
+function addMonths(date: Date, months: number): Date {
+  const next = new Date(date);
+  next.setMonth(next.getMonth() + months);
+  return next;
+}
 
 export default async function AdminInvoicePage({ params }: InvoicePageProps) {
   const { id } = await params;
@@ -24,25 +30,36 @@ export default async function AdminInvoicePage({ params }: InvoicePageProps) {
   const setupFeePaid = business.setupFeePaid ?? false;
   const dueNowInr = (setupFeePaid ? 0 : pricing.setupFeeInr) + pricing.monthlyInr;
 
+  const anchor =
+    business.paymentReceivedAt ?? business.lastInvoiceSentAt ?? business.createdAt ?? new Date();
+  const renewalDate = addMonths(anchor, 1);
+
+  const publicPlans = await subscriptionPlanService.listPublicPlans();
+  const upgradePlan = publicPlans.find((row) => row.key === "premium" && plan !== "premium");
+
   return (
     <InvoiceOnePager
       businessId={business.id}
       businessName={business.name}
       slug={business.slug}
       ownerEmail={business.ownerEmail}
+      planKey={plan}
       planLabel={pricing.label}
       billingStatus={(business.billingStatus as BillingStatus | undefined) ?? "trial"}
       setupFeePaid={setupFeePaid}
       setupFeeInr={pricing.setupFeeInr}
       monthlyInr={pricing.monthlyInr}
       dueNowInr={dueNowInr}
+      renewalDateIso={renewalDate.toISOString()}
       upiVpa={getEnv().UPI_VPA ?? ""}
-      isPremium={plan === "premium" || pricing.monthlyInr >= 999}
+      isPremium={plan === "premium" || pricing.monthlyInr >= 699}
       premiumIncludes={
         pricing.features.length > 0
           ? pricing.features
           : ["Weekly owner report (WhatsApp + email)", "Priority support from Commiters"]
       }
+      upgradePlanLabel={upgradePlan ? `Premium ₹${upgradePlan.priceInr}/mo` : "Premium ₹699/mo"}
+      upgradePlanPriceInr={upgradePlan?.priceInr ?? 699}
       paymentAmountInr={business.paymentAmountInr ?? null}
       paymentReference={business.paymentReference ?? null}
       paymentReceivedAt={business.paymentReceivedAt?.toISOString() ?? null}

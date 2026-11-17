@@ -1,9 +1,21 @@
+import { revalidateTag } from "next/cache";
 import { DuplicateSlugError, BusinessNotFoundError } from "@database/errors";
 import { isAdminAuthorizedFromHeader } from "@backend/lib/auth/require-admin";
 import { businessService } from "@backend/lib/services/index";
 import { jsonError, jsonOk } from "@backend/lib/http";
 import { z } from "zod";
 import { googleReviewUrlSchema, justdialReviewUrlSchema, slugSchema, businessInputSchema, businessLogoUrlSchema, businessTaglineSchema, billingPlanSchema, billingStatusSchema, paymentReferenceSchema } from "@backend/lib/validators";
+
+function revalidateCustomerBusiness(slug: string | null | undefined) {
+  if (!slug) {
+    return;
+  }
+  try {
+    revalidateTag(`business-${slug}`);
+  } catch {
+    // No Next static-generation store in unit tests — ISR TTL still expires the cache.
+  }
+}
 
 const updateBusinessSchema = z
   .object({
@@ -87,6 +99,7 @@ export async function createAdminBusiness(request: Request) {
 
   try {
     const business = await businessService.createBusiness(parsed.data);
+    revalidateCustomerBusiness(business.slug);
     return jsonOk({ business }, 201);
   } catch (error) {
     if (error instanceof DuplicateSlugError) {
@@ -111,6 +124,7 @@ export async function updateAdminBusiness(request: Request, id: string) {
 
   try {
     const business = await businessService.updateBusiness(id, parsed.data);
+    revalidateCustomerBusiness(business.slug);
     return jsonOk({ business });
   } catch (error) {
     if (error instanceof BusinessNotFoundError) {
@@ -127,6 +141,7 @@ export async function deactivateAdminBusiness(request: Request, id: string) {
 
   try {
     const business = await businessService.deactivateBusiness(id);
+    revalidateCustomerBusiness(business.slug);
     return jsonOk({ business });
   } catch (error) {
     if (error instanceof BusinessNotFoundError) {
@@ -143,6 +158,7 @@ export async function deleteAdminBusiness(request: Request, id: string) {
 
   try {
     const business = await businessService.deleteBusiness(id);
+    revalidateCustomerBusiness(business.slug);
     return jsonOk({ business });
   } catch (error) {
     if (error instanceof BusinessNotFoundError) {

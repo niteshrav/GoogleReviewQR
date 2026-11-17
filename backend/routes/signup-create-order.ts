@@ -74,7 +74,7 @@ export async function createSignupPaymentOrder(request: Request) {
   }
 
   const monthlyInr = "priceInr" in plan ? plan.priceInr : 0;
-  const setupFeeInr = "setupFeeInr" in plan ? plan.setupFeeInr : 2999;
+  const setupFeeInr = "setupFeeInr" in plan ? plan.setupFeeInr : 0;
   const dueNowInr = setupFeeInr + monthlyInr;
 
   if (dueNowInr <= 0) {
@@ -105,7 +105,10 @@ export async function createSignupPaymentOrder(request: Request) {
         email: data.ownerEmail,
         contact: data.ownerWhatsApp || data.ownerSmsPhone || "",
       },
-      description: `Prooflyn ${"name" in plan ? plan.name : data.planKey} — setup + first month`,
+      description:
+        setupFeeInr > 0
+          ? `Prooflyn ${"name" in plan ? plan.name : data.planKey} — setup + first month`
+          : `Prooflyn ${"name" in plan ? plan.name : data.planKey} — first month (setup free)`,
       upiVpa: getEnv().UPI_VPA || "",
     });
   } catch (error) {

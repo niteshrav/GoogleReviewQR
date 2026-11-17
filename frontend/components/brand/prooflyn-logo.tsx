@@ -40,7 +40,7 @@ function Wordmark({
             inverse ? "text-white/80" : "text-[#506070]"
           )}
         >
-          Prove. Improve. Grow.
+          PROVE. IMPROVE. GROW.
         </span>
       ) : null}
     </span>

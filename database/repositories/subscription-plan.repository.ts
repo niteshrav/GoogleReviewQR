@@ -69,7 +69,7 @@ export function createSubscriptionPlanRepository(prisma: PrismaClient) {
             name: data.name,
             tagline: data.tagline ?? null,
             priceInr: data.priceInr,
-            setupFeeInr: data.setupFeeInr ?? 2999,
+            setupFeeInr: data.setupFeeInr ?? 0,
             features: data.features,
             highlighted: data.highlighted ?? false,
             isPublic: data.isPublic ?? true,

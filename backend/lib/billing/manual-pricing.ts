@@ -2,14 +2,17 @@ import type { BillingPlan } from "@database/types";
 import { subscriptionPlanRepository } from "@database/index";
 
 /** Fallback amounts when catalog row is missing (keeps invoices working). */
-export const SETUP_FEE_INR = 2999;
+export const SETUP_FEE_INR = 0;
 
 export const PLAN_MONTHLY_INR: Record<string, number> = {
   pilot: 0,
-  core: 499,
-  premium: 999,
+  core: 299,
+  premium: 699,
   dinepro: 1499,
 };
+
+/** List price shown struck-through while onboarding is free. */
+export const SETUP_FEE_LIST_INR = 2999;
 
 export function monthlyFeeForPlan(plan: BillingPlan): number {
   return PLAN_MONTHLY_INR[plan] ?? 0;
