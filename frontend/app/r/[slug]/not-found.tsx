@@ -15,9 +15,9 @@ export default function ReviewNotFound() {
         >
           Go to Prooflyn home
         </Link>
-        <footer className="mt-auto flex flex-col items-center gap-2 pt-16">
+        <footer className="mt-auto flex flex-col items-center gap-2 pt-16 text-center">
           <p className="text-xs font-medium text-[#506070]">Powered by</p>
-          <ProoflynLogo variant="horizontal" markClassName="h-8 w-auto" />
+          <ProoflynLogo variant="stacked" tagline className="mx-auto" />
         </footer>
       </div>
     </main>

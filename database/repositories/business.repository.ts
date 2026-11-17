@@ -36,6 +36,28 @@ export function createBusinessRepository(prisma: PrismaClient) {
       });
     },
 
+    /** Slim public fields for QR / review / feedback pages (unique slug index). */
+    async findActivePublicBySlug(slug: string) {
+      const business = await prisma.business.findUnique({
+        where: { slug },
+        select: {
+          slug: true,
+          name: true,
+          tagline: true,
+          logoUrl: true,
+          googleReviewUrl: true,
+          justdialReviewUrl: true,
+          isActive: true,
+        },
+      });
+
+      if (!business?.isActive) {
+        return null;
+      }
+
+      return business;
+    },
+
     async findBySlug(slug: string) {
       return prisma.business.findUnique({ where: { slug } });
     },

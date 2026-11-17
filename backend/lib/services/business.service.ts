@@ -33,6 +33,10 @@ export function createBusinessService(repository: BusinessRepository) {
       return repository.findActiveBySlug(slug);
     },
 
+    async getActivePublicBusinessBySlug(slug: string) {
+      return repository.findActivePublicBySlug(slug);
+    },
+
     async getBusinessBySlug(slug: string) {
       return repository.findBySlug(slug);
     },

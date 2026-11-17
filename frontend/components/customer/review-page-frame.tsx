@@ -34,7 +34,7 @@ export function ReviewPageFrame({ name, logoUrl, tagline, children }: ReviewPage
 
         <footer className="mt-auto flex flex-col items-center gap-2 pt-10 text-center">
           <p className="text-xs font-medium text-[#506070]">Powered by</p>
-          <ProoflynLogo variant="horizontal" className="text-sm" markClassName="h-8 w-auto" />
+          <ProoflynLogo variant="stacked" tagline className="mx-auto" />
         </footer>
       </div>
     </main>

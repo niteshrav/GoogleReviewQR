@@ -1,2 +1,1 @@
-export { default } from "@frontend/views/feedback-page";
-export const dynamic = "force-dynamic";
+export { default, revalidate } from "@frontend/views/feedback-page";

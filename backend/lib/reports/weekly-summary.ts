@@ -68,7 +68,7 @@ function formatReportDate(date: Date): string {
 export function weeklyReportSupportLine(plan: string): string {
   return plan === "premium"
     ? "Premium support: reply to this message and Commiters will follow up the same day."
-    : "Upgrade to Premium (₹999/mo) for weekly proof plus priority support.";
+    : "Upgrade to Premium (₹699/mo) for weekly proof plus priority support.";
 }
 
 export function formatWeeklyReportHtml(

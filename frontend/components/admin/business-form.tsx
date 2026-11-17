@@ -71,8 +71,8 @@ function readLogoFile(file: File): Promise<string> {
 
 const fallbackPlanOptions: PlanOption[] = [
   { key: "pilot", label: "Pilot (free)" },
-  { key: "core", label: "Core ₹499/mo" },
-  { key: "premium", label: "Premium ₹999/mo" },
+  { key: "core", label: "Core ₹299/mo" },
+  { key: "premium", label: "Premium ₹699/mo" },
 ];
 
 export function BusinessForm({ initialValues, planOptions, onSuccess }: BusinessFormProps) {
@@ -324,7 +324,7 @@ export function BusinessForm({ initialValues, planOptions, onSuccess }: Business
           onChange={(event) => setSetupFeePaid(event.target.checked)}
           className="h-4 w-4 rounded border-border"
         />
-        Setup fee ₹2,999 received
+        Setup fee received (promo: FREE for new customers)
       </label>
 
       {error ? <Alert variant="error">{error}</Alert> : null}

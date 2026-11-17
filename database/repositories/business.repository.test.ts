@@ -91,6 +91,49 @@ describe("businessRepository", () => {
     expect(result).toBeNull();
   });
 
+  it("loads slim public fields by unique slug for QR pages", async () => {
+    prisma.business.findUnique.mockResolvedValue({
+      slug: "cafe-edelweiss",
+      name: "Cafe Edelweiss",
+      tagline: null,
+      logoUrl: null,
+      googleReviewUrl: "https://example.com",
+      justdialReviewUrl: null,
+      isActive: true,
+    });
+
+    const result = await repository.findActivePublicBySlug("cafe-edelweiss");
+
+    expect(result?.name).toBe("Cafe Edelweiss");
+    expect(prisma.business.findUnique).toHaveBeenCalledWith({
+      where: { slug: "cafe-edelweiss" },
+      select: {
+        slug: true,
+        name: true,
+        tagline: true,
+        logoUrl: true,
+        googleReviewUrl: true,
+        justdialReviewUrl: true,
+        isActive: true,
+      },
+    });
+  });
+
+  it("hides inactive businesses from public QR lookup", async () => {
+    prisma.business.findUnique.mockResolvedValue({
+      slug: "inactive-cafe",
+      name: "Inactive",
+      tagline: null,
+      logoUrl: null,
+      googleReviewUrl: "https://example.com",
+      justdialReviewUrl: null,
+      isActive: false,
+    });
+
+    const result = await repository.findActivePublicBySlug("inactive-cafe");
+    expect(result).toBeNull();
+  });
+
   it("finds business by slug regardless of active status", async () => {
     prisma.business.findUnique.mockResolvedValue({
       id: "biz-1",

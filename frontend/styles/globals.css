@@ -41,8 +41,8 @@
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-success: var(--success);
-  --font-sans: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --radius-xl: 12px;
   --radius-2xl: 14px;
   --shadow-card: var(--shadow-md);
@@ -58,7 +58,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
   overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;

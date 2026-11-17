@@ -91,9 +91,9 @@ export function MerchantOnePager({
       <section>
         <h2 className="text-xl font-semibold">Plans (manual UPI)</h2>
         <ul className="mt-3 list-disc space-y-1 pl-5 text-sm">
-          <li>Setup ₹2,999 once — QR, landing page, owner alerts.</li>
-          <li>Core ₹499/mo — weekly owner report (WhatsApp + email).</li>
-          <li>Premium ₹999/mo — weekly report plus same-day priority support from Commiters.</li>
+          <li>Setup FREE for new customers — QR, landing page, owner alerts.</li>
+          <li>Core ₹299/mo — private feedback + Google CTA + owner alerts.</li>
+          <li>Premium ₹699/mo — weekly report plus same-day priority support from Commiters.</li>
         </ul>
       </section>
 

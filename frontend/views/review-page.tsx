@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
-import { businessService } from "@backend/lib/services/index";
 import { BusinessReviewTemplate } from "@frontend/components/customer/business-review-template";
+import { getCustomerBusinessBySlug } from "@frontend/lib/customer-business";
 
-export const dynamic = "force-dynamic";
+/** Public QR landing — short ISR; admin updates revalidate the business tag. */
+export const revalidate = 60;
 
 type ReviewPageProps = {
   params: Promise<{ slug: string }>;
@@ -10,8 +11,7 @@ type ReviewPageProps = {
 
 export default async function ReviewPage({ params }: ReviewPageProps) {
   const { slug } = await params;
-
-  const business = await businessService.getActiveBusinessBySlug(slug);
+  const business = await getCustomerBusinessBySlug(slug);
 
   if (!business) {
     notFound();
@@ -31,7 +31,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
 export async function generateReviewMetadata({ params }: ReviewPageProps) {
   const { slug } = await params;
-  const business = await businessService.getActiveBusinessBySlug(slug);
+  const business = await getCustomerBusinessBySlug(slug);
 
   if (!business) {
     return { title: "Business not found" };

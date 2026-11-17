@@ -139,6 +139,9 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
     if (!plan) {
       return "";
     }
+    if (plan.setupFeeInr === 0) {
+      return `₹${plan.dueNowInr} (first month · setup FREE)`;
+    }
     return `₹${plan.dueNowInr} (setup ₹${plan.setupFeeInr} + monthly ₹${plan.priceInr})`;
   }, [plan]);
 
@@ -397,6 +400,11 @@ export function GetStartedWizard({ initialPlanKey }: { initialPlanKey: string })
         <h1 className="text-2xl font-semibold tracking-tight">{plan.name}</h1>
         {plan.tagline ? <p className="text-sm text-muted">{plan.tagline}</p> : null}
         <p className="text-sm font-medium text-foreground">Pay now: {dueLabel}</p>
+        {plan.setupFeeInr === 0 ? (
+          <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800">
+            Free Onboarding &amp; Setup for New Customers.
+          </p>
+        ) : null}
       </Card>
 
       {error ? <Alert variant="error">{error}</Alert> : null}

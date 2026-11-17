@@ -1,2 +1,1 @@
-export { default, generateReviewMetadata as generateMetadata } from "@frontend/views/review-page";
-export const dynamic = "force-dynamic";
+export { default, generateReviewMetadata as generateMetadata, revalidate } from "@frontend/views/review-page";
